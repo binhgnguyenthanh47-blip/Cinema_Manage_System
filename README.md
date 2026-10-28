@@ -1,7 +1,5 @@
-# Cinema_Manage_System
-Cấu trúc repository GitHub dưới đây được thiết kế tối ưu cho đồ án môn lập trình web, tham chiếu trực tiếp từ bảng phân công nhiệm vụ trong file "đề tài.pdf". Hệ thống thư mục này hỗ trợ toàn diện các công nghệ nhóm đang sử dụng (HTML5, CSS3, JavaScript, Node.js API, SQL) và sắp xếp không gian làm việc tách biệt để tránh xung đột mã nguồn giữa 6 thành viên.
 
-### 1. Cấu trúc Thư mục (Directory Structure)
+### Cấu trúc Thư mục (Directory Structure)
 
 ```text
 cinema-management-website/
@@ -43,24 +41,3 @@ cinema-management-website/
 └── e-ticket.html           # Giao diện hiển thị vé điện tử/QR Code[cite: 3]
 
 ```
-
-### 2. Chiến lược Quản lý Nhánh (Branching Strategy)
-
-Để hệ thống không bị vỡ giao diện hay lỗi ghép nối tổng thể, repository cần cấu hình các nhánh nghiêm ngặt:
-
-* **Nhóm các nhánh cốt lõi**: Khởi tạo nhánh `main` duy nhất chứa code hoàn chỉnh, không có lỗi để phục vụ quá trình demo dự án. Toàn bộ phần mã nguồn đang trong quá trình ghép nối và phát triển sẽ được hợp nhất tại nhánh `dev`.
-
-
-* **Nhánh cá nhân (Features)**: Mỗi thành viên khi lập trình một tính năng mới (ví dụ: bộ lọc phim, trang thanh toán) bắt buộc phải rẽ nhánh riêng theo đúng cú pháp `feature/*`. Cấm tuyệt đối hành vi đẩy code trực tiếp (push) lên nhánh `main`.
-
-
-* **Quy định Merge Code**: Mọi yêu cầu gộp code (Pull Request) phải trải qua bước Review Code kỹ lưỡng và giải quyết hoàn toàn Merge Conflicts từ Team Leader trước khi được đưa vào nhánh `dev`. Cú pháp khi commit cần thống nhất theo chuẩn `[Feature/Fix/Docs] - Nội dung công việc`.
-
-
-
-### 3. Vận hành Issue Tracking & Code Freeze
-
-* **Quản lý lỗi (Bugs)**: Quá trình kiểm thử cuốn chiếu phải bám sát từng module vừa hoàn thiện. Bất kỳ lỗi nào phát sinh cần được báo cáo (Log Bugs) chi tiết ngay trên tab **GitHub Issues** của repository, giúp nhóm phát triển theo dõi và đôn đốc sửa lỗi trong tuần.
-
-
-* **Đóng băng hệ thống (Code Freeze)**: Từ thời điểm 23:59 ngày 13/11, repository sẽ bước vào giai đoạn Code Freeze. Sau mốc thời gian này, không một tính năng (feature) mới nào được phép thêm vào. Nhóm chỉ cấp quyền commit để xử lý triệt để bug (nếu có) và tối ưu hóa tính năng hiển thị trên thiết bị di động (Responsive UI).
