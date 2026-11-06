@@ -1,0 +1,214 @@
+/* ==========================================================================
+   DESIGN SYSTEM - CINEMA TICKETING WEBSITE
+   Phụ trách: Thành viên 1 (Leader)
+   Mục đích: Định nghĩa Bảng màu, Font chữ, Reset CSS & Component dùng chung
+   ========================================================================== */
+
+/* 1. KHAI BÁO BIẾN CẤU HÌNH (CSS VARIABLES) */
+:root {
+  /* Bảng màu chính (Color Palette) - Chuẩn Rạp Chiếu Phim */
+  --bg-primary: #0f172a;       /* Nền chính màu tối (Slate 900) */
+  --bg-secondary: #1e293b;     /* Nền Card/Section (Slate 800) */
+  --bg-tertiary: #334155;      /* Nền ô Input / Hover (Slate 700) */
+  
+  --primary-color: #e11d48;    /* Màu thương hiệu / Đỏ rạp phim (Rose 600) */
+  --primary-hover: #be123c;    /* Đỏ đậm khi Hover */
+  --accent-color: #f59e0b;     /* Màu nhấn / Vàng ngôi sao đánh giá / Ghế VIP */
+  
+  --text-main: #f8fafc;        /* Chữ chính màu trắng sáng (Slate 50) */
+  --text-muted: #94a3b8;       /* Chữ phụ màu xám (Slate 400) */
+  --text-disabled: #64748b;    /* Chữ ẩn / Vô hiệu hóa */
+  
+  /* Trạng thái Ghế & Vé */
+  --seat-available: #475569;   /* Ghế trống (Xám) */
+  --seat-selected: #22c55e;    /* Ghế đang chọn (Xanh lá) */
+  --seat-sold: #dc2626;        /* Ghế đã bán (Đỏ) */
+  --seat-vip: #f59e0b;         /* Ghế VIP (Vàng) */
+
+  /* Font chữ chuẩn */
+  --font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  
+  /* Bo góc (Border Radius) */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+
+  /* Hiệu ứng Đổ bóng (Box Shadow) */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+  
+  /* Tốc độ chuyển cảnh (Transition) */
+  --transition-fast: all 0.2s ease;
+  --transition-normal: all 0.3s ease;
+}
+
+/* 2. RESET CSS CƠ BẢN */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--bg-primary);
+  color: var(--text-main);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: var(--transition-fast);
+}
+
+ul, ol {
+  list-style: none;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* 3. STYLE NÚT BẤM CHUNG (BUTTON COMPONENTS) */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 20px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  border: none;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  user-select: none;
+}
+
+/* Nút chính (Đỏ rạp phim) - Dùng cho: Đặt vé, Thanh toán, Submit form */
+.btn-primary {
+  background-color: var(--primary-color);
+  color: #ffffff;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Nút phụ (Viền / Nền xám) - Dùng cho: Hủy, Xem chi tiết, Quay lại */
+.btn-secondary {
+  background-color: var(--bg-tertiary);
+  color: var(--text-main);
+}
+
+.btn-secondary:hover {
+  background-color: #475569;
+}
+
+/* Nút viền (Outline) */
+.btn-outline {
+  background-color: transparent;
+  border: 1px solid var(--primary-color);
+  color: var(--primary-color);
+}
+
+.btn-outline:hover {
+  background-color: var(--primary-color);
+  color: #ffffff;
+}
+
+/* Nút trạng thái vô hiệu hóa (Disabled) */
+.btn:disabled, .btn.disabled {
+  background-color: var(--text-disabled);
+  color: #94a3b8;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* 4. STYLE Ô NHẬP LIỆU CHUNG (FORM INPUTS) */
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 6px;
+  color: var(--text-muted);
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px 14px;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--bg-tertiary);
+  border-radius: var(--radius-md);
+  color: var(--text-main);
+  font-size: 0.95rem;
+  outline: none;
+  transition: var(--transition-fast);
+}
+
+.form-control:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(225, 29, 72, 0.2);
+}
+
+/* 5. PHÂN TRANG & CONTAINER BỐ CỤC */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.section-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 24px;
+  position: relative;
+  padding-left: 12px;
+}
+
+.section-title::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 4px;
+  bottom: 4px;
+  width: 4px;
+  background-color: var(--primary-color);
+  border-radius: var(--radius-sm);
+}
+
+/* Badge nhãn dán (Ví dụ: 18+, C13, 2D, 3D) */
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border-radius: var(--radius-sm);
+  background-color: var(--primary-color);
+  color: #ffffff;
+}
+
+.badge-warning {
+  background-color: var(--accent-color);
+  color: #000000;
+}
