@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Chi tiết phim</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="dau-trang">
+    <div class="khung dau-trang__noi-dung">
+        <a class="dau-trang__logo" href="index.html">CINEMA</a>
+        <nav class="dau-trang__menu">
+            <a class="dau-trang__lien-ket" href="index.html">Trang chủ</a>
+            <a class="dau-trang__lien-ket dau-trang__lien-ket--hien-tai" href="danhsach.html">Phim</a>
+            <a class="dau-trang__lien-ket" href="danhsach.html">Rạp</a>
+        </nav>
+        <div class="dau-trang__tim o-tim">
+            <input class="o-tim__input" type="text" id="oTim" placeholder="Tìm phim..." autocomplete="off">
+            <div class="o-tim__goi-y" id="goiY"></div>
+        </div>
+        <div class="dau-trang__tai-khoan" id="taiKhoan"></div>
+    </div>
+</header>
+
+<main class="khung" id="noiDungChinh">
+    <div class="chi-tiet">
+        <div class="chi-tiet__poster" id="posterPhim">Poster</div>
+        <div class="chi-tiet__thong-tin">
+            <h1 class="chi-tiet__ten" id="tenPhim">Tên phim</h1>
+            <div class="chi-tiet__the-danh-sach" id="dongMot"></div>
+            <div class="chi-tiet__bang" id="dongHai"></div>
+            <h3 class="chi-tiet__muc">Nội dung phim</h3>
+            <p class="chi-tiet__noi-dung" id="noiDungPhim"></p>
+            <button class="nut nut--chinh chi-tiet__nut-mua" id="nutMuaVe">Mua vé</button>
+        </div>
+    </div>
+
+    <div class="chi-tiet__trailer" id="khungTrailer">Trailer</div>
+
+    <div class="tieu-de-muc" id="lichChieu">Lịch chiếu</div>
+    <div class="lich-chieu__ngay" id="dsNgay"></div>
+    <div id="dsSuat"></div>
+</main>
+
+<footer class="chan-trang">
+    <div class="khung chan-trang__noi-dung">
+        <div>
+            <h4 class="chan-trang__tieu-de">Giới thiệu</h4>
+            <p class="chan-trang__dong">Website quản lý lịch chiếu phim, giúp xem phim đang chiếu, sắp chiếu và lịch chiếu theo từng rạp.</p>
+        </div>
+        <div>
+            <h4 class="chan-trang__tieu-de">Liên hệ</h4>
+            <p class="chan-trang__dong">Email: lienhenhom6@cinema.vn</p>
+            <p class="chan-trang__dong">Hotline: 1900 0000</p>
+        </div>
+        <div>
+            <h4 class="chan-trang__tieu-de">Chính sách</h4>
+            <p class="chan-trang__dong"><a class="chan-trang__lien-ket" href="#">Điều khoản sử dụng</a></p>
+            <p class="chan-trang__dong"><a class="chan-trang__lien-ket" href="#">Chính sách bảo mật</a></p>
+        </div>
+        <div>
+            <h4 class="chan-trang__tieu-de">Mạng xã hội</h4>
+            <p class="chan-trang__dong"><a class="chan-trang__lien-ket" href="#">Facebook</a></p>
+            <p class="chan-trang__dong"><a class="chan-trang__lien-ket" href="#">Youtube</a></p>
+        </div>
+    </div>
+    <div class="khung chan-trang__ban-quyen">Cinema - Website quản lý lịch chiếu phim - 2026</div>
+</footer>
+
+<script src="js/data.js"></script>
+<script src="js/script.js"></script>
+</body>
+</html>
