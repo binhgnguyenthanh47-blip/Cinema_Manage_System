@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vé điện tử - CINEMA</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/booking.css">
+</head>
+<body>
+<header class="dau-trang">
+    <div class="khung dau-trang__noi-dung">
+        <a class="dau-trang__logo" href="index.html">CINEMA</a>
+        <nav class="dau-trang__menu">
+            <a class="dau-trang__lien-ket" href="index.html">Trang chủ</a>
+            <a class="dau-trang__lien-ket" href="danhsach.html">Phim</a>
+            <a class="dau-trang__lien-ket" href="danhsach.html">Rạp</a>
+            <a class="dau-trang__lien-ket dau-trang__lien-ket--hien-tai" href="booking.html">Đặt vé</a>
+        </nav>
+        <div class="dau-trang__tim o-tim">
+            <input class="o-tim__input" type="text" id="oTim" placeholder="Tìm phim..." autocomplete="off">
+            <div class="o-tim__goi-y" id="goiY"></div>
+        </div>
+        <div class="dau-trang__tai-khoan" id="taiKhoan"></div>
+    </div>
+</header>
+
+<main class="khung" id="noiDungChinh">
+    <div class="tien-trinh">
+        <div class="tien-trinh__buoc tien-trinh__buoc--xong">1. Chọn ghế</div>
+        <div class="tien-trinh__buoc tien-trinh__buoc--xong">2. Thanh toán</div>
+        <div class="tien-trinh__buoc tien-trinh__buoc--hien-tai">3. Vé điện tử</div>
+    </div>
+
+    <div class="ve-dien-tu-khung">
+        <div class="ve-dien-tu" id="theVeDienTu">
+            <div class="ve-dien-tu__dau">
+                <div>
+                    <span class="ve-dien-tu__nhan">ĐẶT VÉ THÀNH CÔNG</span>
+                    <h1 class="ve-dien-tu__ten-phim" id="veTenPhim">Tên phim</h1>
+                </div>
+                <div class="ve-dien-tu__ma-box">
+                    <span>MÃ ĐẶT VÉ</span>
+                    <strong id="veMaDatVe">#CNM-000000</strong>
+                </div>
+            </div>
+
+            <div class="ve-dien-tu__luoi">
+                <div class="ve-dien-tu__o">
+                    <span>RẠP CHIẾU</span>
+                    <strong id="veRap">-</strong>
+                </div>
+                <div class="ve-dien-tu__o">
+                    <span>PHÒNG CHIẾU</span>
+                    <strong id="vePhong">-</strong>
+                </div>
+                <div class="ve-dien-tu__o">
+                    <span>SUẤT CHIẾU</span>
+                    <strong id="veSuat">-</strong>
+                </div>
+                <div class="ve-dien-tu__o">
+                    <span>GHẾ NGỒI</span>
+                    <strong id="veGhe">-</strong>
+                </div>
+                <div class="ve-dien-tu__o">
+                    <span>COMBO BẮP NƯỚC</span>
+                    <strong id="veCombo">Không có</strong>
+                </div>
+                <div class="ve-dien-tu__o">
+                    <span>TỔNG THANH TOÁN</span>
+                    <strong id="veTongTien">0đ</strong>
+                </div>
+            </div>
+
+            <div class="ve-dien-tu__chan">
+                <div class="ve-dien-tu__khach">
+                    <p>Khách hàng: <strong id="veKhachHang">-</strong></p>
+                    <p>Email: <span id="veEmail">-</span> | SĐT: <span id="veSdt">-</span></p>
+                    <p>Thanh toán qua: <span id="vePhuongThuc">-</span></p>
+                    <p class="ve-dien-tu__luu-y">Vui lòng đưa mã QR này cho nhân viên tại quầy soát vé trước giờ chiếu 15 phút.</p>
+                </div>
+                <div class="ve-dien-tu__qr">
+                    <canvas id="canvasQrVe" width="140" height="140"></canvas>
+                    <span id="veChuoiQr">CNM-000000</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="ve-dien-tu__nut-bam">
+            <button class="nut nut--phu" type="button" id="nutInVe">In vé / Lưu PDF</button>
+            <a class="nut nut--chinh" href="index.html">Về trang chủ</a>
+        </div>
+    </div>
+</main>
+
+<footer class="chan-trang">
+    <div class="khung chan-trang__noi-dung">
+        <div>
+            <h4 class="chan-trang__tieu-de">Giới thiệu</h4>
+            <p class="chan-trang__dong">Website quản lý lịch chiếu phim, giúp xem phim đang chiếu, sắp chiếu và lịch chiếu theo từng rạp.</p>
+        </div>
+        <div>
+            <h4 class="chan-trang__tieu-de">Liên hệ</h4>
+            <p class="chan-trang__dong">Email: lienhenhom6@cinema.vn</p>
+            <p class="chan-trang__dong">Hotline: 1900 0000</p>
+        </div>
+        <div>
+            <h4 class="chan-trang__tieu-de">Chính sách</h4>
+            <p class="chan-trang__dong"><a class="chan-trang__lien-ket" href="#">Điều khoản sử dụng</a></p>
+            <p class="chan-trang__dong"><a class="chan-trang__lien-ket" href="#">Chính sách bảo mật</a></p>
+        </div>
+        <div>
+            <h4 class="chan-trang__tieu-de">Mạng xã hội</h4>
+            <p class="chan-trang__dong"><a class="chan-trang__lien-ket" href="#">Facebook</a></p>
+            <p class="chan-trang__dong"><a class="chan-trang__lien-ket" href="#">Youtube</a></p>
+        </div>
+    </div>
+    <div class="khung chan-trang__ban-quyen">Cinema - Website quản lý lịch chiếu phim - 2026</div>
+</footer>
+
+<script src="js/data.js"></script>
+<script src="js/script.js"></script>
+<script src="js/seats.js"></script>
+</body>
+</html>

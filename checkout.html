@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thanh toán - CINEMA</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/booking.css">
+</head>
+<body>
+<header class="dau-trang">
+    <div class="khung dau-trang__noi-dung">
+        <a class="dau-trang__logo" href="index.html">CINEMA</a>
+        <nav class="dau-trang__menu">
+            <a class="dau-trang__lien-ket" href="index.html">Trang chủ</a>
+            <a class="dau-trang__lien-ket" href="danhsach.html">Phim</a>
+            <a class="dau-trang__lien-ket" href="danhsach.html">Rạp</a>
+            <a class="dau-trang__lien-ket dau-trang__lien-ket--hien-tai" href="booking.html">Đặt vé</a>
+        </nav>
+        <div class="dau-trang__tim o-tim">
+            <input class="o-tim__input" type="text" id="oTim" placeholder="Tìm phim..." autocomplete="off">
+            <div class="o-tim__goi-y" id="goiY"></div>
+        </div>
+        <div class="dau-trang__tai-khoan" id="taiKhoan"></div>
+    </div>
+</header>
+
+<main class="khung" id="noiDungChinh">
+    <div class="tien-trinh">
+        <div class="tien-trinh__buoc tien-trinh__buoc--xong">1. Chọn ghế</div>
+        <div class="tien-trinh__buoc tien-trinh__buoc--hien-tai">2. Thanh toán</div>
+        <div class="tien-trinh__buoc">3. Vé điện tử</div>
+    </div>
+
+    <div class="thanh-toan-header">
+        <div class="tieu-de-muc">Xác nhận & Thanh toán</div>
+        <div class="dem-nguoc">Thời gian giữ ghế: <strong id="dongHoGiuGhe">10:00</strong></div>
+    </div>
+
+    <div class="dat-ve">
+        <div class="thanh-toan__cot-trai">
+            <section class="khoi-form">
+                <h3 class="khoi-form__tieu-de">Thông tin người nhận vé</h3>
+                <div class="nhom-nhap">
+                    <label class="nhom-nhap__nhan" for="khachHoTen">Họ và tên *</label>
+                    <input class="nhom-nhap__o" type="text" id="khachHoTen" placeholder="Nhập họ và tên">
+                </div>
+                <div class="nhom-nhap-hai-cot">
+                    <div class="nhom-nhap">
+                        <label class="nhom-nhap__nhan" for="khachEmail">Email nhận vé *</label>
+                        <input class="nhom-nhap__o" type="email" id="khachEmail" placeholder="example@gmail.com">
+                    </div>
+                    <div class="nhom-nhap">
+                        <label class="nhom-nhap__nhan" for="khachSdt">Số điện thoại *</label>
+                        <input class="nhom-nhap__o" type="tel" id="khachSdt" placeholder="09xxxxxxxx">
+                    </div>
+                </div>
+            </section>
+
+            <section class="khoi-form">
+                <h3 class="khoi-form__tieu-de">Combo Bắp & Nước (Tùy chọn)</h3>
+                <div class="ds-combo">
+                    <div class="combo-item" data-combo="solo" data-gia="79000">
+                        <div>
+                            <div class="combo-item__ten">Combo Solo (1 Bắp ngọt + 1 Nước lớn)</div>
+                            <div class="combo-item__gia">79.000đ</div>
+                        </div>
+                        <div class="combo-item__bo-dem">
+                            <button type="button" class="nut-dem" data-action="giam">-</button>
+                            <span class="so-dem" id="slComboSolo">0</span>
+                            <button type="button" class="nut-dem" data-action="tang">+</button>
+                        </div>
+                    </div>
+
+                    <div class="combo-item" data-combo="couple" data-gia="139000">
+                        <div>
+                            <div class="combo-item__ten">Combo Couple (1 Bắp lớn + 2 Nước lớn)</div>
+                            <div class="combo-item__gia">139.000đ</div>
+                        </div>
+                        <div class="combo-item__bo-dem">
+                            <button type="button" class="nut-dem" data-action="giam">-</button>
+                            <span class="so-dem" id="slComboCouple">0</span>
+                            <button type="button" class="nut-dem" data-action="tang">+</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="khoi-form">
+                <h3 class="khoi-form__tieu-de">Phương thức thanh toán</h3>
+                <div class="ds-phuong-thuc">
+                    <label class="phuong-thuc">
+                        <input type="radio" name="phuongThuc" value="Ví điện tử MoMo" checked>
+                        <span>Ví điện tử MoMo</span>
+                    </label>
+                    <label class="phuong-thuc">
+                        <input type="radio" name="phuongThuc" value="Ví ZaloPay">
+                        <span>Ví ZaloPay</span>
+                    </label>
+                    <label class="phuong-thuc">
+                        <input type="radio" name="phuongThuc" value="Chuyển khoản QR Ngân hàng">
+                        <span>Chuyển khoản QR Ngân hàng (VietQR)</span>
+                    </label>
+                    <label class="phuong-thuc">
+                        <input type="radio" name="phuongThuc" value="Thẻ quốc tế Visa / Mastercard">
+                        <span>Thẻ quốc tế Visa / Mastercard</span>
+                    </label>
+                </div>
+            </section>
+        </div>
+
+        <aside class="dat-ve__tom-tat the-tom-tat">
+            <h3 class="the-tom-tat__tieu-de" id="ttTenPhim">Tên phim</h3>
+            <div class="the-tom-tat__dong">
+                <span>Rạp:</span>
+                <strong id="ttRap">-</strong>
+            </div>
+            <div class="the-tom-tat__dong">
+                <span>Phòng & Suất:</span>
+                <strong id="ttSuat">-</strong>
+            </div>
+            <div class="the-tom-tat__dong">
+                <span>Ghế:</span>
+                <strong id="ttDanhSachGhe">-</strong>
+            </div>
+            <hr class="the-tom-tat__ngan">
+
+            <div class="ma-giam-gia">
+                <input class="nhom-nhap__o" type="text" id="oMaGiamGia" placeholder="Mã giảm giá (VD: CINEMA20)">
+                <button class="nut nut--phu" type="button" id="nutApMa">Áp dụng</button>
+            </div>
+            <p class="ma-giam-gia__trang-thai" id="trangThaiVoucher"></p>
+
+            <hr class="the-tom-tat__ngan">
+            <div class="the-tom-tat__dong">
+                <span>Tiền vé:</span>
+                <strong id="ttTienVe">0đ</strong>
+            </div>
+            <div class="the-tom-tat__dong">
+                <span>Tiền combo:</span>
+                <strong id="ttTienCombo">0đ</strong>
+            </div>
+            <div class="the-tom-tat__dong">
+                <span>Giảm giá:</span>
+                <strong id="ttTienGiam">-0đ</strong>
+            </div>
+            <div class="the-tom-tat__tong">
+                <span>Tổng thanh toán:</span>
+                <strong id="ttTongThanhToan">0đ</strong>
+            </div>
+
+            <p class="the-tom-tat__loi" id="thongBaoThanhToan"></p>
+
+            <div class="the-tom-tat__hanh-dong">
+                <a class="nut nut--phu" href="booking.html">Đổi ghế</a>
+                <button class="nut nut--chinh" id="nutXacNhanThanhToan" type="button">Thanh toán</button>
+            </div>
+        </aside>
+    </div>
+</main>
+
+<footer class="chan-trang">
+    <div class="khung chan-trang__noi-dung">
+        <div>
+            <h4 class="chan-trang__tieu-de">Giới thiệu</h4>
+            <p class="chan-trang__dong">Website quản lý lịch chiếu phim, giúp xem phim đang chiếu, sắp chiếu và lịch chiếu theo từng rạp.</p>
+        </div>
+        <div>
+            <h4 class="chan-trang__tieu-de">Liên hệ</h4>
+            <p class="chan-trang__dong">Email: lienhenhom6@cinema.vn</p>
+            <p class="chan-trang__dong">Hotline: 1900 0000</p>
+        </div>
+        <div>
+            <h4 class="chan-trang__tieu-de">Chính sách</h4>
+            <p class="chan-trang__dong"><a class="chan-trang__lien-ket" href="#">Điều khoản sử dụng</a></p>
+            <p class="chan-trang__dong"><a class="chan-trang__lien-ket" href="#">Chính sách bảo mật</a></p>
+        </div>
+        <div>
+            <h4 class="chan-trang__tieu-de">Mạng xã hội</h4>
+            <p class="chan-trang__dong"><a class="chan-trang__lien-ket" href="#">Facebook</a></p>
+            <p class="chan-trang__dong"><a class="chan-trang__lien-ket" href="#">Youtube</a></p>
+        </div>
+    </div>
+    <div class="khung chan-trang__ban-quyen">Cinema - Website quản lý lịch chiếu phim - 2026</div>
+</footer>
+
+<script src="js/data.js"></script>
+<script src="js/script.js"></script>
+<script src="js/seats.js"></script>
+</body>
+</html>
