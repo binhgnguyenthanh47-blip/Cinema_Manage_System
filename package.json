@@ -1,0 +1,14 @@
+{
+  "name": "cinema-manage-system",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cinema booking management system",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js"
+  },
+  "dependencies": {
+    "dotenv": "^18.0.10",
+    "mysql2": "^3.24.6"
+  }
+}
