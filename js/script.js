@@ -542,17 +542,27 @@ function khoiTaoChiTiet() {
             return;
         }
 
+        const ngayDuocChon = lichChieu.cacNgay.find(function (n) {
+            return n.so == ngay;
+        });
+        const ngayDayDu = ngayDuocChon.nhan.split(" ")[1] + "/2026";
+
         let html = "";
         for (let i = 0; i < phim.rap.length; i++) {
             const rap = timRap(phim.rap[i]);
             const suatCuaRap = lichChieu.suatTheoRap.find(function (s) {
                 return s.rap == rap.id;
             });
-            html += '<div class="lich-chieu__rap"><b class="lich-chieu__tieu-de">' + rap.cum + ' - ' + rap.ten + '</b>';
+            const tenRapDayDu = rap.cum + ' - ' + rap.ten;
+            html += '<div class="lich-chieu__rap"><b class="lich-chieu__tieu-de">' + tenRapDayDu + '</b>';
             for (let j = 0; j < suatCuaRap.suat.length; j++) {
                 html += '<div class="lich-chieu__suat"><span class="lich-chieu__dinh-dang">' + suatCuaRap.suat[j].dinhDang + '</span>';
                 for (let k = 0; k < suatCuaRap.suat[j].gio.length; k++) {
-                    html += '<button class="lich-chieu__gio">' + suatCuaRap.suat[j].gio[k] + '</button>';
+                    const duongDanDatVe = "booking.html?movie=" + encodeURIComponent(phim.ten) +
+                        "&cinema=" + encodeURIComponent(tenRapDayDu) +
+                        "&date=" + encodeURIComponent(ngayDayDu) +
+                        "&time=" + encodeURIComponent(suatCuaRap.suat[j].gio[k]);
+                    html += '<a class="lich-chieu__gio" href="' + duongDanDatVe + '">' + suatCuaRap.suat[j].gio[k] + '</a>';
                 }
                 html += '</div>';
             }
@@ -563,7 +573,18 @@ function khoiTaoChiTiet() {
 
     for (let i = 0; i < dsNut.length; i++) {
         dsNut[i].addEventListener("click", function () {
-            veSuatChieu(Number(dsNut[i].dataset.ngay));
+            const ngay = Number(dsNut[i].dataset.ngay);
+            if (phim.trangThai == "sap" || phim.ngayChieu.indexOf(ngay) == -1) {
+                veSuatChieu(ngay);
+                return;
+            }
+            const ngayDuocChon = lichChieu.cacNgay.find(function (n) {
+                return n.so == ngay;
+            });
+            const rapDau = timRap(phim.rap[0]);
+            location.href = "booking.html?movie=" + encodeURIComponent(phim.ten) +
+                "&cinema=" + encodeURIComponent(rapDau.cum + " - " + rapDau.ten) +
+                "&date=" + encodeURIComponent(ngayDuocChon.nhan.split(" ")[1] + "/2026");
         });
     }
 
