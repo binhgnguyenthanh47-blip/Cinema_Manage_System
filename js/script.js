@@ -558,6 +558,7 @@ function khoiTaoChiTiet() {
             for (let j = 0; j < suatCuaRap.suat.length; j++) {
                 html += '<div class="lich-chieu__suat"><span class="lich-chieu__dinh-dang">' + suatCuaRap.suat[j].dinhDang + '</span>';
                 for (let k = 0; k < suatCuaRap.suat[j].gio.length; k++) {
+                    const gio = suatCuaRap.suat[j].gio[k];
                     const duongDanDatVe = "booking.html?movie=" + encodeURIComponent(phim.ten) +
                         "&cinema=" + encodeURIComponent(tenRapDayDu) +
                         "&date=" + encodeURIComponent(ngayDayDu) +
@@ -581,6 +582,7 @@ function khoiTaoChiTiet() {
             const ngayDuocChon = lichChieu.cacNgay.find(function (n) {
                 return n.so == ngay;
             });
+            const ngayDat = ngayDuocChon.nhan.split(" ")[1] + "/2026";
             const rapDau = timRap(phim.rap[0]);
             location.href = "booking.html?movie=" + encodeURIComponent(phim.ten) +
                 "&cinema=" + encodeURIComponent(rapDau.cum + " - " + rapDau.ten) +

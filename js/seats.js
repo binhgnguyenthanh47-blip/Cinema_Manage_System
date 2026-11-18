@@ -117,42 +117,6 @@
         localStorage.setItem(KEY_GHE_DA_DAT, JSON.stringify(tatCa));
     }
 
-    /* ================= CẦU NỐI TỪ CHITIET.HTML SANG BOOKING.HTML ================= */
-    function khoiTaoChuyenTrangTuLichChieu() {
-        const khungSuat = document.getElementById("dsSuat");
-        if (!khungSuat) return;
-
-        const nutMuaVe = document.getElementById("nutMuaVe");
-        const mucLichChieu = document.getElementById("lichChieu");
-        if (nutMuaVe && mucLichChieu) {
-            nutMuaVe.addEventListener("click", () => {
-                mucLichChieu.scrollIntoView({ behavior: "smooth" });
-            });
-        }
-
-        khungSuat.addEventListener("click", (e) => {
-            const nutGio = e.target.closest("button, a, span, div");
-            if (!nutGio || !khungSuat.contains(nutGio)) return;
-
-            const noiDung = nutGio.textContent.trim();
-            const khopGio = noiDung.match(/^(\d{1,2}:\d{2})$/);
-            if (!khopGio) return;
-
-            e.preventDefault();
-            const gioChieu = khopGio[1];
-            const tenPhim = document.getElementById("tenPhim")?.textContent.trim() || "Phim đang chiếu";
-
-            const khungNgay = document.getElementById("dsNgay");
-            const ngayActive = khungNgay?.querySelector("[class*='hien'], [class*='active'], .selected");
-            const ngayChieu = ngayActive ? ngayActive.textContent.trim() : "16/11/2026";
-
-            const khoiRap = nutGio.parentElement?.parentElement;
-            const tieuDeRap = khoiRap?.querySelector("h3, h4, strong, [class*='ten'], [class*='rap']");
-            const tenRap = tieuDeRap ? tieuDeRap.textContent.trim() : "Cinema Thủ Đức";
-
-            window.location.href = `booking.html?movie=${encodeURIComponent(tenPhim)}&cinema=${encodeURIComponent(tenRap)}&date=${encodeURIComponent(ngayChieu)}&time=${encodeURIComponent(gioChieu)}`;
-        });
-    }
 
     /* ================= TRANG 1: BOOKING.HTML ================= */
     function khoiTaoTrangChonGhe() {
@@ -515,7 +479,6 @@
     }
 
     document.addEventListener("DOMContentLoaded", () => {
-        khoiTaoChuyenTrangTuLichChieu();
         khoiTaoTrangChonGhe();
         khoiTaoTrangThanhToan();
         khoiTaoTrangVeDienTu();
