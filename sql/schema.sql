@@ -4,11 +4,11 @@
 -- MySQL / MariaDB
 -- ==========================================
 
-CREATE DATABASE IF NOT EXISTS cinema_management
+CREATE DATABASE IF NOT EXISTS cinema_management_dev
 CHARACTER SET utf8mb4
 COLLATE utf8mb4_unicode_ci;
 
-USE cinema_management;
+USE cinema_management_dev;
 
 
 -- ==========================================
@@ -29,11 +29,12 @@ CREATE TABLE IF NOT EXISTS Users (
 -- 2. MOVIES - QUẢN LÝ PHIM
 -- ==========================================
 
+
 CREATE TABLE IF NOT EXISTS Movies (
     movie_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     genre VARCHAR(100) NOT NULL,
-    duration_minutes SMALLINT UNSIGNED NOT NULL,
+    duration_minutes SMALLINT UNSIGNED NULL,
     age_rating VARCHAR(10) NULL,
     release_date DATE NULL,
     poster_url VARCHAR(500) NULL,
@@ -43,7 +44,14 @@ CREATE TABLE IF NOT EXISTS Movies (
         'coming_soon',
         'now_showing',
         'ended'
-    ) NOT NULL DEFAULT 'coming_soon'
+    ) NOT NULL DEFAULT 'coming_soon',
+
+    director VARCHAR(255) NULL,
+    actors TEXT NULL,
+    country VARCHAR(100) NULL,
+    language VARCHAR(100) NULL,
+    rating DECIMAL(3,1) NULL,
+    release_date_text VARCHAR(100) NULL
 ) ENGINE=InnoDB;
 
 
@@ -54,7 +62,8 @@ CREATE TABLE IF NOT EXISTS Movies (
 CREATE TABLE IF NOT EXISTS Cinemas (
     cinema_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(150) NOT NULL,
-    address VARCHAR(255) NOT NULL
+    address VARCHAR(255) NOT NULL,
+    cluster_name VARCHAR(100) NULL
 ) ENGINE=InnoDB;
 
 

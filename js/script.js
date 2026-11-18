@@ -379,12 +379,25 @@ function khoiTaoDanhSach() {
         htmlCum += '<option value="' + dsCum[i] + '">' + dsCum[i] + '</option>';
     }
     locCum.innerHTML = htmlCum;
-
+    
     let htmlNgay = '<option value="">Ngày chiếu</option>';
-    for (let i = 0; i < lichChieu.cacNgay.length; i++) {
-        htmlNgay += '<option value="' + lichChieu.cacNgay[i].so + '">' + lichChieu.cacNgay[i].nhan + '</option>';
+
+    const dsNgay = [...new Set(
+        dsSuatChieu
+            .filter(s => s.trangThai === "scheduled")
+            .map(s => s.ngayId)
+    )].sort();
+
+    for (const ngayId of dsNgay) {
+        const [nam, thang, ngay] = ngayId.split("-");
+
+        htmlNgay += '<option value="' + ngayId + '">' +
+            ngay + "/" + thang + "/" + nam +
+            '</option>';
     }
+
     locNgay.innerHTML = htmlNgay;
+
 
     function napDanhSachRap() {
         let html = '<option value="">Rạp</option>';
@@ -398,23 +411,47 @@ function khoiTaoDanhSach() {
 
     napDanhSachRap();
     locCum.addEventListener("change", napDanhSachRap);
-
+    
     function layDanhSachLoc() {
         return dsPhim.filter(function (p) {
-            if (p.trangThai != trangThai) return false;
-            if (tuKhoa != "" && boDau(p.ten).indexOf(tuKhoa) == -1) return false;
-            if (boLoc.loai != "" && p.theLoai != boLoc.loai) return false;
-            if (boLoc.rap != "" && p.rap.indexOf(Number(boLoc.rap)) == -1) return false;
-            if (boLoc.cum != "") {
-                const coCum = p.rap.some(function (r) {
-                    return timRap(r).cum == boLoc.cum;
+
+            if (p.trangThai !== trangThai) return false;
+
+            if (tuKhoa !== "" &&
+                boDau(p.ten).indexOf(tuKhoa) === -1)
+                return false;
+
+            if (boLoc.loai !== "" &&
+                p.theLoai !== boLoc.loai)
+                return false;
+
+            const coLocLichChieu =
+                boLoc.cum !== "" ||
+                boLoc.rap !== "" ||
+                boLoc.ngay !== "";
+
+            if (coLocLichChieu) {
+                const coSuatPhuHop = p.suatChieu.some(s => {
+
+                    return (
+                        (boLoc.cum === "" ||
+                            s.cum === boLoc.cum) &&
+
+                        (boLoc.rap === "" ||
+                            s.rapId === Number(boLoc.rap)) &&
+
+                        (boLoc.ngay === "" ||
+                            s.ngayId === boLoc.ngay)
+                    );
                 });
-                if (!coCum) return false;
+
+                if (!coSuatPhuHop) return false;
             }
-            if (boLoc.ngay != "" && p.ngayChieu.indexOf(Number(boLoc.ngay)) == -1) return false;
+
             return true;
         });
     }
+
 
     function veTrang() {
         const ds = layDanhSachLoc();
@@ -514,81 +551,140 @@ function khoiTaoChiTiet() {
         document.getElementById("lichChieu").scrollIntoView({behavior: "smooth"});
     });
 
+    
     const dsNgay = document.getElementById("dsNgay");
     const dsSuat = document.getElementById("dsSuat");
 
-    let htmlNgay = "";
-    for (let i = 0; i < lichChieu.cacNgay.length; i++) {
-        const phan = lichChieu.cacNgay[i].nhan.split(" ");
-        htmlNgay += '<button class="lich-chieu__ngay-nut" data-ngay="' + lichChieu.cacNgay[i].so + '">' +
-            '<span class="lich-chieu__thu">' + phan[0] + '</span>' +
-            '<span class="lich-chieu__so">' + phan[1] + '</span></button>';
+    const cacSuat = (phim.suatChieu || []).filter(s =>
+        s.trangThai === "scheduled"
+    );
+
+    // Tao danh sach ngay chieu
+    const cacNgay = [...new Set(
+        cacSuat.map(s => s.ngayId)
+    )].sort();
+
+    // Xu ly phim chua co lich chieu
+    if (phim.trangThai === "sap" || cacNgay.length === 0) {
+        dsNgay.innerHTML = "";
+
+        dsSuat.innerHTML =
+            '<p class="lich-chieu__thong-bao">' +
+            'Phim chưa có lịch chiếu.</p>';
+
+        return;
     }
-    dsNgay.innerHTML = htmlNgay;
+
+    // Hien thi cac nut ngay chieu
+    dsNgay.innerHTML = cacNgay.map(ngayId => {
+        const date = new Date(ngayId + "T12:00:00+07:00");
+
+        const thu = date.toLocaleDateString("vi-VN", {
+            weekday: "short",
+            timeZone: "Asia/Ho_Chi_Minh"
+        });
+
+        const [nam, thang, ngay] = ngayId.split("-");
+
+        return `
+            <button class="lich-chieu__ngay-nut"
+                    data-ngay="${ngayId}">
+                <span class="lich-chieu__thu">${thu}</span>
+                <span class="lich-chieu__so">
+                    ${ngay}/${thang}
+                </span>
+            </button>
+        `;
+    }).join("");
 
     const dsNut = dsNgay.querySelectorAll("button");
 
-    function veSuatChieu(ngay) {
-        for (let i = 0; i < dsNut.length; i++) {
-            dsNut[i].classList.toggle("lich-chieu__ngay-nut--chon", Number(dsNut[i].dataset.ngay) == ngay);
-        }
+    // Hien thi suat chieu theo ngay
+    function veSuatChieu(ngayId) {
 
-        if (phim.trangThai == "sap") {
-            dsSuat.innerHTML = '<p class="lich-chieu__thong-bao">Phim chưa có lịch chiếu.</p>';
-            return;
-        }
-        if (phim.ngayChieu.indexOf(ngay) == -1) {
-            dsSuat.innerHTML = '<p class="lich-chieu__thong-bao">Không có suất chiếu trong ngày này.</p>';
-            return;
-        }
-
-        const ngayDuocChon = lichChieu.cacNgay.find(function (n) {
-            return n.so == ngay;
+        dsNut.forEach(nut => {
+            nut.classList.toggle(
+                "lich-chieu__ngay-nut--chon",
+                nut.dataset.ngay === ngayId
+            );
         });
-        const ngayDayDu = ngayDuocChon.nhan.split(" ")[1] + "/2026";
+
+        const suatTrongNgay = cacSuat.filter(s =>
+            s.ngayId === ngayId
+        );
+
+        const rapIds = [...new Set(
+            suatTrongNgay.map(s => s.rapId)
+        )];
 
         let html = "";
-        for (let i = 0; i < phim.rap.length; i++) {
-            const rap = timRap(phim.rap[i]);
-            const suatCuaRap = lichChieu.suatTheoRap.find(function (s) {
-                return s.rap == rap.id;
-            });
-            const tenRapDayDu = rap.cum + ' - ' + rap.ten;
-            html += '<div class="lich-chieu__rap"><b class="lich-chieu__tieu-de">' + tenRapDayDu + '</b>';
-            for (let j = 0; j < suatCuaRap.suat.length; j++) {
-                html += '<div class="lich-chieu__suat"><span class="lich-chieu__dinh-dang">' + suatCuaRap.suat[j].dinhDang + '</span>';
-                for (let k = 0; k < suatCuaRap.suat[j].gio.length; k++) {
-                    const duongDanDatVe = "booking.html?movie=" + encodeURIComponent(phim.ten) +
-                        "&cinema=" + encodeURIComponent(tenRapDayDu) +
-                        "&date=" + encodeURIComponent(ngayDayDu) +
-                        "&time=" + encodeURIComponent(suatCuaRap.suat[j].gio[k]);
-                    html += '<a class="lich-chieu__gio" href="' + duongDanDatVe + '">' + suatCuaRap.suat[j].gio[k] + '</a>';
+
+        for (const rapId of rapIds) {
+            const rap = dsRap.find(r => r.id === rapId);
+
+            if (!rap) continue;
+
+            const suatCuaRap = suatTrongNgay.filter(s =>
+                s.rapId === rapId
+            );
+
+            const cacDinhDang = [...new Set(
+                suatCuaRap.map(s => s.dinhDang)
+            )];
+
+            html += `
+                <div class="lich-chieu__rap">
+                    <b class="lich-chieu__tieu-de">
+                        ${rap.cum} - ${rap.ten}
+                    </b>
+            `;
+
+            for (const dinhDang of cacDinhDang) {
+                html += `
+                    <div class="lich-chieu__suat">
+                        <span class="lich-chieu__dinh-dang">
+                            ${dinhDang}
+                        </span>
+                `;
+
+                const cacGio = suatCuaRap.filter(s =>
+                    s.dinhDang === dinhDang
+                );
+
+                for (const s of cacGio) {
+                    const duongDan =
+                        "booking.html?show_id=" + s.id;
+
+                    html += `
+                        <a class="lich-chieu__gio"
+                           href="${duongDan}"
+                           title="${s.tenPhong}">
+                            ${s.gio}
+                        </a>
+                    `;
                 }
-                html += '</div>';
+
+                html += "</div>";
             }
-            html += '</div>';
+
+            html += "</div>";
         }
-        dsSuat.innerHTML = html;
+
+        dsSuat.innerHTML = html ||
+            '<p class="lich-chieu__thong-bao">' +
+            'Không có suất chiếu trong ngày này.</p>';
     }
 
-    for (let i = 0; i < dsNut.length; i++) {
-        dsNut[i].addEventListener("click", function () {
-            const ngay = Number(dsNut[i].dataset.ngay);
-            if (phim.trangThai == "sap" || phim.ngayChieu.indexOf(ngay) == -1) {
-                veSuatChieu(ngay);
-                return;
-            }
-            const ngayDuocChon = lichChieu.cacNgay.find(function (n) {
-                return n.so == ngay;
-            });
-            const rapDau = timRap(phim.rap[0]);
-            location.href = "booking.html?movie=" + encodeURIComponent(phim.ten) +
-                "&cinema=" + encodeURIComponent(rapDau.cum + " - " + rapDau.ten) +
-                "&date=" + encodeURIComponent(ngayDuocChon.nhan.split(" ")[1] + "/2026");
+    // Khi nguoi dung chon ngay
+    dsNut.forEach(nut => {
+        nut.addEventListener("click", function () {
+            veSuatChieu(nut.dataset.ngay);
         });
-    }
+    });
 
-    veSuatChieu(phim.ngayChieu.length > 0 ? phim.ngayChieu[0] : lichChieu.cacNgay[0].so);
+    // Mac dinh hien thi ngay dau tien
+    veSuatChieu(cacNgay[0]);
+
 }
 
 function khoiTao() {
@@ -606,4 +702,18 @@ function khoiTao() {
     }
 }
 
-khoiTao();
+
+async function batDauUngDung() {
+    try {
+        await khoiTaoDuLieu();
+
+        khoiTao();
+
+    } catch (error) {
+        console.error("Loi khoi tao ung dung:", error);
+        alert("Không thể tải dữ liệu. Vui lòng thử lại!");
+    }
+}
+
+
+batDauUngDung();
