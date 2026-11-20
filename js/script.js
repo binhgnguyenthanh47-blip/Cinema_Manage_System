@@ -1,27 +1,32 @@
 const soPhimMotTrang = 8;
 
-function chuoiThoiLuong(p) {
-    return p.thoiLuong ? p.thoiLuong + " phút" : "Đang cập nhật";
+function boDau(chuoi) {
+    return String(chuoi || "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/đ/g, "d")
+        .replace(/Đ/g, "D")
+        .toLowerCase();
 }
 
-function boDau(chuoi) {
-    return chuoi.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/đ/g, "d").replace(/Đ/g, "D").toLowerCase();
+function chuoiThoiLuong(p) {
+    return p && p.thoiLuong ? p.thoiLuong + " phút" : "Đang cập nhật";
 }
 
 function layThamSo(ten) {
     return new URLSearchParams(location.search).get(ten);
 }
 
-function timRap(idRap) {
+function timRap(id) {
     return dsRap.find(function (r) {
-        return r.id == idRap;
-    });
+        return Number(r.id) === Number(id);
+    }) || { id: id, ten: "Rạp " + id, cum: "Cụm rạp" };
 }
 
 function layDanhSachCum() {
-    let dsCum = [];
+    const dsCum = [];
     for (let i = 0; i < dsRap.length; i++) {
-        if (dsCum.indexOf(dsRap[i].cum) == -1) {
+        if (dsRap[i].cum && dsCum.indexOf(dsRap[i].cum) === -1) {
             dsCum.push(dsRap[i].cum);
         }
     }
@@ -59,6 +64,7 @@ function taoThePhim(p) {
 }
 
 function veLuoiPhim(ds, luoi) {
+    if (!luoi) return;
     if (ds.length == 0) {
         luoi.innerHTML = '<div class="luoi-phim__trong">Không có phim phù hợp.</div>';
         return;
@@ -602,20 +608,30 @@ function khoiTaoChiTiet() {
         });
     }
 
-    veSuatChieu(phim.ngayChieu.length > 0 ? phim.ngayChieu[0] : lichChieu.cacNgay[0].so);
+    if (lichChieu.cacNgay.length > 0) {
+        veSuatChieu(lichChieu.cacNgay[0].so);
+    }
 }
 
-function khoiTao() {
-    khoiTaoTaiKhoan();
-    khoiTaoTimKiem();
+async function khoiTao() {
+    if (location.protocol !== "file:" && typeof khoiTaoDuLieu === "function") {
+        try {
+            await khoiTaoDuLieu();
+        } catch (err) {
+            console.warn("Khong ket noi duoc API, su dung du lieu mac dinh:", err);
+        }
+    }
 
-    if (document.getElementById("banner")) {
+    khoiTaoTimKiem();
+    khoiTaoTaiKhoan();
+
+    if (document.getElementById("dsAnhBanner")) {
         khoiTaoTrangChu();
     }
-    if (document.getElementById("boLoc")) {
+    if (document.getElementById("phanTrang")) {
         khoiTaoDanhSach();
     }
-    if (document.getElementById("lichChieu")) {
+    if (document.getElementById("posterPhim")) {
         khoiTaoChiTiet();
     }
 }

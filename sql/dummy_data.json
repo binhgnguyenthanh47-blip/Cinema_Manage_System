@@ -1,0 +1,620 @@
+{
+  "movies": [
+    {
+      "movie_id": 4,
+      "title": "Tee Yod – Quỷ Ăn Tạng",
+      "genre": "Kinh di",
+      "duration_minutes": 121,
+      "age_rating": "T18",
+      "release_date": "2023-10-26",
+      "poster_url": "assets/posters/tee-yod-1.jpg",
+      "trailer_url": null,
+      "description": "Gia dinh Yak doi mat voi the luc ta ac.",
+      "status": "now_showing"
+    },
+    {
+      "movie_id": 5,
+      "title": "Tee Yod 2 – Quỷ Ăn Tạng 2",
+      "genre": "Kinh di",
+      "duration_minutes": 112,
+      "age_rating": "T18",
+      "release_date": "2024-10-10",
+      "poster_url": "assets/posters/tee-yod-2.jpg",
+      "trailer_url": null,
+      "description": "Yak quyet tam san lung hon ma de tra thu.",
+      "status": "now_showing"
+    },
+    {
+      "movie_id": 6,
+      "title": "Tee Yod 3 – Quỷ Ăn Tạng 3",
+      "genre": "Kinh di",
+      "duration_minutes": 104,
+      "age_rating": "T18",
+      "release_date": "2025-10-01",
+      "poster_url": "assets/posters/tee-yod-3.jpg",
+      "trailer_url": null,
+      "description": "Yak doi dau voi nhung the luc tam linh moi.",
+      "status": "now_showing"
+    },
+    {
+      "movie_id": 7,
+      "title": "Tee Yod 4 – Quỷ Ăn Tạng 4",
+      "genre": "Kinh di",
+      "duration_minutes": 111,
+      "age_rating": "T18",
+      "release_date": "2026-01-01",
+      "poster_url": "assets/posters/tee-yod-4.jpg",
+      "trailer_url": null,
+      "description": "Yak tim hieu bi an cua Ho Tinh.",
+      "status": "coming_soon"
+    },
+    {
+      "movie_id": 8,
+      "title": "Avatar – Thế Thần",
+      "genre": "Khoa hoc vien tuong",
+      "duration_minutes": 162,
+      "age_rating": "T13",
+      "release_date": "2009-12-18",
+      "poster_url": "assets/posters/avatar-1.jpg",
+      "trailer_url": null,
+      "description": "Jake Sully kham pha hanh tinh Pandora.",
+      "status": "now_showing"
+    },
+    {
+      "movie_id": 9,
+      "title": "Avatar: Dòng Chảy Của Nước",
+      "genre": "Khoa hoc vien tuong",
+      "duration_minutes": 192,
+      "age_rating": "T13",
+      "release_date": "2022-12-16",
+      "poster_url": "assets/posters/avatar-2.jpg",
+      "trailer_url": null,
+      "description": "Gia dinh Jake Sully kham pha dai duong Pandora.",
+      "status": "now_showing"
+    },
+    {
+      "movie_id": 10,
+      "title": "Avatar: Lửa Và Tro Tàn",
+      "genre": "Khoa hoc vien tuong",
+      "duration_minutes": 195,
+      "age_rating": "T13",
+      "release_date": "2025-12-19",
+      "poster_url": "assets/posters/avatar-3.jpg",
+      "trailer_url": null,
+      "description": "Gia dinh Sully doi mat voi toc Mangkwan.",
+      "status": "now_showing"
+    },
+    {
+      "movie_id": 11,
+      "title": "Lật Mặt",
+      "genre": "Hanh dong, hai",
+      "duration_minutes": 100,
+      "age_rating": "T13",
+      "release_date": "2015-05-15",
+      "poster_url": "assets/posters/lat-mat-1.jpg",
+      "trailer_url": null,
+      "description": "Hanh trinh truy duoi va vu oan.",
+      "status": "now_showing"
+    },
+    {
+      "movie_id": 12,
+      "title": "Lật Mặt 2: Phim Trường",
+      "genre": "Hanh dong, hai",
+      "duration_minutes": 100,
+      "age_rating": "T13",
+      "release_date": "2016-04-01",
+      "poster_url": "assets/posters/lat-mat-2.jpg",
+      "trailer_url": null,
+      "description": "Cau chuyen ve nhung nguoi dong the.",
+      "status": "now_showing"
+    },
+    {
+      "movie_id": 13,
+      "title": "Lật Mặt 3: Ba Chàng Khuyết",
+      "genre": "Hai, tam ly",
+      "duration_minutes": 100,
+      "age_rating": "T13",
+      "release_date": "2018-04-20",
+      "poster_url": "assets/posters/lat-mat-3.jpg",
+      "trailer_url": null,
+      "description": "Ba nguoi ban tim lai nguoi me.",
+      "status": "now_showing"
+    },
+    {
+      "movie_id": 14,
+      "title": "Lật Mặt 4: Nhà Có Khách",
+      "genre": "Kinh di, hai",
+      "duration_minutes": 100,
+      "age_rating": "T16",
+      "release_date": "2019-04-12",
+      "poster_url": "assets/posters/lat-mat-4.jpg",
+      "trailer_url": null,
+      "description": "Nhung bi an trong ngoi nha o que.",
+      "status": "now_showing"
+    },
+    {
+      "movie_id": 15,
+      "title": "Lật Mặt 5: 48H",
+      "genre": "Hanh dong",
+      "duration_minutes": 100,
+      "age_rating": "T16",
+      "release_date": "2021-04-16",
+      "poster_url": "assets/posters/lat-mat-5.jpg",
+      "trailer_url": null,
+      "description": "Nguoi cha bao ve gia dinh khoi toi pham.",
+      "status": "now_showing"
+    },
+    {
+      "movie_id": 16,
+      "title": "Lật Mặt 6: Tấm Vé Định Mệnh",
+      "genre": "Tam ly, giat gan",
+      "duration_minutes": 100,
+      "age_rating": "T16",
+      "release_date": "2023-04-28",
+      "poster_url": "assets/posters/lat-mat-6.jpg",
+      "trailer_url": null,
+      "description": "Tam ve so va bi mat tinh ban.",
+      "status": "now_showing"
+    },
+    {
+      "movie_id": 17,
+      "title": "Lật Mặt 7: Một Điều Ước",
+      "genre": "Tinh cam, gia dinh",
+      "duration_minutes": 100,
+      "age_rating": "P",
+      "release_date": "2024-04-26",
+      "poster_url": "assets/posters/lat-mat-7.jpg",
+      "trailer_url": null,
+      "description": "Cau chuyen cam dong ve tinh mau tu.",
+      "status": "now_showing"
+    },
+    {
+      "movie_id": 18,
+      "title": "Lật Mặt 8: Vòng Tay Nắng",
+      "genre": "Tinh cam, gia dinh",
+      "duration_minutes": 100,
+      "age_rating": "K",
+      "release_date": "2025-04-30",
+      "poster_url": "assets/posters/lat-mat-8.jpg",
+      "trailer_url": null,
+      "description": "Hanh trinh theo duoi uoc mo am nhac.",
+      "status": "now_showing"
+    }
+  ],
+  "cinemas": [
+    {
+      "cinema_id": 1,
+      "name": "Cinema Demo Quan 1",
+      "address": "Quan 1, TP. Ho Chi Minh"
+    },
+    {
+      "cinema_id": 2,
+      "name": "Cinema Demo Thu Duc",
+      "address": "TP. Thu Duc, TP. Ho Chi Minh"
+    }
+  ],
+  "cinema_halls": [
+    {
+      "hall_id": 1,
+      "cinema_id": 1,
+      "hall_name": "Phong 01"
+    },
+    {
+      "hall_id": 2,
+      "cinema_id": 1,
+      "hall_name": "Phong 02"
+    },
+    {
+      "hall_id": 3,
+      "cinema_id": 2,
+      "hall_name": "Phong 01"
+    }
+  ],
+  "shows": [
+    {
+      "show_id": 1,
+      "movie_id": 4,
+      "hall_id": 1,
+      "start_time": "2026-11-10 09:00:00",
+      "end_time": "2026-11-10 11:01:00",
+      "base_price": 65000,
+      "status": "scheduled"
+    },
+    {
+      "show_id": 2,
+      "movie_id": 11,
+      "hall_id": 1,
+      "start_time": "2026-11-10 14:00:00",
+      "end_time": "2026-11-10 15:40:00",
+      "base_price": 75000,
+      "status": "scheduled"
+    },
+    {
+      "show_id": 3,
+      "movie_id": 18,
+      "hall_id": 1,
+      "start_time": "2026-11-10 19:00:00",
+      "end_time": "2026-11-10 20:40:00",
+      "base_price": 90000,
+      "status": "scheduled"
+    },
+    {
+      "show_id": 4,
+      "movie_id": 10,
+      "hall_id": 2,
+      "start_time": "2026-11-10 09:00:00",
+      "end_time": "2026-11-10 12:15:00",
+      "base_price": 65000,
+      "status": "scheduled"
+    },
+    {
+      "show_id": 5,
+      "movie_id": 17,
+      "hall_id": 2,
+      "start_time": "2026-11-10 14:00:00",
+      "end_time": "2026-11-10 15:40:00",
+      "base_price": 75000,
+      "status": "scheduled"
+    },
+    {
+      "show_id": 6,
+      "movie_id": 9,
+      "hall_id": 2,
+      "start_time": "2026-11-10 19:00:00",
+      "end_time": "2026-11-10 22:12:00",
+      "base_price": 90000,
+      "status": "scheduled"
+    },
+    {
+      "show_id": 7,
+      "movie_id": 16,
+      "hall_id": 3,
+      "start_time": "2026-11-10 09:00:00",
+      "end_time": "2026-11-10 10:40:00",
+      "base_price": 65000,
+      "status": "scheduled"
+    },
+    {
+      "show_id": 8,
+      "movie_id": 8,
+      "hall_id": 3,
+      "start_time": "2026-11-10 14:00:00",
+      "end_time": "2026-11-10 16:42:00",
+      "base_price": 75000,
+      "status": "scheduled"
+    },
+    {
+      "show_id": 9,
+      "movie_id": 15,
+      "hall_id": 3,
+      "start_time": "2026-11-10 19:00:00",
+      "end_time": "2026-11-10 20:40:00",
+      "base_price": 90000,
+      "status": "scheduled"
+    },
+    {
+      "show_id": 10,
+      "movie_id": 7,
+      "hall_id": 1,
+      "start_time": "2026-11-11 09:00:00",
+      "end_time": "2026-11-11 10:51:00",
+      "base_price": 65000,
+      "status": "scheduled"
+    },
+    {
+      "show_id": 11,
+      "movie_id": 14,
+      "hall_id": 1,
+      "start_time": "2026-11-11 14:00:00",
+      "end_time": "2026-11-11 15:40:00",
+      "base_price": 75000,
+      "status": "scheduled"
+    },
+    {
+      "show_id": 12,
+      "movie_id": 6,
+      "hall_id": 1,
+      "start_time": "2026-11-11 19:00:00",
+      "end_time": "2026-11-11 20:44:00",
+      "base_price": 90000,
+      "status": "scheduled"
+    },
+    {
+      "show_id": 13,
+      "movie_id": 13,
+      "hall_id": 2,
+      "start_time": "2026-11-11 09:00:00",
+      "end_time": "2026-11-11 10:40:00",
+      "base_price": 65000,
+      "status": "scheduled"
+    },
+    {
+      "show_id": 14,
+      "movie_id": 5,
+      "hall_id": 2,
+      "start_time": "2026-11-11 14:00:00",
+      "end_time": "2026-11-11 15:52:00",
+      "base_price": 75000,
+      "status": "scheduled"
+    },
+    {
+      "show_id": 15,
+      "movie_id": 12,
+      "hall_id": 2,
+      "start_time": "2026-11-11 19:00:00",
+      "end_time": "2026-11-11 20:40:00",
+      "base_price": 90000,
+      "status": "scheduled"
+    },
+    {
+      "show_id": 16,
+      "movie_id": 4,
+      "hall_id": 3,
+      "start_time": "2026-11-11 09:00:00",
+      "end_time": "2026-11-11 11:01:00",
+      "base_price": 65000,
+      "status": "scheduled"
+    },
+    {
+      "show_id": 17,
+      "movie_id": 11,
+      "hall_id": 3,
+      "start_time": "2026-11-11 14:00:00",
+      "end_time": "2026-11-11 15:40:00",
+      "base_price": 75000,
+      "status": "scheduled"
+    },
+    {
+      "show_id": 18,
+      "movie_id": 18,
+      "hall_id": 3,
+      "start_time": "2026-11-11 19:00:00",
+      "end_time": "2026-11-11 20:40:00",
+      "base_price": 90000,
+      "status": "scheduled"
+    },
+    {
+      "show_id": 19,
+      "movie_id": 10,
+      "hall_id": 1,
+      "start_time": "2026-11-12 09:00:00",
+      "end_time": "2026-11-12 12:15:00",
+      "base_price": 65000,
+      "status": "scheduled"
+    },
+    {
+      "show_id": 20,
+      "movie_id": 17,
+      "hall_id": 1,
+      "start_time": "2026-11-12 14:00:00",
+      "end_time": "2026-11-12 15:40:00",
+      "base_price": 75000,
+      "status": "scheduled"
+    },
+    {
+      "show_id": 21,
+      "movie_id": 9,
+      "hall_id": 1,
+      "start_time": "2026-11-12 19:00:00",
+      "end_time": "2026-11-12 22:12:00",
+      "base_price": 90000,
+      "status": "scheduled"
+    },
+    {
+      "show_id": 22,
+      "movie_id": 16,
+      "hall_id": 2,
+      "start_time": "2026-11-12 09:00:00",
+      "end_time": "2026-11-12 10:40:00",
+      "base_price": 65000,
+      "status": "scheduled"
+    },
+    {
+      "show_id": 23,
+      "movie_id": 8,
+      "hall_id": 2,
+      "start_time": "2026-11-12 14:00:00",
+      "end_time": "2026-11-12 16:42:00",
+      "base_price": 75000,
+      "status": "scheduled"
+    },
+    {
+      "show_id": 24,
+      "movie_id": 15,
+      "hall_id": 2,
+      "start_time": "2026-11-12 19:00:00",
+      "end_time": "2026-11-12 20:40:00",
+      "base_price": 90000,
+      "status": "scheduled"
+    },
+    {
+      "show_id": 25,
+      "movie_id": 7,
+      "hall_id": 3,
+      "start_time": "2026-11-12 09:00:00",
+      "end_time": "2026-11-12 10:51:00",
+      "base_price": 65000,
+      "status": "scheduled"
+    },
+    {
+      "show_id": 26,
+      "movie_id": 14,
+      "hall_id": 3,
+      "start_time": "2026-11-12 14:00:00",
+      "end_time": "2026-11-12 15:40:00",
+      "base_price": 75000,
+      "status": "scheduled"
+    },
+    {
+      "show_id": 27,
+      "movie_id": 6,
+      "hall_id": 3,
+      "start_time": "2026-11-12 19:00:00",
+      "end_time": "2026-11-12 20:44:00",
+      "base_price": 90000,
+      "status": "scheduled"
+    },
+    {
+      "show_id": 28,
+      "movie_id": 13,
+      "hall_id": 1,
+      "start_time": "2026-11-13 09:00:00",
+      "end_time": "2026-11-13 10:40:00",
+      "base_price": 65000,
+      "status": "scheduled"
+    },
+    {
+      "show_id": 29,
+      "movie_id": 5,
+      "hall_id": 1,
+      "start_time": "2026-11-13 14:00:00",
+      "end_time": "2026-11-13 15:52:00",
+      "base_price": 75000,
+      "status": "scheduled"
+    },
+    {
+      "show_id": 30,
+      "movie_id": 12,
+      "hall_id": 1,
+      "start_time": "2026-11-13 19:00:00",
+      "end_time": "2026-11-13 20:40:00",
+      "base_price": 90000,
+      "status": "scheduled"
+    },
+    {
+      "show_id": 31,
+      "movie_id": 4,
+      "hall_id": 2,
+      "start_time": "2026-11-13 09:00:00",
+      "end_time": "2026-11-13 11:01:00",
+      "base_price": 65000,
+      "status": "scheduled"
+    },
+    {
+      "show_id": 32,
+      "movie_id": 11,
+      "hall_id": 2,
+      "start_time": "2026-11-13 14:00:00",
+      "end_time": "2026-11-13 15:40:00",
+      "base_price": 75000,
+      "status": "scheduled"
+    },
+    {
+      "show_id": 33,
+      "movie_id": 18,
+      "hall_id": 2,
+      "start_time": "2026-11-13 19:00:00",
+      "end_time": "2026-11-13 20:40:00",
+      "base_price": 90000,
+      "status": "scheduled"
+    },
+    {
+      "show_id": 34,
+      "movie_id": 10,
+      "hall_id": 3,
+      "start_time": "2026-11-13 09:00:00",
+      "end_time": "2026-11-13 12:15:00",
+      "base_price": 65000,
+      "status": "scheduled"
+    },
+    {
+      "show_id": 35,
+      "movie_id": 17,
+      "hall_id": 3,
+      "start_time": "2026-11-13 14:00:00",
+      "end_time": "2026-11-13 15:40:00",
+      "base_price": 75000,
+      "status": "scheduled"
+    },
+    {
+      "show_id": 36,
+      "movie_id": 9,
+      "hall_id": 3,
+      "start_time": "2026-11-13 19:00:00",
+      "end_time": "2026-11-13 22:12:00",
+      "base_price": 90000,
+      "status": "scheduled"
+    },
+    {
+      "show_id": 37,
+      "movie_id": 16,
+      "hall_id": 1,
+      "start_time": "2026-11-14 09:00:00",
+      "end_time": "2026-11-14 10:40:00",
+      "base_price": 65000,
+      "status": "scheduled"
+    },
+    {
+      "show_id": 38,
+      "movie_id": 8,
+      "hall_id": 1,
+      "start_time": "2026-11-14 14:00:00",
+      "end_time": "2026-11-14 16:42:00",
+      "base_price": 75000,
+      "status": "scheduled"
+    },
+    {
+      "show_id": 39,
+      "movie_id": 15,
+      "hall_id": 1,
+      "start_time": "2026-11-14 19:00:00",
+      "end_time": "2026-11-14 20:40:00",
+      "base_price": 90000,
+      "status": "scheduled"
+    },
+    {
+      "show_id": 40,
+      "movie_id": 7,
+      "hall_id": 2,
+      "start_time": "2026-11-14 09:00:00",
+      "end_time": "2026-11-14 10:51:00",
+      "base_price": 65000,
+      "status": "scheduled"
+    },
+    {
+      "show_id": 41,
+      "movie_id": 14,
+      "hall_id": 2,
+      "start_time": "2026-11-14 14:00:00",
+      "end_time": "2026-11-14 15:40:00",
+      "base_price": 75000,
+      "status": "scheduled"
+    },
+    {
+      "show_id": 42,
+      "movie_id": 6,
+      "hall_id": 2,
+      "start_time": "2026-11-14 19:00:00",
+      "end_time": "2026-11-14 20:44:00",
+      "base_price": 90000,
+      "status": "scheduled"
+    },
+    {
+      "show_id": 43,
+      "movie_id": 13,
+      "hall_id": 3,
+      "start_time": "2026-11-14 09:00:00",
+      "end_time": "2026-11-14 10:40:00",
+      "base_price": 65000,
+      "status": "scheduled"
+    },
+    {
+      "show_id": 44,
+      "movie_id": 5,
+      "hall_id": 3,
+      "start_time": "2026-11-14 14:00:00",
+      "end_time": "2026-11-14 15:52:00",
+      "base_price": 75000,
+      "status": "scheduled"
+    },
+    {
+      "show_id": 45,
+      "movie_id": 12,
+      "hall_id": 3,
+      "start_time": "2026-11-14 19:00:00",
+      "end_time": "2026-11-14 20:40:00",
+      "base_price": 90000,
+      "status": "scheduled"
+    }
+  ]
+}

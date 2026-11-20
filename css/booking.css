@@ -43,6 +43,7 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
+    min-width: 0;
 }
 
 .chon-suat-nhanh__nhan {
@@ -61,7 +62,7 @@
 
 .dat-ve {
     display: grid;
-    grid-template-columns: 1fr 360px;
+    grid-template-columns: minmax(0, 1fr) 360px;
     gap: 24px;
     align-items: start;
     margin-bottom: 40px;
@@ -75,6 +76,8 @@
     border-radius: 12px;
     padding: 24px;
     color: #f3f4f6;
+    min-width: 0;
+    box-sizing: border-box;
 }
 
 .man-hinh {
@@ -102,6 +105,7 @@
     flex-direction: column;
     gap: 10px;
     align-items: center;
+    width: 100%;
     overflow-x: auto;
     padding-bottom: 8px;
 }
@@ -109,11 +113,13 @@
 .hang-ghe {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 8px;
 }
 
 .hang-ghe__nhan {
     width: 24px;
+    flex-shrink: 0;
     font-weight: 700;
     color: #9ca3af;
     text-align: center;
@@ -123,12 +129,14 @@
 .ghe {
     width: 36px;
     height: 34px;
+    flex-shrink: 0;
     border-radius: 6px 6px 2px 2px;
     border: 1px solid #3f4451;
     background: #272a34;
     color: #f3f4f6;
     font-size: 11px;
     font-weight: 600;
+    padding: 0;
     cursor: pointer;
     transition: transform 0.15s ease, background-color 0.15s ease;
 }
@@ -188,6 +196,7 @@
     border-radius: 4px;
     display: inline-block;
     border: 1px solid #3f4451;
+    flex-shrink: 0;
 }
 
 .ghe-mau--thuong { background: #272a34; }
@@ -273,6 +282,7 @@
     align-items: center;
     flex-wrap: wrap;
     gap: 12px;
+    margin-bottom: 16px;
 }
 
 .dem-nguoc {
@@ -288,6 +298,7 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
+    min-width: 0;
 }
 
 .khoi-form__tieu-de {
@@ -336,6 +347,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 10px;
     padding: 12px 14px;
     border-radius: 8px;
     background: #121318;
@@ -344,7 +356,6 @@
 
 .phuong-thuc {
     justify-content: flex-start;
-    gap: 10px;
     cursor: pointer;
 }
 
@@ -363,6 +374,7 @@
     display: flex;
     align-items: center;
     gap: 10px;
+    flex-shrink: 0;
 }
 
 .nut-dem {
@@ -488,13 +500,22 @@
     padding: 10px;
     border-radius: 10px;
     color: #111827;
+    flex-shrink: 0;
+}
+
+.ve-dien-tu__qr-box {
+    width: 140px;
+    height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .ve-dien-tu__qr span {
     display: block;
     font-size: 11px;
     font-weight: 700;
-    margin-top: 4px;
+    margin-top: 6px;
 }
 
 .ve-dien-tu__nut-bam {
@@ -504,13 +525,66 @@
     margin-top: 24px;
 }
 
+/* Danh sách lịch sử vé */
+.lich-su-ve {
+    margin-top: 36px;
+    background: #1b1d24;
+    border: 1px solid #2e323d;
+    border-radius: 12px;
+    padding: 20px;
+    color: #f3f4f6;
+}
+
+.lich-su-ve__tieu-de {
+    margin: 0 0 14px;
+    font-size: 17px;
+    color: #ffffff;
+}
+
+.lich-su-ve__ds {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.lich-su-ve__item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: 8px;
+    background: #121318;
+    border: 1px solid #2e323d;
+    cursor: pointer;
+    transition: border-color 0.15s ease;
+}
+
+.lich-su-ve__item:hover,
+.lich-su-ve__item--dang-xem {
+    border-color: #e50914;
+}
+
+.lich-su-ve__phim {
+    font-weight: 600;
+    font-size: 14px;
+    color: #ffffff;
+}
+
+.lich-su-ve__phu {
+    font-size: 12px;
+    color: #9ca3af;
+    margin-top: 3px;
+}
+
+/* Responsive Tablet & Mobile (fix BUG-13 trên viewport 375px) */
 @media (max-width: 860px) {
     .chon-suat-nhanh {
         grid-template-columns: repeat(2, 1fr);
         gap: 16px;
     }
     .dat-ve {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
     }
     .nhom-nhap-hai-cot,
     .ve-dien-tu__luoi {
@@ -523,15 +597,49 @@
     }
 }
 
-@media (max-width: 520px) {
+@media (max-width: 480px) {
+    .tien-trinh {
+        gap: 6px;
+    }
+    .tien-trinh__buoc {
+        padding: 8px 6px;
+        font-size: 12px;
+    }
     .chon-suat-nhanh {
         grid-template-columns: 1fr;
-        gap: 14px;
+        gap: 12px;
+        padding: 14px;
+    }
+    .dat-ve__phong-chieu,
+    .the-tom-tat,
+    .khoi-form {
+        padding: 14px 10px;
+    }
+    .hang-ghe {
+        gap: 3px;
+    }
+    .hang-ghe__nhan {
+        width: 16px;
+        font-size: 11px;
+    }
+    .ghe {
+        width: 23px;
+        height: 24px;
+        font-size: 9px;
+        border-radius: 4px 4px 2px 2px;
+    }
+    .ghe--doi {
+        width: 49px;
+        font-size: 8px;
+    }
+    .chu-thich-ghe {
+        gap: 10px;
+        font-size: 12px;
     }
 }
 
 @media print {
-    .dau-trang, .chan-trang, .tien-trinh, .ve-dien-tu__nut-bam {
+    .dau-trang, .chan-trang, .tien-trinh, .ve-dien-tu__nut-bam, .lich-su-ve {
         display: none !important;
     }
     body {

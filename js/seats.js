@@ -12,44 +12,51 @@
 
     const DU_LIEU_HE_THONG_MAC_DINH = {
         phim: [
-            "Spider-Man: Du Hành Vũ Trụ Nhện",
+            "Spider-Man: Brand New Day",
             "The Odyssey",
-            "Doraemon: Nobita Và Bản Giao Hưởng Địa Cầu",
-            "Ám Ảnh Kinh Hoàng",
-            "Hồ Nuốt Người"
+            "Toy Story 5",
+            "The Super Mario Galaxy Movie",
+            "Resident Evil",
+            "Moana",
+            "Minions & Monsters",
+            "The Dog Stars",
+            "Mortal Kombat II"
         ],
         rap: [
             "Cụm rạp A - Rạp 1",
-            "Cụm rạp A - Rạp 2",
-            "Cụm rạp B - Rạp 1",
-            "Cụm rạp B - Rạp 2"
+            "Cụm rạp B - Rạp 2",
+            "Cụm rạp A - Rạp 3",
+            "Cụm rạp B - Rạp 4"
         ],
         ngay: [
-            "16/11/2026",
-            "17/11/2026",
-            "18/11/2026",
-            "19/11/2026"
+            "02/11/2026",
+            "03/11/2026",
+            "04/11/2026",
+            "05/11/2026",
+            "06/11/2026",
+            "07/11/2026",
+            "08/11/2026"
         ],
         suatTheoRap: {
             "Cụm rạp A - Rạp 1": [
                 { gio: "09:30", phong: "Phòng 01" },
-                { gio: "14:30", phong: "Phòng 02" },
-                { gio: "19:30", phong: "Phòng 03" }
-            ],
-            "Cụm rạp A - Rạp 2": [
-                { gio: "10:15", phong: "Phòng 02" },
-                { gio: "15:00", phong: "Phòng 04" },
-                { gio: "20:15", phong: "Phòng 01" }
-            ],
-            "Cụm rạp B - Rạp 1": [
-                { gio: "09:45", phong: "Phòng 03" },
-                { gio: "14:30", phong: "Phòng 01" },
-                { gio: "19:00", phong: "Phòng 02" }
+                { gio: "13:00", phong: "Phòng 02" },
+                { gio: "19:45", phong: "Phòng 03" }
             ],
             "Cụm rạp B - Rạp 2": [
-                { gio: "11:00", phong: "Phòng 04" },
-                { gio: "14:30", phong: "Phòng 02" },
-                { gio: "21:30", phong: "Phòng 03" }
+                { gio: "10:00", phong: "Phòng 02" },
+                { gio: "14:30", phong: "Phòng 04" },
+                { gio: "20:15", phong: "Phòng 01" }
+            ],
+            "Cụm rạp A - Rạp 3": [
+                { gio: "09:00", phong: "Phòng 03" },
+                { gio: "15:00", phong: "Phòng 01" },
+                { gio: "18:30", phong: "Phòng 02" }
+            ],
+            "Cụm rạp B - Rạp 4": [
+                { gio: "10:30", phong: "Phòng 04" },
+                { gio: "13:45", phong: "Phòng 02" },
+                { gio: "19:00", phong: "Phòng 03" }
             ]
         }
     };
@@ -115,7 +122,7 @@
 
     function layTaiKhoanDangNhap() {
         const cacKeyUuTien = [
-            "taiKhoan", "nguoiDung", "nguoiDungHienTai", "taiKhoanHienTai",
+            "nguoiDangNhap", "taiKhoan", "nguoiDung", "nguoiDungHienTai", "taiKhoanHienTai",
             "userHienTai", "dangNhap", "khachHang", "currentUser",
             "user", "taiKhoanDangNhap", "loggedInUser", "loginUser", "auth"
         ];
@@ -182,6 +189,7 @@
             [];
 
         const nguonLich =
+            (typeof dsSuatChieu !== "undefined" && Array.isArray(dsSuatChieu) && dsSuatChieu) ||
             (typeof dsLichChieu !== "undefined" && Array.isArray(dsLichChieu) && dsLichChieu) ||
             (typeof lichChieu !== "undefined" && Array.isArray(lichChieu) && lichChieu) ||
             (typeof showtimes !== "undefined" && Array.isArray(showtimes) && showtimes) ||
@@ -194,24 +202,31 @@
             [];
 
         const tenPhimList = nguonPhim
+            .filter((p) => !p.trangThai || p.trangThai === "dang")
             .map((p) => (typeof p === "string" ? p : p.ten || p.tenPhim || p.title || p.name))
             .filter(Boolean);
 
         const tenRapTuLich = nguonLich
-            .map((l) => l.rap || l.tenRap || l.cumRap)
+            .map((l) => (l.cum && l.tenRap ? `${l.cum} - ${l.tenRap}` : l.rap || l.tenRap || l.cumRap))
             .filter(Boolean);
 
         const tenRapTuDs = nguonRap
-            .map((r) => (typeof r === "string" ? r : r.ten || r.tenRap || r.name))
+            .map((r) => (typeof r === "string" ? r : r.cum && r.ten ? `${r.cum} - ${r.ten}` : r.ten || r.tenRap || r.name))
             .filter(Boolean);
 
-        const dsRapChuan = Array.from(new Set([...tenRapTuLich, ...tenRapTuDs]));
+        const dsRapChuan = Array.from(new Set([...tenRapTuDs, ...tenRapTuLich]));
+
+        let dsNgayChuan = [...DU_LIEU_HE_THONG_MAC_DINH.ngay];
+        if (typeof lichChieu !== "undefined" && lichChieu && Array.isArray(lichChieu.cacNgay)) {
+            dsNgayChuan = lichChieu.cacNgay.map((n) => n.nhan.split(" ")[1] + "/2026");
+        }
 
         return {
             nguonPhim,
             nguonLich,
             phim: tenPhimList.length ? tenPhimList : DU_LIEU_HE_THONG_MAC_DINH.phim,
-            rap: dsRapChuan.length ? dsRapChuan : DU_LIEU_HE_THONG_MAC_DINH.rap
+            rap: dsRapChuan.length ? dsRapChuan : DU_LIEU_HE_THONG_MAC_DINH.rap,
+            ngay: dsNgayChuan
         };
     }
 
@@ -222,8 +237,8 @@
             const phimObj = heThong.nguonPhim.find((p) => (p.ten || p.tenPhim || p.title) === tenPhim);
             const loc = heThong.nguonLich.filter((l) => {
                 const lPhim = l.tenPhim || l.phim || "";
-                const lRap = l.rap || l.tenRap || l.cumRap || "";
-                const lNgay = chuanHoaNgay(l.ngay || l.ngayChieu || "");
+                const lRap = l.cum && l.tenRap ? `${l.cum} - ${l.tenRap}` : l.rap || l.tenRap || l.cumRap || "";
+                const lNgay = chuanHoaNgay(l.ngayId || l.ngay || l.ngayChieu || "");
                 const khopPhim = (!lPhim && !l.phimId) || lPhim === tenPhim || (phimObj && String(l.phimId) === String(phimObj.id));
                 const khopRap = !lRap || lRap === tenRap;
                 const khopNgay = !lNgay || lNgay === ngayChuan;
@@ -232,7 +247,7 @@
             if (loc.length > 0) {
                 return loc.map((l, idx) => ({
                     gio: l.gio || l.gioChieu || l.suat || "19:30",
-                    phong: l.phong || l.tenPhong || `Phòng 0${(idx % 4) + 1}`
+                    phong: l.tenPhong || l.phong || `Phòng 0${(idx % 4) + 1}`
                 }));
             }
         }
@@ -265,7 +280,7 @@
         if (tenPhimUrl || rapUrl || ngayUrl || gioUrl) {
             const tenPhim = (tenPhimUrl || heThong.phim[0]).trim();
             const rap = (rapUrl || heThong.rap[0]).trim();
-            const ngay = chuanHoaNgay(ngayUrl || DU_LIEU_HE_THONG_MAC_DINH.ngay[0]);
+            const ngay = chuanHoaNgay(ngayUrl || heThong.ngay[0]);
             const dsSuat = layDanhSachSuatTheoRap(tenPhim, rap, ngay);
             const suatKhop = dsSuat.find((s) => s.gio === gioUrl);
 
@@ -288,11 +303,11 @@
         }
 
         const rapMacDinh = heThong.rap[0];
-        const dsSuatMacDinh = layDanhSachSuatTheoRap(heThong.phim[0], rapMacDinh, DU_LIEU_HE_THONG_MAC_DINH.ngay[0]);
+        const dsSuatMacDinh = layDanhSachSuatTheoRap(heThong.phim[0], rapMacDinh, heThong.ngay[0]);
         const macDinh = {
             tenPhim: heThong.phim[0],
             rap: rapMacDinh,
-            ngay: DU_LIEU_HE_THONG_MAC_DINH.ngay[0],
+            ngay: heThong.ngay[0],
             gio: dsSuatMacDinh[0].gio,
             phong: dsSuatMacDinh[0].phong
         };
@@ -326,7 +341,6 @@
         localStorage.setItem(KEY_GHE_DA_DAT, JSON.stringify(tatCa));
     }
 
-    /* ================= TRANG 1: BOOKING.HTML ================= */
     function khoiTaoTrangChonGhe() {
         const khungSoDo = document.getElementById("soDoGhe");
         if (!khungSoDo) return;
@@ -373,7 +387,7 @@
             selectRap.value = suat.rap;
 
             suat.ngay = chuanHoaNgay(suat.ngay);
-            const dsNgay = [...DU_LIEU_HE_THONG_MAC_DINH.ngay];
+            const dsNgay = [...heThong.ngay];
             if (!dsNgay.includes(suat.ngay)) dsNgay.unshift(suat.ngay);
             selectNgay.innerHTML = dsNgay.map((ngay) => `<option value="${ngay}">${ngay}</option>`).join("");
             selectNgay.value = suat.ngay;
@@ -552,7 +566,6 @@
         });
     }
 
-    /* ================= TRANG 2: CHECKOUT.HTML ================= */
     function khoiTaoTrangThanhToan() {
         const nutThanhToan = document.getElementById("nutXacNhanThanhToan");
         if (!nutThanhToan) return;
@@ -762,7 +775,6 @@
         });
     }
 
-    /* ================= TRANG 3: E_TICKET.HTML ================= */
     function khoiTaoTrangVeDienTu() {
         const khungQr = document.getElementById("khungQrVe");
         if (!khungQr) return;
