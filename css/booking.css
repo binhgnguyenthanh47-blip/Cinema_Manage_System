@@ -1,4 +1,3 @@
-/* Thanh tiến trình 3 bước */
 .tien-trinh {
     display: flex;
     gap: 12px;
@@ -18,8 +17,8 @@
 }
 
 .tien-trinh__buoc--hien-tai {
-    background: var(--mau-chinh, #e50914);
-    border-color: var(--mau-chinh, #e50914);
+    background: var(--chinh, #4338CA);
+    border-color: var(--chinh, #4338CA);
     color: #ffffff;
 }
 
@@ -28,7 +27,6 @@
     color: #4ade80;
 }
 
-/* Khung chọn phim & suất chiếu trực tiếp */
 .chon-suat-nhanh {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -61,7 +59,6 @@
     box-sizing: border-box;
 }
 
-/* Bố cục 2 cột Đặt vé & Thanh toán */
 .dat-ve {
     display: grid;
     grid-template-columns: 1fr 360px;
@@ -80,7 +77,6 @@
     color: #f3f4f6;
 }
 
-/* Màn hình chiếu */
 .man-hinh {
     text-align: center;
     margin-bottom: 32px;
@@ -90,9 +86,9 @@
     height: 10px;
     width: 80%;
     margin: 0 auto 10px;
-    background: linear-gradient(90deg, transparent, #e50914, transparent);
+    background: linear-gradient(90deg, transparent, #4338CA, transparent);
     border-radius: 50% 50% 0 0;
-    box-shadow: 0 8px 24px rgba(229, 9, 20, 0.45);
+    box-shadow: 0 8px 24px rgba(99, 102, 241, 0.45);
 }
 
 .man-hinh__chu {
@@ -101,7 +97,6 @@
     color: #9ca3af;
 }
 
-/* Sơ đồ lưới ghế */
 .so-do-ghe {
     display: flex;
     flex-direction: column;
@@ -157,8 +152,8 @@
 }
 
 .ghe--dang-chon {
-    background: var(--mau-chinh, #e50914) !important;
-    border-color: var(--mau-chinh, #e50914) !important;
+    background: var(--chinh, #4338CA) !important;
+    border-color: var(--chinh, #4338CA) !important;
     color: #ffffff !important;
 }
 
@@ -169,7 +164,6 @@
     cursor: not-allowed;
 }
 
-/* Chú thích loại ghế */
 .chu-thich-ghe {
     display: flex;
     flex-wrap: wrap;
@@ -199,10 +193,9 @@
 .ghe-mau--thuong { background: #272a34; }
 .ghe-mau--vip { background: #31254a; border-color: #8b5cf6; }
 .ghe-mau--doi { background: #4a2237; border-color: #ec4899; }
-.ghe-mau--dang-chon { background: var(--mau-chinh, #e50914); border-color: var(--mau-chinh, #e50914); }
+.ghe-mau--dang-chon { background: var(--chinh, #4338CA); border-color: var(--chinh, #4338CA); }
 .ghe-mau--da-dat { background: #14151a; border-color: #23262f; }
 
-/* Thẻ tóm tắt bên phải */
 .the-tom-tat__tieu-de {
     font-size: 18px;
     margin: 0 0 16px;
@@ -261,21 +254,19 @@
     text-decoration: none;
 }
 
-.nut--phu {
+.the-tom-tat .nut--phu,
+.ma-giam-gia .nut--phu {
     background: #272a34;
     color: #f3f4f6;
     border: 1px solid #3f4451;
-    padding: 10px 16px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 600;
 }
 
-.nut--phu:hover {
+.the-tom-tat .nut--phu:hover,
+.ma-giam-gia .nut--phu:hover {
     background: #323643;
+    color: #ffffff;
 }
 
-/* Trang thanh toán */
 .thanh-toan-header {
     display: flex;
     justify-content: space-between;
@@ -396,7 +387,6 @@
     color: #4ade80;
 }
 
-/* Trang vé điện tử */
 .ve-dien-tu-khung {
     max-width: 720px;
     margin: 0 auto 48px;
@@ -412,7 +402,7 @@
 }
 
 .ve-dien-tu__dau {
-    background: linear-gradient(135deg, #e50914, #991b1b);
+    background: linear-gradient(135deg, #4338CA, #312e81);
     color: #ffffff;
     padding: 24px;
     display: flex;

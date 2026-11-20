@@ -28,6 +28,17 @@ function layDanhSachCum() {
     return dsCum;
 }
 
+function thayAnhLoi(anh) {
+    const khoi = document.createElement("div");
+    khoi.className = "anh-loi " + anh.className;
+    khoi.textContent = anh.alt;
+    anh.replaceWith(khoi);
+}
+
+function taoAnh(p, lop) {
+    return '<img' + (lop ? ' class="' + lop + '"' : '') + ' src="' + p.anh + '" alt="' + p.ten + '" onerror="thayAnhLoi(this)">';
+}
+
 function taoThePhim(p) {
     const lienKet = "chitiet.html?id=" + p.id;
     const chuNutDau = p.trangThai == "sap" ? "Chi tiết" : "Mua vé";
@@ -37,7 +48,7 @@ function taoThePhim(p) {
     }
     return '<div class="the-phim">' +
         '<div class="the-phim__poster">' +
-        '<a href="' + lienKet + '"><img src="' + p.anh + '" alt="' + p.ten + '"></a>' +
+        '<a href="' + lienKet + '">' + taoAnh(p, "") + '</a>' +
         '<span class="the-phim__nhan">' + p.doTuoi + '</span>' + diem +
         '<div class="the-phim__hanh-dong">' +
         '<a class="nut nut--chinh" href="' + lienKet + '#lichChieu">' + chuNutDau + '</a>' +
@@ -62,6 +73,7 @@ function veLuoiPhim(ds, luoi) {
 function khoiTaoTimKiem() {
     const oTim = document.getElementById("oTim");
     const goiY = document.getElementById("goiY");
+    if (!oTim || !goiY) return;
 
     oTim.addEventListener("input", function () {
         const tuKhoa = boDau(oTim.value.trim());
@@ -79,7 +91,7 @@ function khoiTaoTimKiem() {
             let html = "";
             for (let i = 0; i < ketQua.length; i++) {
                 html += '<a class="o-tim__muc" href="chitiet.html?id=' + ketQua[i].id + '">' +
-                    '<img class="o-tim__anh" src="' + ketQua[i].anh + '" alt="' + ketQua[i].ten + '">' +
+                    taoAnh(ketQua[i], "o-tim__anh") +
                     '<span><span class="o-tim__ten">' + ketQua[i].ten + '</span>' +
                     '<span class="o-tim__loai">' + ketQua[i].theLoai + '</span></span></a>';
             }
@@ -111,6 +123,7 @@ function layNguoiDangNhap() {
 
 function veTaiKhoan() {
     const khung = document.getElementById("taiKhoan");
+    if (!khung) return;
     const nguoi = layNguoiDangNhap();
     khung.innerHTML = "";
 
@@ -165,7 +178,8 @@ function moHopThoai(cheDo) {
 }
 
 function dongHopThoai() {
-    document.getElementById("hopThoai").classList.remove("hop-thoai--hien");
+    const hop = document.getElementById("hopThoai");
+    if (hop) hop.classList.remove("hop-thoai--hien");
 }
 
 function dangNhapThanhCong(nguoi) {
@@ -175,6 +189,8 @@ function dangNhapThanhCong(nguoi) {
 }
 
 function khoiTaoTaiKhoan() {
+    if (!document.getElementById("taiKhoan")) return;
+
     const hop = document.createElement("div");
     hop.className = "hop-thoai";
     hop.id = "hopThoai";
@@ -279,7 +295,7 @@ function khoiTaoTrangChu() {
     let htmlCham = "";
     for (let i = 0; i < phimNoiBat.length; i++) {
         htmlAnh += '<a class="banner__anh" href="chitiet.html?id=' + phimNoiBat[i].id + '">' +
-            '<img class="banner__poster" src="' + phimNoiBat[i].anh + '" alt="' + phimNoiBat[i].ten + '">' +
+            taoAnh(phimNoiBat[i], "banner__poster") +
             '<div class="banner__chu"><b class="banner__ten">' + phimNoiBat[i].ten + '</b>' +
             '<span class="banner__loai">' + phimNoiBat[i].theLoai + ' - ' + chuoiThoiLuong(phimNoiBat[i]) + '</span>' +
             '<span class="nut nut--chinh">Xem chi tiết</span></div></a>';
@@ -323,8 +339,10 @@ function khoiTaoTrangChu() {
         });
     }
 
-    hienAnh(0);
-    batDauTuDong();
+    if (phimNoiBat.length > 0) {
+        hienAnh(0);
+        batDauTuDong();
+    }
 
     function hienThiTheoTab(tt) {
         const ds = dsPhim.filter(function (p) {
@@ -356,7 +374,12 @@ function khoiTaoDanhSach() {
     const locNgay = document.getElementById("locNgay");
     const tuKhoa = boDau((layThamSo("tukhoa") || "").trim());
 
-    let trangThai = "dang";
+    let trangThai = layThamSo("tab") === "sap" ? "sap" : "dang";
+    if (trangThai === "sap") {
+        for (let i = 0; i < dsNutTab.length; i++) {
+            dsNutTab[i].classList.toggle("tab__nut--hien", dsNutTab[i].dataset.tt === "sap");
+        }
+    }
     let trangHienTai = 1;
     let boLoc = {loai: "", cum: "", rap: "", ngay: ""};
 
@@ -428,11 +451,11 @@ function khoiTaoDanhSach() {
             phanTrang.innerHTML = "";
             return;
         }
-        let html = '<button class="phan-trang__nut" data-trang="' + (trangHienTai - 1) + '">&lt;</button>';
+        let html = '<button class="phan-trang__nut" data-trang="' + (trangHienTai - 1) + '"><</button>';
         for (let i = 1; i <= tongTrang; i++) {
             html += '<button class="phan-trang__nut' + (i == trangHienTai ? ' phan-trang__nut--hien' : '') + '" data-trang="' + i + '">' + i + '</button>';
         }
-        html += '<button class="phan-trang__nut" data-trang="' + (trangHienTai + 1) + '">&gt;</button>';
+        html += '<button class="phan-trang__nut" data-trang="' + (trangHienTai + 1) + '">></button>';
         phanTrang.innerHTML = html;
 
         const dsNut = phanTrang.querySelectorAll("button");
@@ -484,7 +507,7 @@ function khoiTaoChiTiet() {
     }
 
     document.title = phim.ten;
-    document.getElementById("posterPhim").innerHTML = '<img src="' + phim.anh + '" alt="' + phim.ten + '">';
+    document.getElementById("posterPhim").innerHTML = taoAnh(phim, "");
     document.getElementById("tenPhim").textContent = phim.ten;
     document.getElementById("dongMot").innerHTML = '<span class="chi-tiet__the chi-tiet__the--tuoi">' + phim.doTuoi + '</span>' +
         '<span class="chi-tiet__the">' + phim.theLoai + '</span>' +
@@ -562,8 +585,8 @@ function khoiTaoChiTiet() {
                     const duongDanDatVe = "booking.html?movie=" + encodeURIComponent(phim.ten) +
                         "&cinema=" + encodeURIComponent(tenRapDayDu) +
                         "&date=" + encodeURIComponent(ngayDayDu) +
-                        "&time=" + encodeURIComponent(suatCuaRap.suat[j].gio[k]);
-                    html += '<a class="lich-chieu__gio" href="' + duongDanDatVe + '">' + suatCuaRap.suat[j].gio[k] + '</a>';
+                        "&time=" + encodeURIComponent(gio);
+                    html += '<a class="lich-chieu__gio" href="' + duongDanDatVe + '">' + gio + '</a>';
                 }
                 html += '</div>';
             }
@@ -575,18 +598,7 @@ function khoiTaoChiTiet() {
     for (let i = 0; i < dsNut.length; i++) {
         dsNut[i].addEventListener("click", function () {
             const ngay = Number(dsNut[i].dataset.ngay);
-            if (phim.trangThai == "sap" || phim.ngayChieu.indexOf(ngay) == -1) {
-                veSuatChieu(ngay);
-                return;
-            }
-            const ngayDuocChon = lichChieu.cacNgay.find(function (n) {
-                return n.so == ngay;
-            });
-            const ngayDat = ngayDuocChon.nhan.split(" ")[1] + "/2026";
-            const rapDau = timRap(phim.rap[0]);
-            location.href = "booking.html?movie=" + encodeURIComponent(phim.ten) +
-                "&cinema=" + encodeURIComponent(rapDau.cum + " - " + rapDau.ten) +
-                "&date=" + encodeURIComponent(ngayDuocChon.nhan.split(" ")[1] + "/2026");
+            veSuatChieu(ngay);
         });
     }
 
@@ -608,4 +620,8 @@ function khoiTao() {
     }
 }
 
-khoiTao();
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", khoiTao);
+} else {
+    khoiTao();
+}
