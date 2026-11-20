@@ -135,11 +135,6 @@ const lichChieu = {
     ]
 };
 
-
-/* =====================================
-   KET NOI API DANH SACH PHIM
-===================================== */
-
 async function taiDanhSachPhim() {
     try {
         const response = await fetch("/api/movies");
@@ -166,7 +161,6 @@ async function taiDanhSachPhim() {
     }
 }
 
-
 function chuyenDoiPhim(p) {
     return {
         id: Number(p.movie_id),
@@ -176,11 +170,9 @@ function chuyenDoiPhim(p) {
         thoiLuong: p.duration_minutes || "",
         doTuoi: p.age_rating || "",
         diem: p.rating ?? "Chưa có",
-
         trangThai: p.status === "now_showing"
             ? "dang"
             : "sap",
-
         daoDien: p.director || "Đang cập nhật",
         dienVien: p.actors || "Đang cập nhật",
         quocGia: p.country || "",
@@ -188,12 +180,10 @@ function chuyenDoiPhim(p) {
         khoiChieu: p.release_date_text || "",
         noiDung: p.description || "",
         trailer: p.trailer_url || "",
-
         rap: [],
         ngayChieu: []
     };
 }
-
 
 async function khoiTaoDuLieuPhim() {
     const movies = await taiDanhSachPhim();
@@ -203,11 +193,6 @@ async function khoiTaoDuLieuPhim() {
     console.log("Da dong bo phim tu database");
     console.log("Tong so phim:", dsPhim.length);
 }
-
-
-/* =====================================
-   KET NOI API DANH SACH RAP
-===================================== */
 
 async function taiDanhSachRap() {
     try {
@@ -234,11 +219,6 @@ async function taiDanhSachRap() {
         throw error;
     }
 }
-
-
-/* =====================================
-   KET NOI API LICH CHIEU
-===================================== */
 
 async function taiLichChieu() {
     try {
@@ -267,11 +247,6 @@ async function taiLichChieu() {
     }
 }
 
-
-/* =====================================
-   CHUAN HOA DU LIEU RAP
-===================================== */
-
 function chuyenDoiRap(r) {
     return {
         id: Number(r.cinema_id),
@@ -281,11 +256,6 @@ function chuyenDoiRap(r) {
     };
 }
 
-
-/* =====================================
-   CHUAN HOA DU LIEU SUAT CHIEU
-===================================== */
-
 function chuyenDoiSuatChieu(s) {
     const ngayGio = tachNgayGio(s.start_time);
 
@@ -293,34 +263,23 @@ function chuyenDoiSuatChieu(s) {
         id: Number(s.show_id),
         phimId: Number(s.movie_id),
         tenPhim: s.movie_title,
-
         rapId: Number(s.cinema_id),
         tenRap: s.cinema_name,
         cum: s.cluster_name,
-
         phongId: Number(s.hall_id),
         tenPhong: s.hall_name,
-
         batDau: s.start_time,
         ketThuc: s.end_time,
-
         ngayId: ngayGio.ngayId,
         ngay: ngayGio.ngay,
         gio: ngayGio.gio,
-
         dinhDang: s.show_format === "2d_dubbed"
             ? "2D lồng tiếng"
             : "2D phụ đề",
-
         giaVe: Number(s.base_price),
         trangThai: s.status
     };
 }
-
-
-/* =====================================
-   XU LY NGAY GIO VIET NAM
-===================================== */
 
 function tachNgayGio(thoiGian) {
     const date = new Date(thoiGian);
@@ -353,11 +312,6 @@ function tachNgayGio(thoiGian) {
 
 let dsSuatChieu = [];
 
-
-/* =====================================
-   TAI TOAN BO DU LIEU TU DATABASE
-===================================== */
-
 async function taiToanBoDuLieu() {
     const [movies, cinemas, shows] = await Promise.all([
         taiDanhSachPhim(),
@@ -376,11 +330,6 @@ async function taiToanBoDuLieu() {
     };
 }
 
-
-/* =====================================
-   LIEN KET PHIM VOI SUAT CHIEU
-===================================== */
-
 function lienKetPhimVoiSuatChieu(phim, suatChieu) {
     return phim.map(p => {
         const cacSuat = suatChieu.filter(s =>
@@ -394,12 +343,6 @@ function lienKetPhimVoiSuatChieu(phim, suatChieu) {
         };
     });
 }
-
-
-
-/* =====================================
-   KHOI TAO TOAN BO DU LIEU
-===================================== */
 
 async function khoiTaoDuLieu() {
     const data = await taiToanBoDuLieu();

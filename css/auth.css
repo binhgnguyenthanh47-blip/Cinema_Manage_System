@@ -1,0 +1,149 @@
+.dau-trang__tai-khoan {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.dau-trang__chao {
+    max-width: 170px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-weight: 600;
+    color: var(--chu);
+}
+
+.dau-trang__vai-tro {
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: var(--nhat);
+    color: var(--chinh);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.hop-thoai {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 16px;
+    background: rgba(30, 27, 75, 0.6);
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+}
+
+.hop-thoai--hien {
+    display: flex;
+}
+
+.hop-thoai__noi-dung {
+    width: 100%;
+    max-width: 420px;
+    max-height: 100%;
+    overflow-y: auto;
+    border-radius: var(--bo-lon);
+    background: #fff;
+    box-shadow: var(--bong-dam);
+}
+
+.hop-thoai__dau {
+    display: flex;
+    align-items: stretch;
+    border-bottom: 1px solid var(--vien);
+}
+
+.hop-thoai__tab {
+    flex: 1;
+    padding: 16px 0 13px;
+    border: none;
+    border-bottom: 3px solid transparent;
+    background: none;
+    font-size: 15px;
+    font-weight: bold;
+    color: var(--xam);
+    transition: color 0.2s;
+}
+
+.hop-thoai__tab:hover {
+    color: var(--chinh);
+}
+
+.hop-thoai__tab--hien {
+    border-bottom-color: var(--chinh);
+    color: var(--chinh);
+}
+
+.hop-thoai__dong {
+    padding: 0 20px;
+    border: none;
+    border-left: 1px solid var(--nhat);
+    background: none;
+    font-size: 13px;
+    color: var(--xam);
+}
+
+.hop-thoai__dong:hover {
+    color: var(--chinh);
+}
+
+.hop-thoai__form {
+    padding: 12px 28px 28px;
+}
+
+.hop-thoai__nhan {
+    display: block;
+    margin: 14px 0 6px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.hop-thoai__o {
+    width: 100%;
+    height: 40px;
+    padding: 0 12px;
+    border: 1px solid var(--vien);
+    border-radius: var(--bo-nho);
+    font-size: 14px;
+    color: var(--chu);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.hop-thoai__o:focus {
+    border-color: var(--chinh);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}
+
+.hop-thoai__goi-y-demo {
+    margin: 10px 0 0;
+    padding: 8px 10px;
+    border-radius: var(--bo-nho);
+    background: var(--nen);
+    border: 1px dashed var(--vien);
+    font-size: 12px;
+    color: var(--xam);
+}
+
+.hop-thoai__loi {
+    min-height: 20px;
+    margin: 10px 0 0;
+    font-size: 13px;
+    color: var(--do);
+}
+
+.hop-thoai__gui {
+    width: 100%;
+    height: 42px;
+    margin-top: 8px;
+}
+
+@media (max-width: 480px) {
+    .hop-thoai__form {
+        padding: 8px 20px 24px;
+    }
+}
