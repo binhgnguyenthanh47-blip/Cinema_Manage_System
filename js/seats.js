@@ -1,486 +1,419 @@
-(function () {
-    const KEY_SUAT_CHIEU = "cinema_suat_chieu_dang_chon";
-    const KEY_DON_DAT_VE = "cinema_don_dat_ve_tam";
-    const KEY_VE_HOAN_TAT = "cinema_ve_dien_tu_cuoi";
-    const KEY_GHE_DA_DAT = "cinema_danh_sach_ghe_da_dat";
+let dsPhim = [
+    {"id": 1, "ten": "Spider-Man: Brand New Day", "anh": "assets/images/spiderman-brand-new-day.jpeg", "theLoai": "Hành động", "thoiLuong": "135", "doTuoi": "T13", "diem": "7.8", "trangThai": "dang", "rap": [1, 2, 3, 4], "ngayChieu": [2, 3, 4, 5, 6, 7, 8], "daoDien": "Destin Daniel Cretton", "dienVien": "Tom Holland, Zendaya", "quocGia": "Mỹ", "ngonNgu": "Tiếng Anh, phụ đề tiếng Việt", "khoiChieu": "31/07/2026", "noiDung": "Phần phim mới về Người Nhện, tiếp nối cuộc sống của Peter Parker sau các sự kiện trước đó.", "trailer": "62bIsvRcPv0"},
+    {"id": 2, "ten": "Avengers: Doomsday", "anh": "assets/images/avengers-doomsday.jpeg", "theLoai": "Hành động", "thoiLuong": "150", "doTuoi": "T13", "diem": "Chưa có", "trangThai": "sap", "rap": [], "ngayChieu": [], "daoDien": "Anthony Russo, Joe Russo", "dienVien": "Đang cập nhật", "quocGia": "Mỹ", "ngonNgu": "Tiếng Anh, phụ đề tiếng Việt", "khoiChieu": "18/12/2026", "noiDung": "Biệt đội Avengers phải đối đầu với mối đe dọa mới mang tên Doom.", "trailer": "irVNGjRFZGk"},
+    {"id": 3, "ten": "Dune: Part Three", "anh": "assets/images/dune-part-three.jpeg", "theLoai": "Khoa học viễn tưởng", "thoiLuong": "165", "doTuoi": "T13", "diem": "Chưa có", "trangThai": "sap", "rap": [], "ngayChieu": [], "daoDien": "Denis Villeneuve", "dienVien": "Timothée Chalamet, Zendaya, Jason Momoa, Florence Pugh, Rebecca Ferguson", "quocGia": "Mỹ", "ngonNgu": "Tiếng Anh, phụ đề tiếng Việt", "khoiChieu": "18/12/2026", "noiDung": "Phần kết của loạt phim Dune, tiếp nối hành trình của Paul Atreides trên hành tinh Arrakis.", "trailer": "uJqaGLmZpGo"},
+    {"id": 4, "ten": "The Odyssey", "anh": "assets/images/the-odyssey.jpeg", "theLoai": "Phiêu lưu", "thoiLuong": "170", "doTuoi": "T16", "diem": "8.2", "trangThai": "dang", "rap": [1, 2, 4], "ngayChieu": [2, 3, 4, 5, 6, 7, 8], "daoDien": "Christopher Nolan", "dienVien": "Matt Damon, Tom Holland, Anne Hathaway, Zendaya, Lupita Nyong'o, Robert Pattinson, Charlize Theron", "quocGia": "Mỹ", "ngonNgu": "Tiếng Anh, phụ đề tiếng Việt", "khoiChieu": "17/07/2026", "noiDung": "Chuyển thể từ sử thi của Homer, kể về hành trình trở về quê nhà của Odysseus sau cuộc chiến thành Troy.", "trailer": "Mzw2ttJD2qQ"},
+    {"id": 5, "ten": "Toy Story 5", "anh": "assets/images/toy-story-5.jpeg", "theLoai": "Hoạt hình", "thoiLuong": "100", "doTuoi": "P", "diem": "7.6", "trangThai": "dang", "rap": [1, 3], "ngayChieu": [2, 4, 6, 8], "daoDien": "Andrew Stanton", "dienVien": "Tom Hanks, Tim Allen", "quocGia": "Mỹ", "ngonNgu": "Tiếng Anh, phụ đề tiếng Việt", "khoiChieu": "17/06/2026", "noiDung": "Nhóm đồ chơi quen thuộc phải đối mặt với sự xuất hiện của một thiết bị công nghệ mới trong nhà.", "trailer": "c51ND9Hdbw0"},
+    {"id": 6, "ten": "The Super Mario Galaxy Movie", "anh": "assets/images/super-mario-galaxy.jpeg", "theLoai": "Hoạt hình", "thoiLuong": "98", "doTuoi": "P", "diem": "6.9", "trangThai": "dang", "rap": [2, 3], "ngayChieu": [3, 5, 7], "daoDien": "Aaron Horvath, Michael Jelenic", "dienVien": "Chris Pratt, Anya Taylor-Joy, Charlie Day, Jack Black", "quocGia": "Mỹ", "ngonNgu": "Tiếng Anh, phụ đề tiếng Việt", "khoiChieu": "04/2026", "noiDung": "Mario, Công chúa Peach và những người bạn bước vào cuộc phiêu lưu mới giữa vũ trụ.", "trailer": "GuCejewteF8"},
+    {"id": 7, "ten": "The Hunger Games: Sunrise on the Reaping", "anh": "assets/images/hunger-games-sunrise.jpeg", "theLoai": "Khoa học viễn tưởng", "thoiLuong": "140", "doTuoi": "T16", "diem": "Chưa có", "trangThai": "sap", "rap": [], "ngayChieu": [], "daoDien": "Francis Lawrence", "dienVien": "Đang cập nhật", "quocGia": "Mỹ", "ngonNgu": "Tiếng Anh, phụ đề tiếng Việt", "khoiChieu": "20/11/2026", "noiDung": "Phần tiền truyện của loạt phim Hunger Games, lấy bối cảnh trước các phần đã ra mắt.", "trailer": "lYXtL5TreOE"},
+    {"id": 8, "ten": "Resident Evil", "anh": "assets/images/resident-evil.jpeg", "theLoai": "Kinh dị", "thoiLuong": "105", "doTuoi": "T18", "diem": "6.5", "trangThai": "dang", "rap": [2, 4], "ngayChieu": [4, 5, 6, 7], "daoDien": "Zach Cregger", "dienVien": "Đang cập nhật", "quocGia": "Mỹ", "ngonNgu": "Tiếng Anh, phụ đề tiếng Việt", "khoiChieu": "18/09/2026", "noiDung": "Phiên bản điện ảnh mới của loạt trò chơi kinh dị sinh tồn Resident Evil.", "trailer": "mNd1gb19A-c"},
+    {"id": 9, "ten": "Moana", "anh": "assets/images/moana.jpeg", "theLoai": "Gia đình", "thoiLuong": "105", "doTuoi": "P", "diem": "6.8", "trangThai": "dang", "rap": [1, 3], "ngayChieu": [2, 3, 4, 5, 6], "daoDien": "Thomas Kail", "dienVien": "Catherine Laga'aia, Dwayne Johnson", "quocGia": "Mỹ", "ngonNgu": "Tiếng Anh, phụ đề tiếng Việt", "khoiChieu": "07/2026", "noiDung": "Phiên bản người đóng của Moana, kể về cô gái trẻ và hành trình vượt đại dương cùng sức mạnh của biển cả.", "trailer": "n7f6hlKsxxo"},
+    {"id": 10, "ten": "Minions & Monsters", "anh": "assets/images/minions-monsters.jpeg", "theLoai": "Hoạt hình", "thoiLuong": "95", "doTuoi": "P", "diem": "6.7", "trangThai": "dang", "rap": [3, 4], "ngayChieu": [5, 6, 7, 8], "daoDien": "Pierre Coffin", "dienVien": "Đang cập nhật", "quocGia": "Mỹ", "ngonNgu": "Tiếng Anh, phụ đề tiếng Việt", "khoiChieu": "01/07/2026", "noiDung": "Những chú Minion bước vào cuộc phiêu lưu mới cùng các sinh vật kỳ lạ.", "trailer": "V-O-uBaHk3c"},
+    {"id": 11, "ten": "The Dog Stars", "anh": "assets/images/the-dog-stars.jpeg", "theLoai": "Phiêu lưu", "thoiLuong": "120", "doTuoi": "T18", "diem": "7.4", "trangThai": "dang", "rap": [1, 4], "ngayChieu": [2, 3, 7, 8], "daoDien": "Ridley Scott", "dienVien": "Jacob Elordi, Josh Brolin, Margaret Qualley", "quocGia": "Mỹ", "ngonNgu": "Tiếng Anh, phụ đề tiếng Việt", "khoiChieu": "28/08/2026", "noiDung": "Chuyển thể từ tiểu thuyết của Peter Heller, kể về những người sống sót tìm cách tồn tại trong thế giới hậu tận thế.", "trailer": "cmzVY1goqwQ"},
+    {"id": 12, "ten": "Mortal Kombat II", "anh": "assets/images/mortal-kombat-2.jpeg", "theLoai": "Hành động", "thoiLuong": "115", "doTuoi": "T18", "diem": "6.6", "trangThai": "dang", "rap": [2, 3, 4], "ngayChieu": [2, 3, 5, 6, 8], "daoDien": "Simon McQuoid", "dienVien": "Karl Urban, Jessica McNamee, Lewis Tan", "quocGia": "Mỹ", "ngonNgu": "Tiếng Anh, phụ đề tiếng Việt", "khoiChieu": "08/05/2026", "noiDung": "Các chiến binh của Trái Đất tiếp tục tham gia giải đấu Mortal Kombat để bảo vệ thế giới.", "trailer": "mITiMK1g338"}
+];
 
-    const GIA_VE = {
-        thuong: 75000,
-        vip: 95000,
-        doi: 190000
-    };
+let dsRap = [
+    {"id": 1, "ten": "Rạp 1", "cum": "Cụm rạp A"},
+    {"id": 2, "ten": "Rạp 2", "cum": "Cụm rạp B"},
+    {"id": 3, "ten": "Rạp 3", "cum": "Cụm rạp A"},
+    {"id": 4, "ten": "Rạp 4", "cum": "Cụm rạp B"}
+];
 
-    const VOUCHER_HOP_LE = {
-        CINEMA20: { loai: "co_dinh", giaTri: 20000, moTa: "Giảm trực tiếp 20.000đ" },
-        UTH2026: { loai: "phan_tram", giaTri: 15, moTa: "Giảm 15% tổng đơn" }
-    };
-
-    const DU_LIEU_MAC_DINH = {
-        phim: [
-            "Spider-Man: Du Hành Vũ Trụ Nhện",
-            "The Odyssey",
-            "Doraemon: Nobita Và Bản Giao Hưởng Địa Cầu",
-            "Ám Ảnh Kinh Hoàng",
-            "Hồ Nuốt Người"
-        ],
-        rap: [
-            "Cinema Thủ Đức",
-            "Cinema Lê Văn Việt",
-            "Cinema Linh Trung",
-            "Cinema Sinh Viên"
-        ],
-        ngay: [
-            "16/11/2026",
-            "17/11/2026",
-            "18/11/2026",
-            "19/11/2026"
-        ],
-        suat: [
-            { gio: "09:30", phong: "Phòng 01" },
-            { gio: "13:15", phong: "Phòng 02" },
-            { gio: "16:45", phong: "Phòng 04" },
-            { gio: "19:30", phong: "Phòng 03" },
-            { gio: "22:10", phong: "Phòng 01" }
-        ]
-    };
-
-    function layDanhSachPhimTuHeThong() {
-        const nguonDuLieu =
-            (typeof dsPhim !== "undefined" && Array.isArray(dsPhim) && dsPhim) ||
-            (typeof danhSachPhim !== "undefined" && Array.isArray(danhSachPhim) && danhSachPhim) ||
-            (typeof movies !== "undefined" && Array.isArray(movies) && movies) ||
-            (typeof PHIM !== "undefined" && Array.isArray(PHIM) && PHIM) ||
-            null;
-
-        if (nguonDuLieu && nguonDuLieu.length > 0) {
-            const danhSachTen = nguonDuLieu
-                .map((item) => (typeof item === "string" ? item : item.ten || item.tenPhim || item.title || item.name))
-                .filter(Boolean);
-            if (danhSachTen.length > 0) return danhSachTen;
+const lichChieu = {
+    "cacNgay": [
+        {
+            "so": 2,
+            "nhan": "T2 02/11"
+        },
+        {
+            "so": 3,
+            "nhan": "T3 03/11"
+        },
+        {
+            "so": 4,
+            "nhan": "T4 04/11"
+        },
+        {
+            "so": 5,
+            "nhan": "T5 05/11"
+        },
+        {
+            "so": 6,
+            "nhan": "T6 06/11"
+        },
+        {
+            "so": 7,
+            "nhan": "T7 07/11"
+        },
+        {
+            "so": 8,
+            "nhan": "CN 08/11"
         }
-        return DU_LIEU_MAC_DINH.phim;
+    ],
+    "suatTheoRap": [
+        {
+            "rap": 1,
+            "suat": [
+                {
+                    "dinhDang": "2D phụ đề",
+                    "gio": [
+                        "09:30",
+                        "13:00",
+                        "19:45"
+                    ]
+                },
+                {
+                    "dinhDang": "2D lồng tiếng",
+                    "gio": [
+                        "11:15",
+                        "21:00"
+                    ]
+                }
+            ]
+        },
+        {
+            "rap": 2,
+            "suat": [
+                {
+                    "dinhDang": "2D phụ đề",
+                    "gio": [
+                        "10:00",
+                        "14:30",
+                        "20:15"
+                    ]
+                },
+                {
+                    "dinhDang": "2D lồng tiếng",
+                    "gio": [
+                        "12:00",
+                        "22:00"
+                    ]
+                }
+            ]
+        },
+        {
+            "rap": 3,
+            "suat": [
+                {
+                    "dinhDang": "2D phụ đề",
+                    "gio": [
+                        "09:00",
+                        "15:00",
+                        "18:30"
+                    ]
+                },
+                {
+                    "dinhDang": "2D lồng tiếng",
+                    "gio": [
+                        "11:30",
+                        "21:15"
+                    ]
+                }
+            ]
+        },
+        {
+            "rap": 4,
+            "suat": [
+                {
+                    "dinhDang": "2D phụ đề",
+                    "gio": [
+                        "10:30",
+                        "13:45",
+                        "19:00"
+                    ]
+                },
+                {
+                    "dinhDang": "2D lồng tiếng",
+                    "gio": [
+                        "12:15",
+                        "21:30"
+                    ]
+                }
+            ]
+        }
+    ]
+};
+
+
+/* =====================================
+   KET NOI API DANH SACH PHIM
+===================================== */
+
+async function taiDanhSachPhim() {
+    try {
+        const response = await fetch("/api/movies");
+
+        if (!response.ok) {
+            throw new Error("Khong the ket noi API phim");
+        }
+
+        const result = await response.json();
+
+        if (!result.success || !Array.isArray(result.data)) {
+            throw new Error("Du lieu phim khong hop le");
+        }
+
+        console.log("Lay danh sach phim thanh cong!");
+        console.log("Tong so phim:", result.data.length);
+        console.table(result.data);
+
+        return result.data;
+
+    } catch (error) {
+        console.error("Loi tai danh sach phim:", error);
+        throw error;
     }
+}
 
-    function dinhDangTien(soTien) {
-        return Number(soTien || 0).toLocaleString("vi-VN") + "đ";
+
+function chuyenDoiPhim(p) {
+    return {
+        id: Number(p.movie_id),
+        ten: p.title,
+        anh: p.poster_url || "",
+        theLoai: p.genre || "",
+        thoiLuong: p.duration_minutes || "",
+        doTuoi: p.age_rating || "",
+        diem: p.rating ?? "Chưa có",
+
+        trangThai: p.status === "now_showing"
+            ? "dang"
+            : "sap",
+
+        daoDien: p.director || "Đang cập nhật",
+        dienVien: p.actors || "Đang cập nhật",
+        quocGia: p.country || "",
+        ngonNgu: p.language || "",
+        khoiChieu: p.release_date_text || "",
+        noiDung: p.description || "",
+        trailer: p.trailer_url || "",
+
+        rap: [],
+        ngayChieu: []
+    };
+}
+
+
+async function khoiTaoDuLieuPhim() {
+    const movies = await taiDanhSachPhim();
+
+    dsPhim = movies.map(chuyenDoiPhim);
+
+    console.log("Da dong bo phim tu database");
+    console.log("Tong so phim:", dsPhim.length);
+}
+
+
+/* =====================================
+   KET NOI API DANH SACH RAP
+===================================== */
+
+async function taiDanhSachRap() {
+    try {
+        const response = await fetch("/api/cinemas");
+
+        if (!response.ok) {
+            throw new Error("Khong the ket noi API rap");
+        }
+
+        const result = await response.json();
+
+        if (!result.success || !Array.isArray(result.data)) {
+            throw new Error("Du lieu rap khong hop le");
+        }
+
+        console.log("Lay danh sach rap thanh cong!");
+        console.log("Tong so rap:", result.data.length);
+        console.table(result.data);
+
+        return result.data;
+
+    } catch (error) {
+        console.error("Loi tai danh sach rap:", error);
+        throw error;
     }
+}
 
-    function laySuatChieuHienTai() {
-        const dsPhimHienCo = layDanhSachPhimTuHeThong();
-        const params = new URLSearchParams(window.location.search);
 
-        if (params.get("movie") || params.get("tenPhim")) {
-            const suatTuUrl = {
-                tenPhim: params.get("movie") || params.get("tenPhim") || dsPhimHienCo[0],
-                rap: params.get("cinema") || params.get("rap") || DU_LIEU_MAC_DINH.rap[0],
-                phong: params.get("room") || params.get("phong") || "Phòng 03",
-                ngay: params.get("date") || params.get("ngay") || DU_LIEU_MAC_DINH.ngay[0],
-                gio: params.get("time") || params.get("gio") || "19:30"
-            };
-            localStorage.setItem(KEY_SUAT_CHIEU, JSON.stringify(suatTuUrl));
-            return suatTuUrl;
+/* =====================================
+   KET NOI API LICH CHIEU
+===================================== */
+
+async function taiLichChieu() {
+    try {
+        const response = await fetch("/api/shows");
+
+        if (!response.ok) {
+            throw new Error("Khong the ket noi API lich chieu");
         }
 
-        const daLuu = localStorage.getItem(KEY_SUAT_CHIEU);
-        if (daLuu) {
-            return JSON.parse(daLuu);
+        const result = await response.json();
+
+        if (!result.success || !Array.isArray(result.data)) {
+            throw new Error("Du lieu lich chieu khong hop le");
         }
 
-        const macDinh = {
-            tenPhim: dsPhimHienCo[0],
-            rap: DU_LIEU_MAC_DINH.rap[0],
-            phong: "Phòng 03",
-            ngay: DU_LIEU_MAC_DINH.ngay[0],
-            gio: "19:30"
+        console.log("Lay lich chieu thanh cong!");
+        console.log("Tong so suat chieu:", result.data.length);
+
+        console.table(result.data.slice(0, 5));
+
+        return result.data;
+
+    } catch (error) {
+        console.error("Loi tai lich chieu:", error);
+        throw error;
+    }
+}
+
+
+/* =====================================
+   CHUAN HOA DU LIEU RAP
+===================================== */
+
+function chuyenDoiRap(r) {
+    return {
+        id: Number(r.cinema_id),
+        ten: r.name,
+        cum: r.cluster_name,
+        diaChi: r.address || "Đang cập nhật"
+    };
+}
+
+
+/* =====================================
+   CHUAN HOA DU LIEU SUAT CHIEU
+===================================== */
+
+function chuyenDoiSuatChieu(s) {
+    const ngayGio = tachNgayGio(s.start_time);
+
+    return {
+        id: Number(s.show_id),
+        phimId: Number(s.movie_id),
+        tenPhim: s.movie_title,
+
+        rapId: Number(s.cinema_id),
+        tenRap: s.cinema_name,
+        cum: s.cluster_name,
+
+        phongId: Number(s.hall_id),
+        tenPhong: s.hall_name,
+
+        batDau: s.start_time,
+        ketThuc: s.end_time,
+
+        ngayId: ngayGio.ngayId,
+        ngay: ngayGio.ngay,
+        gio: ngayGio.gio,
+
+        dinhDang: s.show_format === "2d_dubbed"
+            ? "2D lồng tiếng"
+            : "2D phụ đề",
+
+        giaVe: Number(s.base_price),
+        trangThai: s.status
+    };
+}
+
+
+/* =====================================
+   XU LY NGAY GIO VIET NAM
+===================================== */
+
+function tachNgayGio(thoiGian) {
+    const date = new Date(thoiGian);
+
+    const parts = new Intl.DateTimeFormat("vi-VN", {
+        timeZone: "Asia/Ho_Chi_Minh",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        hourCycle: "h23"
+    }).formatToParts(date);
+
+    const lay = (type) =>
+        parts.find(p => p.type === type).value;
+
+    const nam = lay("year");
+    const thang = lay("month");
+    const ngay = lay("day");
+    const gio = lay("hour");
+    const phut = lay("minute");
+
+    return {
+        ngayId: `${nam}-${thang}-${ngay}`,
+        ngay: `${ngay}/${thang}`,
+        gio: `${gio}:${phut}`
+    };
+}
+
+let dsSuatChieu = [];
+
+
+/* =====================================
+   TAI TOAN BO DU LIEU TU DATABASE
+===================================== */
+
+async function taiToanBoDuLieu() {
+    const [movies, cinemas, shows] = await Promise.all([
+        taiDanhSachPhim(),
+        taiDanhSachRap(),
+        taiLichChieu()
+    ]);
+
+    const phimMoi = movies.map(chuyenDoiPhim);
+    const rapMoi = cinemas.map(chuyenDoiRap);
+    const suatMoi = shows.map(chuyenDoiSuatChieu);
+
+    return {
+        phim: phimMoi,
+        rap: rapMoi,
+        suatChieu: suatMoi
+    };
+}
+
+
+/* =====================================
+   LIEN KET PHIM VOI SUAT CHIEU
+===================================== */
+
+function lienKetPhimVoiSuatChieu(phim, suatChieu) {
+    return phim.map(p => {
+        const cacSuat = suatChieu.filter(s =>
+            s.phimId === Number(p.id) &&
+            s.trangThai === "scheduled"
+        );
+
+        return {
+            ...p,
+            suatChieu: cacSuat
         };
-        localStorage.setItem(KEY_SUAT_CHIEU, JSON.stringify(macDinh));
-        return macDinh;
-    }
-
-    function layKeySuat(suat) {
-        return `${suat.tenPhim}_${suat.rap}_${suat.ngay}_${suat.gio}`;
-    }
-
-    function layGheDaDatTheoSuat(suat) {
-        const tatCa = JSON.parse(localStorage.getItem(KEY_GHE_DA_DAT) || "{}");
-        const key = layKeySuat(suat);
-        const gheMacDinh = ["C5", "C6", "D4", "D5", "E6", "E7", "F5"];
-        const gheNguoiDungDat = tatCa[key] || [];
-        return Array.from(new Set([...gheMacDinh, ...gheNguoiDungDat]));
-    }
-
-    function luuGheDaDat(suat, danhSachMaGhe) {
-        const tatCa = JSON.parse(localStorage.getItem(KEY_GHE_DA_DAT) || "{}");
-        const key = layKeySuat(suat);
-        const hienCo = tatCa[key] || [];
-        tatCa[key] = Array.from(new Set([...hienCo, ...danhSachMaGhe]));
-        localStorage.setItem(KEY_GHE_DA_DAT, JSON.stringify(tatCa));
-    }
-
-
-    /* ================= TRANG 1: BOOKING.HTML ================= */
-    function khoiTaoTrangChonGhe() {
-        const khungSoDo = document.getElementById("soDoGhe");
-        if (!khungSoDo) return;
-
-        let suat = laySuatChieuHienTai();
-        let gheDangChon = [];
-
-        const selectPhim = document.getElementById("chonPhim");
-        const selectRap = document.getElementById("chonRap");
-        const selectNgay = document.getElementById("chonNgay");
-        const selectGio = document.getElementById("chonGio");
-
-        function napLuaChonBoLoc() {
-            if (!selectPhim || !selectRap || !selectNgay || !selectGio) return;
-
-            const dsPhim = layDanhSachPhimTuHeThong();
-            if (!dsPhim.includes(suat.tenPhim)) dsPhim.unshift(suat.tenPhim);
-            selectPhim.innerHTML = dsPhim.map((ten) => `<option value="${ten}">${ten}</option>`).join("");
-            selectPhim.value = suat.tenPhim;
-
-            const dsRap = [...DU_LIEU_MAC_DINH.rap];
-            if (!dsRap.includes(suat.rap)) dsRap.unshift(suat.rap);
-            selectRap.innerHTML = dsRap.map((rap) => `<option value="${rap}">${rap}</option>`).join("");
-            selectRap.value = suat.rap;
-
-            const dsNgay = [...DU_LIEU_MAC_DINH.ngay];
-            if (!dsNgay.includes(suat.ngay)) dsNgay.unshift(suat.ngay);
-            selectNgay.innerHTML = dsNgay.map((ngay) => `<option value="${ngay}">${ngay}</option>`).join("");
-            selectNgay.value = suat.ngay;
-
-            const dsSuat = [...DU_LIEU_MAC_DINH.suat];
-            if (!dsSuat.some((s) => s.gio === suat.gio)) {
-                dsSuat.unshift({ gio: suat.gio, phong: suat.phong });
-            }
-            selectGio.innerHTML = dsSuat
-                .map((s) => `<option value="${s.gio}|${s.phong}">${s.gio} (${s.phong})</option>`)
-                .join("");
-            selectGio.value = `${suat.gio}|${suat.phong}`;
-
-            const xuLyDoiSuat = () => {
-                const [gioMoi, phongMoi] = selectGio.value.split("|");
-                suat = {
-                    tenPhim: selectPhim.value,
-                    rap: selectRap.value,
-                    ngay: selectNgay.value,
-                    gio: gioMoi,
-                    phong: phongMoi
-                };
-                localStorage.setItem(KEY_SUAT_CHIEU, JSON.stringify(suat));
-                gheDangChon = [];
-                document.getElementById("thongBaoGhe").textContent = "";
-                capNhatThongTinSuatTrenThe();
-                capNhatTomTat();
-                veSoDoGhe();
-            };
-
-            selectPhim.addEventListener("change", xuLyDoiSuat);
-            selectRap.addEventListener("change", xuLyDoiSuat);
-            selectNgay.addEventListener("change", xuLyDoiSuat);
-            selectGio.addEventListener("change", xuLyDoiSuat);
-        }
-
-        function capNhatThongTinSuatTrenThe() {
-            document.getElementById("ttTenPhim").textContent = suat.tenPhim;
-            document.getElementById("ttRap").textContent = suat.rap;
-            document.getElementById("ttPhong").textContent = suat.phong;
-            document.getElementById("ttSuat").textContent = `${suat.gio} - ${suat.ngay}`;
-        }
-
-        function veSoDoGhe() {
-            khungSoDo.innerHTML = "";
-            const gheDaDat = layGheDaDatTheoSuat(suat);
-            const cacHang = ["A", "B", "C", "D", "E", "F", "G", "H"];
-
-            cacHang.forEach((hang) => {
-                const dong = document.createElement("div");
-                dong.className = "hang-ghe";
-
-                const nhan = document.createElement("span");
-                nhan.className = "hang-ghe__nhan";
-                nhan.textContent = hang;
-                dong.appendChild(nhan);
-
-                if (hang === "H") {
-                    for (let i = 1; i <= 10; i += 2) {
-                        const maGhe = `H${i}-H${i + 1}`;
-                        dong.appendChild(taoNutGhe(maGhe, "doi", GIA_VE.doi, gheDaDat.includes(maGhe)));
-                    }
-                } else {
-                    const loai = ["A", "B", "C"].includes(hang) ? "thuong" : "vip";
-                    for (let cot = 1; cot <= 10; cot++) {
-                        const maGhe = `${hang}${cot}`;
-                        dong.appendChild(taoNutGhe(maGhe, loai, GIA_VE[loai], gheDaDat.includes(maGhe)));
-                    }
-                }
-
-                khungSoDo.appendChild(dong);
-            });
-        }
-
-        function taoNutGhe(ma, loai, gia, daDat) {
-            const nut = document.createElement("button");
-            nut.type = "button";
-            nut.textContent = ma;
-            nut.className = `ghe ghe--${loai}` + (daDat ? " ghe--da-dat" : "");
-            nut.disabled = daDat;
-
-            nut.addEventListener("click", () => {
-                const viTri = gheDangChon.findIndex((g) => g.ma === ma);
-                if (viTri > -1) {
-                    gheDangChon.splice(viTri, 1);
-                    nut.classList.remove("ghe--dang-chon");
-                } else {
-                    if (gheDangChon.length >= 8) {
-                        document.getElementById("thongBaoGhe").textContent = "Bạn chỉ được chọn tối đa 8 ghế mỗi lần đặt.";
-                        return;
-                    }
-                    gheDangChon.push({ ma, loai, gia });
-                    nut.classList.add("ghe--dang-chon");
-                }
-                document.getElementById("thongBaoGhe").textContent = "";
-                capNhatTomTat();
-            });
-
-            return nut;
-        }
-
-        function capNhatTomTat() {
-            const dsMa = gheDangChon.map((g) => g.ma);
-            const tongTien = gheDangChon.reduce((tong, g) => tong + g.gia, 0);
-
-            document.getElementById("ttDanhSachGhe").textContent = dsMa.length ? dsMa.join(", ") : "Chưa chọn";
-            document.getElementById("ttSoLuong").textContent = gheDangChon.length;
-            document.getElementById("ttTongTien").textContent = dinhDangTien(tongTien);
-        }
-
-        napLuaChonBoLoc();
-        capNhatThongTinSuatTrenThe();
-        veSoDoGhe();
-
-        document.getElementById("nutTiepTucThanhToan").addEventListener("click", () => {
-            if (gheDangChon.length === 0) {
-                document.getElementById("thongBaoGhe").textContent = "Vui lòng chọn ít nhất 1 ghế trước khi tiếp tục.";
-                return;
-            }
-            const donTam = {
-                suat,
-                ghe: gheDangChon,
-                tienVe: gheDangChon.reduce((tong, g) => tong + g.gia, 0)
-            };
-            localStorage.setItem(KEY_DON_DAT_VE, JSON.stringify(donTam));
-            window.location.href = "checkout.html";
-        });
-    }
-
-    /* ================= TRANG 2: CHECKOUT.HTML ================= */
-    function khoiTaoTrangThanhToan() {
-        const nutThanhToan = document.getElementById("nutXacNhanThanhToan");
-        if (!nutThanhToan) return;
-
-        const donTam = JSON.parse(localStorage.getItem(KEY_DON_DAT_VE) || "null");
-        if (!donTam || !donTam.ghe || donTam.ghe.length === 0) {
-            window.location.href = "booking.html";
-            return;
-        }
-
-        let soLuongCombo = { solo: 0, couple: 0 };
-        let voucherDangAp = null;
-
-        document.getElementById("ttTenPhim").textContent = donTam.suat.tenPhim;
-        document.getElementById("ttRap").textContent = donTam.suat.rap;
-        document.getElementById("ttSuat").textContent = `${donTam.suat.phong} | ${donTam.suat.gio} (${donTam.suat.ngay})`;
-        document.getElementById("ttDanhSachGhe").textContent = donTam.ghe.map((g) => g.ma).join(", ");
-
-        let giayConLai = 600;
-        const dongHoEl = document.getElementById("dongHoGiuGhe");
-        const boDem = setInterval(() => {
-            giayConLai--;
-            if (giayConLai <= 0) {
-                clearInterval(boDem);
-                alert("Hết thời gian giữ ghế, vui lòng chọn lại ghế!");
-                window.location.href = "booking.html";
-                return;
-            }
-            const phut = String(Math.floor(giayConLai / 60)).padStart(2, "0");
-            const giay = String(giayConLai % 60).padStart(2, "0");
-            dongHoEl.textContent = `${phut}:${giay}`;
-        }, 1000);
-
-        document.querySelectorAll(".combo-item").forEach((item) => {
-            const loai = item.dataset.combo;
-            item.querySelectorAll(".nut-dem").forEach((btn) => {
-                btn.addEventListener("click", () => {
-                    if (btn.dataset.action === "tang") {
-                        soLuongCombo[loai]++;
-                    } else if (soLuongCombo[loai] > 0) {
-                        soLuongCombo[loai]--;
-                    }
-                    document.getElementById(loai === "solo" ? "slComboSolo" : "slComboCouple").textContent = soLuongCombo[loai];
-                    tinhTongTien();
-                });
-            });
-        });
-
-        document.getElementById("nutApMa").addEventListener("click", () => {
-            const ma = document.getElementById("oMaGiamGia").value.trim().toUpperCase();
-            const thongBao = document.getElementById("trangThaiVoucher");
-            if (!ma) {
-                voucherDangAp = null;
-                thongBao.textContent = "";
-                tinhTongTien();
-                return;
-            }
-            if (VOUCHER_HOP_LE[ma]) {
-                voucherDangAp = { ma, ...VOUCHER_HOP_LE[ma] };
-                thongBao.style.color = "#4ade80";
-                thongBao.textContent = `Đã áp dụng mã ${ma}: ${voucherDangAp.moTa}`;
-            } else {
-                voucherDangAp = null;
-                thongBao.style.color = "#f87171";
-                thongBao.textContent = "Mã giảm giá không hợp lệ. Thử: CINEMA20 hoặc UTH2026";
-            }
-            tinhTongTien();
-        });
-
-        function tinhTongTien() {
-            const tienVe = donTam.tienVe;
-            const tienCombo = soLuongCombo.solo * 79000 + soLuongCombo.couple * 139000;
-            const tamTinh = tienVe + tienCombo;
-
-            let tienGiam = 0;
-            if (voucherDangAp) {
-                tienGiam = voucherDangAp.loai === "co_dinh"
-                    ? voucherDangAp.giaTri
-                    : Math.round((tamTinh * voucherDangAp.giaTri) / 100);
-            }
-            const tongCuoi = Math.max(0, tamTinh - tienGiam);
-
-            document.getElementById("ttTienVe").textContent = dinhDangTien(tienVe);
-            document.getElementById("ttTienCombo").textContent = dinhDangTien(tienCombo);
-            document.getElementById("ttTienGiam").textContent = "-" + dinhDangTien(tienGiam);
-            document.getElementById("ttTongThanhToan").textContent = dinhDangTien(tongCuoi);
-
-            return { tienVe, tienCombo, tienGiam, tongCuoi };
-        }
-
-        tinhTongTien();
-
-        nutThanhToan.addEventListener("click", () => {
-            const hoTen = document.getElementById("khachHoTen").value.trim();
-            const email = document.getElementById("khachEmail").value.trim();
-            const sdt = document.getElementById("khachSdt").value.trim();
-            const loiEl = document.getElementById("thongBaoThanhToan");
-
-            if (!hoTen || !email || !sdt) {
-                loiEl.textContent = "Vui lòng điền đầy đủ Họ tên, Email và Số điện thoại.";
-                return;
-            }
-
-            const phuongThuc = document.querySelector('input[name="phuongThuc"]:checked').value;
-            const chiTietTien = tinhTongTien();
-            const maVe = "CNM-" + Math.floor(100000 + Math.random() * 900000);
-
-            const dsComboText = [];
-            if (soLuongCombo.solo > 0) dsComboText.push(`${soLuongCombo.solo}x Combo Solo`);
-            if (soLuongCombo.couple > 0) dsComboText.push(`${soLuongCombo.couple}x Combo Couple`);
-
-            const veHoanTat = {
-                maVe,
-                suat: donTam.suat,
-                ghe: donTam.ghe.map((g) => g.ma),
-                combo: dsComboText.length ? dsComboText.join(", ") : "Không có",
-                tongTien: chiTietTien.tongCuoi,
-                khachHang: { hoTen, email, sdt },
-                phuongThuc,
-                thoiGianDat: new Date().toLocaleString("vi-VN")
-            };
-
-            luuGheDaDat(donTam.suat, veHoanTat.ghe);
-            localStorage.setItem(KEY_VE_HOAN_TAT, JSON.stringify(veHoanTat));
-            localStorage.removeItem(KEY_DON_DAT_VE);
-            clearInterval(boDem);
-            window.location.href = "e_ticket.html";
-        });
-    }
-
-    /* ================= TRANG 3: E_TICKET.HTML ================= */
-    function khoiTaoTrangVeDienTu() {
-        const canvas = document.getElementById("canvasQrVe");
-        if (!canvas) return;
-
-        const ve = JSON.parse(localStorage.getItem(KEY_VE_HOAN_TAT) || "null");
-        if (!ve) {
-            window.location.href = "index.html";
-            return;
-        }
-
-        document.getElementById("veTenPhim").textContent = ve.suat.tenPhim;
-        document.getElementById("veMaDatVe").textContent = "#" + ve.maVe;
-        document.getElementById("veRap").textContent = ve.suat.rap;
-        document.getElementById("vePhong").textContent = ve.suat.phong;
-        document.getElementById("veSuat").textContent = `${ve.suat.gio} - ${ve.suat.ngay}`;
-        document.getElementById("veGhe").textContent = ve.ghe.join(", ");
-        document.getElementById("veCombo").textContent = ve.combo;
-        document.getElementById("veTongTien").textContent = dinhDangTien(ve.tongTien);
-        document.getElementById("veKhachHang").textContent = ve.khachHang.hoTen;
-        document.getElementById("veEmail").textContent = ve.khachHang.email;
-        document.getElementById("veSdt").textContent = ve.khachHang.sdt;
-        document.getElementById("vePhuongThuc").textContent = ve.phuongThuc;
-        document.getElementById("veChuoiQr").textContent = ve.maVe;
-
-        veMaQrGiaLap(canvas, ve.maVe + "|" + ve.ghe.join(","));
-
-        document.getElementById("nutInVe").addEventListener("click", () => {
-            window.print();
-        });
-    }
-
-    function veMaQrGiaLap(canvas, duLieu) {
-        const ctx = canvas.getContext("2d");
-        const kichThuoc = 21;
-        const o = Math.floor(canvas.width / kichThuoc);
-        ctx.fillStyle = "#ffffff";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        let hash = 0;
-        for (let i = 0; i < duLieu.length; i++) {
-            hash = (hash * 31 + duLieu.charCodeAt(i)) >>> 0;
-        }
-
-        ctx.fillStyle = "#111827";
-        function veGoc(x, y) {
-            ctx.fillRect(x * o, y * o, 7 * o, 7 * o);
-            ctx.fillStyle = "#ffffff";
-            ctx.fillRect((x + 1) * o, (y + 1) * o, 5 * o, 5 * o);
-            ctx.fillStyle = "#111827";
-            ctx.fillRect((x + 2) * o, (y + 2) * o, 3 * o, 3 * o);
-        }
-
-        veGoc(0, 0);
-        veGoc(kichThuoc - 7, 0);
-        veGoc(0, kichThuoc - 7);
-
-        for (let r = 0; r < kichThuoc; r++) {
-            for (let c = 0; c < kichThuoc; c++) {
-                const trongGoc =
-                    (r < 8 && c < 8) ||
-                    (r < 8 && c >= kichThuoc - 8) ||
-                    (r >= kichThuoc - 8 && c < 8);
-                if (trongGoc) continue;
-
-                hash = (hash * 1664525 + 1013904223) >>> 0;
-                if ((hash & 1) === 1) {
-                    ctx.fillRect(c * o, r * o, o, o);
-                }
-            }
-        }
-    }
-
-    document.addEventListener("DOMContentLoaded", () => {
-        khoiTaoTrangChonGhe();
-        khoiTaoTrangThanhToan();
-        khoiTaoTrangVeDienTu();
     });
-})();
+}
+
+
+
+/* =====================================
+   KHOI TAO TOAN BO DU LIEU
+===================================== */
+
+async function khoiTaoDuLieu() {
+    const data = await taiToanBoDuLieu();
+
+    dsRap = data.rap;
+    dsSuatChieu = data.suatChieu;
+
+    dsPhim = lienKetPhimVoiSuatChieu(
+        data.phim,
+        dsSuatChieu
+    );
+
+    console.log("Da dong bo toan bo du lieu!");
+    console.log("Tong so phim:", dsPhim.length);
+    console.log("Tong so rap:", dsRap.length);
+    console.log("Tong so suat:", dsSuatChieu.length);
+}

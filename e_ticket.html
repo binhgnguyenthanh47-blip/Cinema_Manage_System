@@ -80,7 +80,7 @@
                     <p class="ve-dien-tu__luu-y">Vui lòng đưa mã QR này cho nhân viên tại quầy soát vé trước giờ chiếu 15 phút.</p>
                 </div>
                 <div class="ve-dien-tu__qr">
-                    <canvas id="canvasQrVe" width="140" height="140"></canvas>
+                    <div class="ve-dien-tu__qr-box" id="khungQrVe"></div>
                     <span id="veChuoiQr">CNM-000000</span>
                 </div>
             </div>
@@ -90,6 +90,11 @@
             <button class="nut nut--phu" type="button" id="nutInVe">In vé / Lưu PDF</button>
             <a class="nut nut--chinh" href="index.html">Về trang chủ</a>
         </div>
+
+        <section class="lich-su-ve" id="khungLichSuVe">
+            <h3 class="lich-su-ve__tieu-de">Lịch sử vé đã đặt của tài khoản</h3>
+            <div class="lich-su-ve__ds" id="dsLichSuVe"></div>
+        </section>
     </div>
 </main>
 
@@ -118,6 +123,7 @@
     <div class="khung chan-trang__ban-quyen">Cinema - Website quản lý lịch chiếu phim - 2026</div>
 </footer>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="js/data.js"></script>
 <script src="js/script.js"></script>
 <script src="js/seats.js"></script>
