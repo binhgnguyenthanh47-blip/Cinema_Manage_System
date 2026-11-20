@@ -779,6 +779,9 @@ select:focus-visible {
 }
 
 .lich-chieu__gio {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
     height: 34px;
     padding: 0 16px;
     border: 1px solid var(--vien);
