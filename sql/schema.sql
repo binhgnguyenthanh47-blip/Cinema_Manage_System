@@ -123,6 +123,8 @@ CREATE TABLE IF NOT EXISTS Shows (
     start_time DATETIME NOT NULL,
     end_time DATETIME NOT NULL,
     base_price DECIMAL(12,2) NOT NULL,
+    show_format ENUM('2d_subtitle', '2d_dubbed')
+        NOT NULL DEFAULT '2d_subtitle',
 
     status ENUM('scheduled', 'cancelled', 'finished')
         NOT NULL DEFAULT 'scheduled',
