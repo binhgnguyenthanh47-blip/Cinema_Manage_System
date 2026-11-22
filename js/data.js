@@ -251,7 +251,7 @@ function chuyenDoiRap(r) {
     return {
         id: Number(r.cinema_id),
         ten: r.name,
-        cum: r.cluster_name,
+        cum: r.cluster_name || "",
         diaChi: r.address || "Đang cập nhật"
     };
 }
@@ -337,11 +337,78 @@ function lienKetPhimVoiSuatChieu(phim, suatChieu) {
             s.trangThai === "scheduled"
         );
 
+        const dsRapId = [];
+        const dsNgayId = [];
+
+        cacSuat.forEach(s => {
+            if (dsRapId.indexOf(s.rapId) === -1) {
+                dsRapId.push(s.rapId);
+            }
+            if (dsNgayId.indexOf(s.ngayId) === -1) {
+                dsNgayId.push(s.ngayId);
+            }
+        });
+
         return {
             ...p,
+            rap: dsRapId,
+            ngayChieu: dsNgayId,
             suatChieu: cacSuat
         };
     });
+}
+
+let dungDuLieuApi = false;
+let dsNgayHienTai = lichChieu.cacNgay;
+
+function taoDanhSachNgay(dsSuat) {
+    const dsNgayId = [];
+    dsSuat.forEach(s => {
+        if (s.trangThai === "scheduled" && dsNgayId.indexOf(s.ngayId) === -1) {
+            dsNgayId.push(s.ngayId);
+        }
+    });
+    dsNgayId.sort();
+
+    const dsThu = ["CN", "T2", "T3", "T4", "T5", "T6", "T7"];
+    return dsNgayId.map(id => {
+        const phan = id.split("-");
+        const thu = dsThu[new Date(Number(phan[0]), Number(phan[1]) - 1, Number(phan[2])).getDay()];
+        return {so: id, nhan: thu + " " + phan[2] + "/" + phan[1]};
+    });
+}
+
+function coNgayChieu(phim, ngay) {
+    return phim.ngayChieu.some(n => String(n) === String(ngay));
+}
+
+function laySuatTheoNgay(phim, ngay) {
+    if (!dungDuLieuApi) {
+        return phim.rap.map(rapId => {
+            return lichChieu.suatTheoRap.find(s => s.rap == rapId);
+        }).filter(Boolean);
+    }
+
+    const ketQua = [];
+    dsSuatChieu.forEach(s => {
+        if (s.phimId !== Number(phim.id) || s.ngayId !== String(ngay) || s.trangThai !== "scheduled") {
+            return;
+        }
+        let rap = ketQua.find(r => r.rap === s.rapId);
+        if (!rap) {
+            rap = {rap: s.rapId, suat: []};
+            ketQua.push(rap);
+        }
+        let nhom = rap.suat.find(n => n.dinhDang === s.dinhDang);
+        if (!nhom) {
+            nhom = {dinhDang: s.dinhDang, gio: []};
+            rap.suat.push(nhom);
+        }
+        nhom.gio.push(s.gio);
+    });
+
+    ketQua.forEach(r => r.suat.forEach(n => n.gio.sort()));
+    return ketQua;
 }
 
 async function khoiTaoDuLieu() {
@@ -354,6 +421,12 @@ async function khoiTaoDuLieu() {
         data.phim,
         dsSuatChieu
     );
+
+    dungDuLieuApi = true;
+    const dsNgayMoi = taoDanhSachNgay(dsSuatChieu);
+    if (dsNgayMoi.length > 0) {
+        dsNgayHienTai = dsNgayMoi;
+    }
 
     console.log("Da dong bo toan bo du lieu!");
     console.log("Tong so phim:", dsPhim.length);
