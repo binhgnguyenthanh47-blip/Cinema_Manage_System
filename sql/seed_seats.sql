@@ -45,7 +45,7 @@ BEGIN
                 )
                 VALUES (
                     v_hall_id,
-                    CHAR(64 + v_row USING utf8mb4),
+                    CHAR(64 + v_row),
                     v_number,
                     'standard'
                 )

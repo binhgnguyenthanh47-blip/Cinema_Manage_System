@@ -828,26 +828,6 @@
         font-size: 12px;
     }
 
-    /* Mui ten nho lai, sat mep; chua cho trong ben phai de khong de len chu */
-    .banner__mui-ten {
-        width: 32px;
-        height: 32px;
-        margin-top: -16px;
-        font-size: 15px;
-    }
-
-    .banner__mui-ten--trai {
-        left: 6px;
-    }
-
-    .banner__mui-ten--phai {
-        right: 6px;
-    }
-
-    .banner__chu {
-        padding-right: 32px;
-    }
-
     .luoi-phim {
         grid-template-columns: repeat(2, 1fr);
         gap: 20px 16px;
@@ -1145,44 +1125,4 @@
     width: 100%;
     height: 42px;
     margin-top: 4px;
-}
-/* ===== Bo anh phim (trang chi tiet) ===== */
-.bo-anh {
-    margin: 24px 0;
-}
-
-.bo-anh__luoi {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 12px;
-}
-
-.bo-anh__muc {
-    display: block;
-    border-radius: var(--bo-vua);
-    overflow: hidden;
-    box-shadow: var(--bong);
-}
-
-.bo-anh__muc img {
-    display: block;
-    width: 100%;
-    aspect-ratio: 16 / 10;
-    object-fit: cover;
-    transition: transform .25s ease;
-}
-
-.bo-anh__muc:hover img {
-    transform: scale(1.05);
-}
-
-.chi-tiet__noi-dung p {
-    margin: 0 0 8px;
-}
-
-@media (max-width: 480px) {
-    .bo-anh__luoi {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 8px;
-    }
 }

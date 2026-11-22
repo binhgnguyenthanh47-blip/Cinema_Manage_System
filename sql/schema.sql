@@ -1,23 +1,7 @@
 -- ==========================================
 -- CINEMA MANAGEMENT SYSTEM
 -- Database Schema
--- Tuong thich: MySQL 8.0+ va MariaDB 10.2+
---
--- Thu tu chay cac file SQL:
---   1. schema.sql              (tao database + bang)
---   2. procedures.sql          (sp_book_seat)
---   3. triggers.sql            (chong trung lich chieu)
---   4. expire_bookings.sql     (sp_expire_bookings)
---   5. expire_bookings_event.sql
---   6. dummy_data.sql          (du lieu mau)
---   7. seed_seats.sql / seed_extra_seats.sql
---
--- Luu y:
---   - Ten bang viet thuong toan bo de chay duoc tren ca
---     Windows va Linux (lower_case_table_names = 0).
---   - CREATE TABLE IF NOT EXISTS se KHONG cap nhat bang da ton tai.
---     Database cu: chay migrate_frontend_schema.sql,
---     hoac DROP DATABASE roi chay lai tu dau.
+-- MySQL / MariaDB
 -- ==========================================
 
 CREATE DATABASE IF NOT EXISTS cinema_management_dev
@@ -31,41 +15,31 @@ USE cinema_management_dev;
 -- 1. USERS - QUẢN LÝ NGƯỜI DÙNG
 -- ==========================================
 
-CREATE TABLE IF NOT EXISTS users (
+CREATE TABLE IF NOT EXISTS Users (
     user_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     full_name VARCHAR(100) NOT NULL,
-    email VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL,
-
     role ENUM('customer', 'admin')
-        NOT NULL DEFAULT 'customer',
-
-    created_at DATETIME NOT NULL
-        DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT uq_users_email
-        UNIQUE (email)
-) ENGINE=InnoDB
-  DEFAULT CHARSET=utf8mb4
-  COLLATE=utf8mb4_unicode_ci;
+        NOT NULL DEFAULT 'customer'
+) ENGINE=InnoDB;
 
 
 -- ==========================================
 -- 2. MOVIES - QUẢN LÝ PHIM
 -- ==========================================
 
-CREATE TABLE IF NOT EXISTS movies (
+
+CREATE TABLE IF NOT EXISTS Movies (
     movie_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     genre VARCHAR(100) NOT NULL,
     duration_minutes SMALLINT UNSIGNED NULL,
     age_rating VARCHAR(10) NULL,
     release_date DATE NULL,
-    release_date_text VARCHAR(100) NULL,
     poster_url VARCHAR(500) NULL,
     trailer_url VARCHAR(500) NULL,
     description TEXT NULL,
-
     status ENUM(
         'coming_soon',
         'now_showing',
@@ -77,63 +51,27 @@ CREATE TABLE IF NOT EXISTS movies (
     country VARCHAR(100) NULL,
     language VARCHAR(100) NULL,
     rating DECIMAL(3,1) NULL,
-
-    -- API /api/movies loc theo status
-    KEY idx_movies_status (status),
-
-    CONSTRAINT chk_movie_duration
-        CHECK (duration_minutes IS NULL OR duration_minutes > 0),
-
-    CONSTRAINT chk_movie_rating
-        CHECK (rating IS NULL OR rating BETWEEN 0 AND 10)
-) ENGINE=InnoDB
-  DEFAULT CHARSET=utf8mb4
-  COLLATE=utf8mb4_unicode_ci;
-
-
--- ==========================================
--- 2b. MOVIE_IMAGES - BỘ ẢNH CỦA PHIM (upload nhiều ảnh)
--- ==========================================
-
-CREATE TABLE IF NOT EXISTS movie_images (
-    image_id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    movie_id BIGINT NOT NULL,
-    image_url VARCHAR(500) NOT NULL,
-    sort_order INT NOT NULL DEFAULT 0,
-    created_at DATETIME NOT NULL
-        DEFAULT CURRENT_TIMESTAMP,
-
-    KEY idx_movie_images_movie (movie_id, sort_order),
-
-    -- Xoa phim thi xoa luon danh sach anh
-    CONSTRAINT fk_movie_images_movie
-        FOREIGN KEY (movie_id)
-        REFERENCES movies(movie_id)
-        ON DELETE CASCADE
-) ENGINE=InnoDB
-  DEFAULT CHARSET=utf8mb4
-  COLLATE=utf8mb4_unicode_ci;
+    release_date_text VARCHAR(100) NULL
+) ENGINE=InnoDB;
 
 
 -- ==========================================
 -- 3. CINEMAS - QUẢN LÝ RẠP CHIẾU PHIM
 -- ==========================================
 
-CREATE TABLE IF NOT EXISTS cinemas (
+CREATE TABLE IF NOT EXISTS Cinemas (
     cinema_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(150) NOT NULL,
     address VARCHAR(255) NOT NULL,
     cluster_name VARCHAR(100) NULL
-) ENGINE=InnoDB
-  DEFAULT CHARSET=utf8mb4
-  COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB;
 
 
 -- ==========================================
 -- 4. CINEMAHALLS - QUẢN LÝ PHÒNG CHIẾU
 -- ==========================================
 
-CREATE TABLE IF NOT EXISTS cinemahalls (
+CREATE TABLE IF NOT EXISTS CinemaHalls (
     hall_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     cinema_id BIGINT NOT NULL,
     hall_name VARCHAR(100) NOT NULL,
@@ -143,22 +81,19 @@ CREATE TABLE IF NOT EXISTS cinemahalls (
 
     CONSTRAINT fk_halls_cinema
         FOREIGN KEY (cinema_id)
-        REFERENCES cinemas(cinema_id)
-) ENGINE=InnoDB
-  DEFAULT CHARSET=utf8mb4
-  COLLATE=utf8mb4_unicode_ci;
+        REFERENCES Cinemas(cinema_id)
+) ENGINE=InnoDB;
 
 
 -- ==========================================
 -- 5. SEATS - QUẢN LÝ GHẾ NGỒI
 -- ==========================================
 
-CREATE TABLE IF NOT EXISTS seats (
+CREATE TABLE IF NOT EXISTS Seats (
     seat_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     hall_id BIGINT NOT NULL,
     row_label VARCHAR(5) NOT NULL,
     seat_number SMALLINT UNSIGNED NOT NULL,
-
     seat_type ENUM('standard', 'vip', 'couple')
         NOT NULL DEFAULT 'standard',
 
@@ -170,30 +105,24 @@ CREATE TABLE IF NOT EXISTS seats (
 
     CONSTRAINT fk_seats_hall
         FOREIGN KEY (hall_id)
-        REFERENCES cinemahalls(hall_id),
+        REFERENCES CinemaHalls(hall_id),
 
     CONSTRAINT chk_seat_number
         CHECK (seat_number > 0)
-) ENGINE=InnoDB
-  DEFAULT CHARSET=utf8mb4
-  COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB;
 
 
 -- ==========================================
 -- 6. SHOWS - QUẢN LÝ SUẤT CHIẾU
 -- ==========================================
 
-CREATE TABLE IF NOT EXISTS shows (
+CREATE TABLE IF NOT EXISTS Shows (
     show_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     movie_id BIGINT NOT NULL,
     hall_id BIGINT NOT NULL,
     start_time DATETIME NOT NULL,
     end_time DATETIME NOT NULL,
     base_price DECIMAL(12,2) NOT NULL,
-
-    -- Dinh dang suat chieu: 2D phu de / 2D long tieng
-    show_format ENUM('2d_sub', '2d_dubbed')
-        NOT NULL DEFAULT '2d_sub',
 
     status ENUM('scheduled', 'cancelled', 'finished')
         NOT NULL DEFAULT 'scheduled',
@@ -202,31 +131,28 @@ CREATE TABLE IF NOT EXISTS shows (
 
     KEY idx_shows_hall_time (hall_id, start_time),
     KEY idx_shows_movie_time (movie_id, start_time),
-    KEY idx_shows_start_time (start_time),
 
     CONSTRAINT fk_shows_movie
         FOREIGN KEY (movie_id)
-        REFERENCES movies(movie_id),
+        REFERENCES Movies(movie_id),
 
     CONSTRAINT fk_shows_hall
         FOREIGN KEY (hall_id)
-        REFERENCES cinemahalls(hall_id),
+        REFERENCES CinemaHalls(hall_id),
 
     CONSTRAINT chk_show_times
         CHECK (end_time > start_time),
 
     CONSTRAINT chk_show_price
         CHECK (base_price >= 0)
-) ENGINE=InnoDB
-  DEFAULT CHARSET=utf8mb4
-  COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB;
 
 
 -- ==========================================
 -- 7. BOOKINGS - QUẢN LÝ ĐƠN ĐẶT VÉ
 -- ==========================================
 
-CREATE TABLE IF NOT EXISTS bookings (
+CREATE TABLE IF NOT EXISTS Bookings (
     booking_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     user_id BIGINT NOT NULL,
 
@@ -242,42 +168,25 @@ CREATE TABLE IF NOT EXISTS bookings (
         'expired'
     ) NOT NULL DEFAULT 'pending',
 
-    -- So tien khach thuc tra = tien ve + combo - giam gia
     total_amount DECIMAL(12,2)
         NOT NULL DEFAULT 0,
 
-    -- Chi tiet combo bap nuoc va ma giam gia (luu khi thanh toan)
-    combo_detail VARCHAR(255) NULL,
-    combo_amount DECIMAL(12,2) NOT NULL DEFAULT 0,
-    voucher_code VARCHAR(30) NULL,
-    discount_amount DECIMAL(12,2) NOT NULL DEFAULT 0,
-
-    -- Thong tin nguoi nhan ve (nhap o trang thanh toan)
-    contact_name VARCHAR(100) NULL,
-    contact_email VARCHAR(255) NULL,
-    contact_phone VARCHAR(15) NULL,
-
     KEY idx_bookings_user (user_id),
-
-    -- Phuc vu sp_expire_bookings (chay moi phut)
-    KEY idx_bookings_status_expires (status, expires_at),
 
     CONSTRAINT fk_bookings_user
         FOREIGN KEY (user_id)
-        REFERENCES users(user_id),
+        REFERENCES Users(user_id),
 
     CONSTRAINT chk_booking_total
         CHECK (total_amount >= 0)
-) ENGINE=InnoDB
-  DEFAULT CHARSET=utf8mb4
-  COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB;
 
 
 -- ==========================================
 -- 8. TICKETS - QUẢN LÝ VÉ XEM PHIM
 -- ==========================================
 
-CREATE TABLE IF NOT EXISTS tickets (
+CREATE TABLE IF NOT EXISTS Tickets (
     ticket_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     booking_id BIGINT NOT NULL,
     show_id BIGINT NOT NULL,
@@ -291,58 +200,46 @@ CREATE TABLE IF NOT EXISTS tickets (
         'expired'
     ) NOT NULL DEFAULT 'held',
 
-    qr_code VARCHAR(255) NULL,
+    qr_code VARCHAR(255) NULL UNIQUE,
 
-    -- Cot tu sinh: chi giu ghe khi ve con hieu luc.
-    -- STORED chay duoc tren ca MySQL 8 va MariaDB
-    -- (PERSISTENT chi co tren MariaDB).
-    active_seat_id BIGINT
-        GENERATED ALWAYS AS (
-            CASE
-                WHEN status IN ('held', 'paid')
-                THEN seat_id
-                ELSE NULL
-            END
-        ) STORED,
+    -- Cột tự sinh: chỉ giữ ghế khi vé còn hiệu lực
+    active_seat_id BIGINT AS (
+        CASE
+            WHEN status IN ('held', 'paid')
+            THEN seat_id
+            ELSE NULL
+        END
+    ) PERSISTENT,
 
-    -- Ngan dat trung ghe trong cung suat chieu
-    -- (NULL khong bi tinh trung nen ve het han/huy khong chan ghe)
+    -- Ngăn đặt trùng ghế trong cùng suất chiếu
     UNIQUE KEY uq_active_show_seat
         (show_id, active_seat_id),
-
-    CONSTRAINT uq_tickets_qr_code
-        UNIQUE (qr_code),
 
     KEY idx_tickets_booking (booking_id),
     KEY idx_tickets_seat (seat_id),
 
-    -- Phuc vu truy van trang thai ghe theo suat chieu
-    KEY idx_tickets_show_seat_status (show_id, seat_id, status),
-
     CONSTRAINT fk_tickets_booking
         FOREIGN KEY (booking_id)
-        REFERENCES bookings(booking_id),
+        REFERENCES Bookings(booking_id),
 
     CONSTRAINT fk_tickets_show
         FOREIGN KEY (show_id)
-        REFERENCES shows(show_id),
+        REFERENCES Shows(show_id),
 
     CONSTRAINT fk_tickets_seat
         FOREIGN KEY (seat_id)
-        REFERENCES seats(seat_id),
+        REFERENCES Seats(seat_id),
 
     CONSTRAINT chk_ticket_price
         CHECK (price >= 0)
-) ENGINE=InnoDB
-  DEFAULT CHARSET=utf8mb4
-  COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB;
 
 
 -- ==========================================
 -- 9. PAYMENTS - QUẢN LÝ THANH TOÁN
 -- ==========================================
 
-CREATE TABLE IF NOT EXISTS payments (
+CREATE TABLE IF NOT EXISTS Payments (
     payment_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     booking_id BIGINT NOT NULL,
 
@@ -362,24 +259,18 @@ CREATE TABLE IF NOT EXISTS payments (
         'refunded'
     ) NOT NULL DEFAULT 'pending',
 
-    transaction_code VARCHAR(100) NULL,
+    transaction_code VARCHAR(100) NULL UNIQUE,
     paid_at DATETIME NULL,
-
-    CONSTRAINT uq_payments_transaction_code
-        UNIQUE (transaction_code),
 
     KEY idx_payments_booking (booking_id),
 
     CONSTRAINT fk_payments_booking
         FOREIGN KEY (booking_id)
-        REFERENCES bookings(booking_id),
+        REFERENCES Bookings(booking_id),
 
     CONSTRAINT chk_payment_amount
         CHECK (amount >= 0)
-) ENGINE=InnoDB
-  DEFAULT CHARSET=utf8mb4
-  COLLATE=utf8mb4_unicode_ci;
-
+) ENGINE=InnoDB;
 
 -- ==========================================
 -- KIỂM TRA DANH SÁCH BẢNG

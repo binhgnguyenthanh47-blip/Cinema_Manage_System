@@ -147,7 +147,3 @@ vite.config.ts.timestamp-*
 
 # Turbo Repo
 .turbo
-
-# Anh do admin upload (khong dua len git)
-uploads/movies/*
-!uploads/movies/.gitkeep

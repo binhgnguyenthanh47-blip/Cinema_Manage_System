@@ -8,16 +8,6 @@
             .toLowerCase();
     }
 
-    // Escape du lieu truoc khi chen vao HTML (chong XSS)
-    function escapeHtmlTim(giaTri) {
-        return String(giaTri ?? "")
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#39;");
-    }
-
     function khoiTaoTimKiem() {
         const oTim = document.getElementById("oTim");
         const goiY = document.getElementById("goiY");
@@ -46,10 +36,10 @@
             } else {
                 let html = "";
                 for (let i = 0; i < ketQua.length; i++) {
-                    html += '<a class="o-tim__muc" href="chitiet.html?id=' + encodeURIComponent(ketQua[i].id) + '">' +
+                    html += '<a class="o-tim__muc" href="chitiet.html?id=' + ketQua[i].id + '">' +
                         taoAnh(ketQua[i], "o-tim__anh") +
-                        '<span><span class="o-tim__ten">' + escapeHtmlTim(ketQua[i].ten) + '</span>' +
-                        '<span class="o-tim__loai">' + escapeHtmlTim(ketQua[i].theLoai) + ' • ' + escapeHtmlTim(ketQua[i].doTuoi) + '</span></span></a>';
+                        '<span><span class="o-tim__ten">' + ketQua[i].ten + '</span>' +
+                        '<span class="o-tim__loai">' + ketQua[i].theLoai + ' • ' + ketQua[i].doTuoi + '</span></span></a>';
                 }
                 goiY.innerHTML = html;
             }
