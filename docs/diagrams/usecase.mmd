@@ -1,0 +1,28 @@
+flowchart LR
+    Khach(["👤 Khách vãng lai"])
+    KH(["👤 Khách hàng<br/>(đã đăng nhập)"])
+    AD(["🛠 Quản trị viên"])
+
+    subgraph WEB["Website đặt vé xem phim"]
+        direction TB
+        UC1["Xem phim đang / sắp chiếu"]
+        UC2["Tìm kiếm, lọc phim, phân trang"]
+        UC3["Xem chi tiết phim, trailer, bộ ảnh"]
+        UC4["Xem lịch chiếu theo ngày / rạp"]
+        UC5["Đăng ký / Đăng nhập / Đăng xuất"]
+        UC6["Chọn suất, chọn ghế, giữ ghế 15 phút"]
+        UC7["Thanh toán: combo, mã giảm giá"]
+        UC8["Xem vé điện tử QR, lịch sử vé"]
+
+        UA1["Thống kê doanh thu"]
+        UA2["CRUD phim + upload ảnh + editor"]
+        UA3["CRUD suất chiếu"]
+        UA4["CRUD rạp, phòng, sơ đồ ghế"]
+        UA5["Quản lý đơn: xem, hủy, xóa"]
+        UA6["CRUD người dùng, phân quyền"]
+    end
+
+    Khach --- UC1 & UC2 & UC3 & UC4 & UC5
+    KH --- UC6 & UC7 & UC8
+    KH -. "kế thừa" .-> Khach
+    AD --- UA1 & UA2 & UA3 & UA4 & UA5 & UA6

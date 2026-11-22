@@ -137,7 +137,7 @@ const lichChieu = {
 
 async function taiDanhSachPhim() {
     try {
-        const response = await fetch("/api/movies");
+        const response = await fetch("api/movies.php", {credentials: "same-origin"});
 
         if (!response.ok) {
             throw new Error("Khong the ket noi API phim");
@@ -177,26 +177,20 @@ function chuyenDoiPhim(p) {
         dienVien: p.actors || "Đang cập nhật",
         quocGia: p.country || "",
         ngonNgu: p.language || "",
-        khoiChieu: p.release_date_text || "",
+        khoiChieu: p.release_date_text ||
+            (p.release_date ? String(p.release_date).slice(0, 10).split("-").reverse().join("/") : ""),
+        // Noi dung tu editor admin, da duoc server loc HTML an toan
         noiDung: p.description || "",
+        noiDungHtml: true,
         trailer: p.trailer_url || "",
         rap: [],
         ngayChieu: []
     };
 }
 
-async function khoiTaoDuLieuPhim() {
-    const movies = await taiDanhSachPhim();
-
-    dsPhim = movies.map(chuyenDoiPhim);
-
-    console.log("Da dong bo phim tu database");
-    console.log("Tong so phim:", dsPhim.length);
-}
-
 async function taiDanhSachRap() {
     try {
-        const response = await fetch("/api/cinemas");
+        const response = await fetch("api/cinemas.php", {credentials: "same-origin"});
 
         if (!response.ok) {
             throw new Error("Khong the ket noi API rap");
@@ -222,7 +216,7 @@ async function taiDanhSachRap() {
 
 async function taiLichChieu() {
     try {
-        const response = await fetch("/api/shows");
+        const response = await fetch("api/shows.php", {credentials: "same-origin"});
 
         if (!response.ok) {
             throw new Error("Khong the ket noi API lich chieu");
@@ -277,11 +271,24 @@ function chuyenDoiSuatChieu(s) {
             ? "2D lồng tiếng"
             : "2D phụ đề",
         giaVe: Number(s.base_price),
-        trangThai: s.status
+        // Suat da bat dau (dang chieu) khong con dat duoc -> danh dau "started"
+        // de cac trang chi liet ke suat "scheduled" an no di.
+        trangThai: s.status === "scheduled" && s.bookable === false ? "started" : s.status
     };
 }
 
 function tachNgayGio(thoiGian) {
+    // API PHP tra "YYYY-MM-DD HH:MM:SS" theo gio rap (Viet Nam): doc truc tiep,
+    // khong qua new Date() (Safari khong doc duoc dinh dang co dau cach).
+    const khop = String(thoiGian || "").match(/^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2})/);
+    if (khop && !/[zZ]|[+-]\d{2}:?\d{2}$/.test(String(thoiGian))) {
+        return {
+            ngayId: `${khop[1]}-${khop[2]}-${khop[3]}`,
+            ngay: `${khop[3]}/${khop[2]}`,
+            gio: `${khop[4]}:${khop[5]}`
+        };
+    }
+
     const date = new Date(thoiGian);
 
     const parts = new Intl.DateTimeFormat("vi-VN", {
@@ -432,4 +439,37 @@ async function khoiTaoDuLieu() {
     console.log("Tong so phim:", dsPhim.length);
     console.log("Tong so rap:", dsRap.length);
     console.log("Tong so suat:", dsSuatChieu.length);
+}
+// ===== Goi API PHP (phien dang nhap luu bang cookie session) =====
+// Duong dan tuong doi (api/...) de chay duoc ca khi dat trong thu muc con cua htdocs.
+// Tra ve { ok, status, data, message } thay vi nem loi,
+// de giao dien hien thi dung thong bao tu server.
+async function goiApi(duongDan, tuyChon) {
+    const opts = tuyChon || {};
+    const coBody = opts.body !== undefined;
+
+    try {
+        const response = await fetch(duongDan, {
+            method: opts.method || (coBody ? "POST" : "GET"),
+            credentials: "same-origin",
+            headers: coBody ? { "Content-Type": "application/json" } : {},
+            body: coBody ? JSON.stringify(opts.body) : undefined
+        });
+
+        let ketQua = {};
+        try {
+            ketQua = await response.json();
+        } catch (_) {
+            ketQua = {};
+        }
+
+        return {
+            ok: response.ok && ketQua.success !== false,
+            status: response.status,
+            data: ketQua.data,
+            message: ketQua.message || (response.ok ? "" : "Lỗi kết nối máy chủ (" + response.status + ")")
+        };
+    } catch (_) {
+        return { ok: false, status: 0, data: null, message: "Không kết nối được máy chủ." };
+    }
 }

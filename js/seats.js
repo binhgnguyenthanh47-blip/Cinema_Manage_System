@@ -65,6 +65,50 @@
         return Number(soTien || 0).toLocaleString("vi-VN") + "đ";
     }
 
+    // ===== Che do API (chay qua server Node + MySQL) =====
+    // Ghe da dat / dang giu duoc luu tren server nen moi tai khoan,
+    // moi trinh duyet deu thay giong nhau. Neu mo file truc tiep
+    // (khong co server) thi dung localStorage nhu truoc.
+    function cheDoApi() {
+        return typeof dungDuLieuApi !== "undefined" && dungDuLieuApi === true && typeof goiApi === "function";
+    }
+
+    const LOAI_GHE_API = { standard: "thuong", vip: "vip", couple: "doi" };
+
+    const PHUONG_THUC_API = {
+        "Ví điện tử MoMo": "ewallet",
+        "Ví ZaloPay": "ewallet",
+        "Chuyển khoản QR Ngân hàng": "bank_transfer",
+        "Thẻ quốc tế Visa / Mastercard": "card"
+    };
+
+    function tenRapCuaSuatApi(s) {
+        return s.cum && s.tenRap ? `${s.cum} - ${s.tenRap}` : (s.tenRap || "");
+    }
+
+    // Tim suat chieu trong du lieu API khop voi phim / rap / ngay / gio dang chon
+    function timSuatApi(suat) {
+        if (!cheDoApi() || typeof dsSuatChieu === "undefined") return null;
+        const ngay = chuanHoaNgay(suat.ngay);
+        return dsSuatChieu.find((s) =>
+            s.trangThai === "scheduled" &&
+            s.tenPhim === suat.tenPhim &&
+            tenRapCuaSuatApi(s) === suat.rap &&
+            chuanHoaNgay(s.ngayId) === ngay &&
+            s.gio === suat.gio
+        ) || null;
+    }
+
+    // Escape du lieu truoc khi chen vao HTML (chong XSS)
+    function escapeHtml(giaTri) {
+        return String(giaTri ?? "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#39;");
+    }
+
     function boDauTiengViet(str) {
         return String(str || "")
             .normalize("NFD")
@@ -120,56 +164,14 @@
         return bangGia.vip;
     }
 
+    // Tai khoan dang nhap: do script.js luu sau khi dang nhap qua API (co userId tu server)
     function layTaiKhoanDangNhap() {
-        const cacKeyUuTien = [
-            "nguoiDangNhap", "taiKhoan", "nguoiDung", "nguoiDungHienTai", "taiKhoanHienTai",
-            "userHienTai", "dangNhap", "khachHang", "currentUser",
-            "user", "taiKhoanDangNhap", "loggedInUser", "loginUser", "auth"
-        ];
-        const keyBoQua = new Set([
-            "dsNguoiDung", "dsPhim", "dsLichChieu", "dsRap",
-            KEY_SUAT_CHIEU, KEY_DON_DAT_VE, KEY_LICH_SU_VE, KEY_GHE_DA_DAT
-        ]);
-
-        const tatCaKey = Array.from(new Set([
-            ...cacKeyUuTien,
-            ...Object.keys(localStorage),
-            ...Object.keys(sessionStorage)
-        ]));
-
-        for (const key of tatCaKey) {
-            if (keyBoQua.has(key) || key.startsWith("cinema_")) continue;
-            const raw = localStorage.getItem(key) || sessionStorage.getItem(key);
-            if (!raw) continue;
-
-            try {
-                const parsed = JSON.parse(raw);
-                if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
-                    if (
-                        parsed.email || parsed.tenDangNhap || parsed.username ||
-                        parsed.hoTen || parsed.ten || parsed.name ||
-                        parsed.taiKhoan || parsed.sdt
-                    ) {
-                        return parsed;
-                    }
-                }
-            } catch (_) {
-                if (cacKeyUuTien.includes(key) && raw.trim() && raw !== "null" && raw !== "undefined") {
-                    return { email: raw.trim(), hoTen: raw.trim() };
-                }
-            }
+        try {
+            const nguoi = JSON.parse(localStorage.getItem("nguoiDangNhap") || "null");
+            return nguoi && nguoi.userId ? nguoi : null;
+        } catch (_) {
+            return null;
         }
-
-        const khungTaiKhoan = document.getElementById("taiKhoan");
-        if (khungTaiKhoan) {
-            const text = khungTaiKhoan.textContent.trim();
-            if (text && !text.toLowerCase().includes("đăng nhập")) {
-                const tenHienThi = text.replace(/đăng xuất/gi, "").trim() || "Khách hàng";
-                return { hoTen: tenHienThi, email: tenHienThi };
-            }
-        }
-
-        return null;
     }
 
     function layDinhDanhTaiKhoan(user) {
@@ -217,7 +219,10 @@
         const dsRapChuan = Array.from(new Set([...tenRapTuDs, ...tenRapTuLich]));
 
         let dsNgayChuan = [...DU_LIEU_HE_THONG_MAC_DINH.ngay];
-        if (typeof lichChieu !== "undefined" && lichChieu && Array.isArray(lichChieu.cacNgay)) {
+        if (cheDoApi() && typeof dsNgayHienTai !== "undefined" && Array.isArray(dsNgayHienTai) && dsNgayHienTai.length) {
+            // Ngay chieu that lay tu API (so = "YYYY-MM-DD")
+            dsNgayChuan = dsNgayHienTai.map((n) => chuanHoaNgay(n.so));
+        } else if (typeof lichChieu !== "undefined" && lichChieu && Array.isArray(lichChieu.cacNgay)) {
             dsNgayChuan = lichChieu.cacNgay.map((n) => n.nhan.split(" ")[1] + "/2026");
         }
 
@@ -360,7 +365,7 @@
                 dsSuat.unshift({ gio: suat.gio, phong: suat.phong });
             }
             selectGio.innerHTML = dsSuat
-                .map((s) => `<option value="${s.gio}|${s.phong}">${s.gio} (${s.phong})</option>`)
+                .map((s) => `<option value="${escapeHtml(s.gio)}|${escapeHtml(s.phong)}">${escapeHtml(s.gio)} (${escapeHtml(s.phong)})</option>`)
                 .join("");
 
             const suatChon = giuGioHienTai
@@ -378,18 +383,18 @@
 
             const dsPhim = [...heThong.phim];
             if (!dsPhim.includes(suat.tenPhim)) dsPhim.unshift(suat.tenPhim);
-            selectPhim.innerHTML = dsPhim.map((ten) => `<option value="${ten}">${ten}</option>`).join("");
+            selectPhim.innerHTML = dsPhim.map((ten) => `<option value="${escapeHtml(ten)}">${escapeHtml(ten)}</option>`).join("");
             selectPhim.value = suat.tenPhim;
 
             const dsRap = [...heThong.rap];
             if (!dsRap.includes(suat.rap)) dsRap.unshift(suat.rap);
-            selectRap.innerHTML = dsRap.map((rap) => `<option value="${rap}">${rap}</option>`).join("");
+            selectRap.innerHTML = dsRap.map((rap) => `<option value="${escapeHtml(rap)}">${escapeHtml(rap)}</option>`).join("");
             selectRap.value = suat.rap;
 
             suat.ngay = chuanHoaNgay(suat.ngay);
             const dsNgay = [...heThong.ngay];
             if (!dsNgay.includes(suat.ngay)) dsNgay.unshift(suat.ngay);
-            selectNgay.innerHTML = dsNgay.map((ngay) => `<option value="${ngay}">${ngay}</option>`).join("");
+            selectNgay.innerHTML = dsNgay.map((ngay) => `<option value="${escapeHtml(ngay)}">${escapeHtml(ngay)}</option>`).join("");
             selectNgay.value = suat.ngay;
 
             capNhatDropdownGioVaPhong(true);
@@ -439,7 +444,103 @@
             if (elDoi) elDoi.textContent = `Ghế Đôi (${dinhDangTien(bangGia.doi)}/cặp)`;
         }
 
+        // Suat chieu (tu API) dang hien thi, va so thu tu lan tai
+        // de bo qua ket qua cu khi nguoi dung doi suat lien tuc.
+        let suatApiHienTai = null;
+        let luotTaiGhe = 0;
+
+        async function veSoDoGheApi() {
+            const luot = ++luotTaiGhe;
+            suatApiHienTai = timSuatApi(suat);
+
+            if (!suatApiHienTai) {
+                gheDangChon = [];
+                capNhatTomTat();
+                khungSoDo.textContent = "Suất chiếu này chưa có trong hệ thống. Vui lòng chọn suất khác.";
+                return;
+            }
+
+            if (!khungSoDo.children.length) {
+                khungSoDo.textContent = "Đang tải sơ đồ ghế...";
+            }
+
+            const kq = await goiApi(`api/seats.php?show_id=${encodeURIComponent(suatApiHienTai.id)}`);
+            if (luot !== luotTaiGhe) return;
+
+            if (!kq.ok || !Array.isArray(kq.data)) {
+                khungSoDo.textContent = kq.message || "Không tải được sơ đồ ghế.";
+                return;
+            }
+
+            // Bo cac ghe dang chon ma nguoi khac vua dat
+            const gheDaDat = new Set(
+                kq.data.filter((g) => g.availability === "occupied").map((g) => Number(g.seat_id))
+            );
+            const gheBiMat = gheDangChon.filter((g) => gheDaDat.has(g.seatId));
+            if (gheBiMat.length > 0) {
+                gheDangChon = gheDangChon.filter((g) => !gheDaDat.has(g.seatId));
+                document.getElementById("thongBaoGhe").textContent =
+                    `Ghế ${gheBiMat.map((g) => g.ma).join(", ")} vừa được người khác đặt!`;
+            }
+
+            const theoHang = new Map();
+            kq.data.forEach((g) => {
+                if (!theoHang.has(g.row_label)) theoHang.set(g.row_label, []);
+                theoHang.get(g.row_label).push(g);
+            });
+
+            const giaTheoLoai = {};
+            khungSoDo.innerHTML = "";
+
+            if (theoHang.size === 0) {
+                khungSoDo.textContent = "Phòng chiếu chưa có ghế. Hãy chạy seed_seats.sql và seed_extra_seats.sql.";
+            }
+
+            theoHang.forEach((dsGhe, hang) => {
+                const dong = document.createElement("div");
+                dong.className = "hang-ghe";
+
+                const nhan = document.createElement("span");
+                nhan.className = "hang-ghe__nhan";
+                nhan.textContent = hang;
+                dong.appendChild(nhan);
+
+                dsGhe
+                    .sort((a, b) => a.seat_number - b.seat_number)
+                    .forEach((g) => {
+                        const loai = LOAI_GHE_API[g.seat_type] || "thuong";
+                        const gia = Number(g.price);
+                        if (giaTheoLoai[loai] === undefined) giaTheoLoai[loai] = gia;
+                        dong.appendChild(taoNutGhe(
+                            g.seat_label,
+                            loai,
+                            gia,
+                            gheDaDat.has(Number(g.seat_id)),
+                            Number(g.seat_id)
+                        ));
+                    });
+
+                khungSoDo.appendChild(dong);
+            });
+
+            // Bang gia lay tu server
+            const nhanGia = { thuong: ["nhanGiaThuong", "Ghế Thường"], vip: ["nhanGiaVip", "Ghế VIP"], doi: ["nhanGiaDoi", "Ghế Đôi"] };
+            Object.keys(nhanGia).forEach((loai) => {
+                const el = document.getElementById(nhanGia[loai][0]);
+                if (el && giaTheoLoai[loai] !== undefined) {
+                    el.textContent = `${nhanGia[loai][1]} (${dinhDangTien(giaTheoLoai[loai])})`;
+                }
+            });
+
+            capNhatTomTat();
+        }
+
         function veSoDoGhe() {
+            if (cheDoApi()) {
+                veSoDoGheApi();
+                return;
+            }
+
             khungSoDo.innerHTML = "";
             const gheDaDat = layGheDaDatTheoSuat(suat);
             const cacHang = ["A", "B", "C", "D", "E", "F", "G", "H"];
@@ -470,7 +571,7 @@
             });
         }
 
-        function taoNutGhe(ma, loai, gia, daDat) {
+        function taoNutGhe(ma, loai, gia, daDat, seatId) {
             const nut = document.createElement("button");
             nut.type = "button";
             nut.textContent = ma;
@@ -489,7 +590,7 @@
                         document.getElementById("thongBaoGhe").textContent = "Bạn chỉ được chọn tối đa 8 ghế mỗi lần đặt.";
                         return;
                     }
-                    gheDangChon.push({ ma, loai, gia: giaChuan });
+                    gheDangChon.push({ ma, loai, gia: giaChuan, seatId });
                     nut.classList.add("ghe--dang-chon");
                 }
                 document.getElementById("thongBaoGhe").textContent = "";
@@ -509,6 +610,7 @@
         }
 
         window.addEventListener("storage", (e) => {
+            if (cheDoApi()) return; // che do API tu dong lam moi tu server
             if (e.key === KEY_GHE_DA_DAT || e.key === KEY_LICH_SU_VE) {
                 const gheDaBanMoiNhat = layGheDaDatTheoSuat(suat);
                 const gheBiMat = gheDangChon.filter((g) => gheDaBanMoiNhat.includes(g.ma));
@@ -525,10 +627,78 @@
         capNhatThongTinSuatTrenThe();
         veSoDoGhe();
 
-        document.getElementById("nutTiepTucThanhToan").addEventListener("click", () => {
+        // Che do API: cap nhat so do ghe moi 10 giay de thay ghe nguoi khac vua dat
+        if (cheDoApi()) {
+            setInterval(() => {
+                if (!document.hidden) veSoDoGhe();
+            }, 10000);
+        }
+
+        // Giu ghe tren server: neu ghe da bi nguoi khac giu/dat, server tra 409
+        async function giuGheQuaApi(nut, loiEl) {
+            const taiKhoan = layTaiKhoanDangNhap();
+            if (!taiKhoan) {
+                loiEl.textContent = "Vui lòng đăng nhập tài khoản ở góc trên bên phải trước khi đặt vé!";
+                return;
+            }
+            if (!suatApiHienTai) {
+                loiEl.textContent = "Suất chiếu này chưa có trong hệ thống. Vui lòng chọn suất khác.";
+                return;
+            }
+
+            nut.disabled = true;
+            loiEl.textContent = "Đang giữ ghế...";
+
+            const kq = await goiApi("api/bookings.php", {
+                method: "POST",
+                body: {
+                    action: "create",
+                    show_id: Number(suatApiHienTai.id),
+                    seat_ids: gheDangChon.map((g) => g.seatId)
+                }
+            });
+
+            nut.disabled = false;
+
+            if (!kq.ok || !kq.data) {
+                loiEl.textContent = kq.message || "Không giữ được ghế, vui lòng thử lại.";
+                if (kq.status === 401) {
+                    localStorage.removeItem("nguoiDangNhap");
+                    loiEl.textContent = "Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại.";
+                }
+                if (kq.status === 409) {
+                    gheDangChon = [];
+                    capNhatTomTat();
+                    veSoDoGhe();
+                }
+                return;
+            }
+
+            loiEl.textContent = "";
+            const donTam = {
+                quaApi: true,
+                bookingId: kq.data.booking_id,
+                maDatVe: kq.data.booking_code,
+                showId: Number(suatApiHienTai.id),
+                suat: { ...suat, ngay: chuanHoaNgay(suat.ngay) },
+                ghe: gheDangChon.map((g) => ({ ma: g.ma, loai: g.loai, gia: g.gia })),
+                tienVe: kq.data.total_amount,
+                // Tru 5 giay de giao dien het han truoc server
+                hetHanLuc: Date.now() + (Number(kq.data.hold_seconds) || 900) * 1000 - 5000
+            };
+            localStorage.setItem(KEY_DON_DAT_VE, JSON.stringify(donTam));
+            window.location.href = "checkout.html";
+        }
+
+        document.getElementById("nutTiepTucThanhToan").addEventListener("click", (e) => {
             const loiEl = document.getElementById("thongBaoGhe");
             if (gheDangChon.length === 0) {
                 loiEl.textContent = "Vui lòng chọn ít nhất 1 ghế trước khi tiếp tục.";
+                return;
+            }
+
+            if (cheDoApi()) {
+                giuGheQuaApi(e.currentTarget, loiEl);
                 return;
             }
 
@@ -583,6 +753,13 @@
             return;
         }
 
+        // Don tao o che do cu (khong qua server) khong thanh toan duoc khi dang chay server
+        if (cheDoApi() && !donTam.quaApi) {
+            localStorage.removeItem(KEY_DON_DAT_VE);
+            window.location.href = "booking.html";
+            return;
+        }
+
         donTam.suat.ngay = chuanHoaNgay(donTam.suat.ngay);
 
         donTam.ghe = donTam.ghe.map((g) => {
@@ -615,6 +792,7 @@
         document.getElementById("ttDanhSachGhe").textContent = donTam.ghe.map((g) => g.ma).join(", ");
 
         window.addEventListener("storage", (e) => {
+            if (donTam.quaApi) return; // server da giu ghe cho don nay
             if (e.key === KEY_GHE_DA_DAT || e.key === KEY_LICH_SU_VE) {
                 const gheDaBanMoiNhat = layGheDaDatTheoSuat(donTam.suat);
                 const gheBiTrung = donTam.ghe.map((g) => g.ma).filter((ma) => gheDaBanMoiNhat.includes(ma));
@@ -631,7 +809,7 @@
             if (giayConLai <= 0) {
                 clearInterval(boDem);
                 localStorage.removeItem(KEY_DON_DAT_VE);
-                alert("Hết thời gian giữ ghế 10 phút, vui lòng chọn lại ghế!");
+                alert("Hết thời gian giữ ghế, vui lòng chọn lại ghế!");
                 window.location.href = "booking.html";
                 return;
             }
@@ -728,6 +906,11 @@
                 return;
             }
 
+            if (donTam.quaApi) {
+                thanhToanQuaApi(loiEl, { hoTen, email, sdt });
+                return;
+            }
+
             const gheDaBanMoiNhat = layGheDaDatTheoSuat(donTam.suat);
             const gheBiTrung = donTam.ghe
                 .map((g) => g.ma)
@@ -748,6 +931,13 @@
             const chiTietTien = tinhTongTien();
             const maVe = "CNM-" + Math.floor(100000 + Math.random() * 900000);
 
+            luuVeVaChuyenTrang(maVe, phuongThuc, chiTietTien, { hoTen, email, sdt });
+            luuGheDaDat(donTam.suat, donTam.ghe.map((g) => g.ma));
+            window.location.href = `e_ticket.html?maVe=${encodeURIComponent(maVe)}`;
+        });
+
+        // Luu ve vao lich su (de trang e_ticket hien thi) va xoa don tam
+        function luuVeVaChuyenTrang(maVe, phuongThuc, chiTietTien, khachHang) {
             const dsComboText = [];
             if (soLuongCombo.solo > 0) dsComboText.push(`${soLuongCombo.solo}x Combo Solo`);
             if (soLuongCombo.couple > 0) dsComboText.push(`${soLuongCombo.couple}x Combo Couple`);
@@ -759,33 +949,113 @@
                 ghe: donTam.ghe.map((g) => g.ma),
                 combo: dsComboText.length ? dsComboText.join(", ") : "Không có",
                 tongTien: chiTietTien.tongCuoi,
-                khachHang: { hoTen, email, sdt },
+                khachHang,
                 phuongThuc,
                 thoiGianDat: new Date().toLocaleString("vi-VN")
             };
 
-            const lichSuVe = JSON.parse(localStorage.getItem(KEY_LICH_SU_VE) || "[]");
-            lichSuVe.unshift(veMoi);
-            localStorage.setItem(KEY_LICH_SU_VE, JSON.stringify(lichSuVe));
+            // Chay qua server: lich su ve doc tu database (api/bookings.php), khong luu o trinh duyet
+            if (!donTam.quaApi) {
+                const lichSuVe = JSON.parse(localStorage.getItem(KEY_LICH_SU_VE) || "[]");
+                lichSuVe.unshift(veMoi);
+                localStorage.setItem(KEY_LICH_SU_VE, JSON.stringify(lichSuVe));
+            }
 
-            luuGheDaDat(donTam.suat, veMoi.ghe);
             localStorage.removeItem(KEY_DON_DAT_VE);
             clearInterval(boDem);
+        }
+
+        // Thanh toan tren server: chuyen ve tu "dang giu" sang "da thanh toan"
+        async function thanhToanQuaApi(loiEl, khachHang) {
+            const phuongThuc = document.querySelector('input[name="phuongThuc"]:checked').value;
+            const chiTietTien = tinhTongTien();
+
+            nutThanhToan.disabled = true;
+            loiEl.textContent = "Đang xử lý thanh toán...";
+
+            const kq = await goiApi("api/bookings.php", {
+                method: "POST",
+                body: {
+                    action: "pay",
+                    booking_id: Number(donTam.bookingId),
+                    method: PHUONG_THUC_API[phuongThuc] || "ewallet",
+                    // Chi gui so luong + ma; server tu tinh tien theo bang gia cua server
+                    combos: { solo: soLuongCombo.solo, couple: soLuongCombo.couple },
+                    voucher: voucherDangAp ? voucherDangAp.ma : "",
+                    contact: { name: khachHang.hoTen, email: khachHang.email, phone: khachHang.sdt }
+                }
+            });
+
+            if (!kq.ok || !kq.data) {
+                nutThanhToan.disabled = false;
+                loiEl.textContent = kq.message || "Thanh toán thất bại, vui lòng thử lại.";
+                if (kq.status === 409 || kq.status === 404) {
+                    alert(loiEl.textContent);
+                    localStorage.removeItem(KEY_DON_DAT_VE);
+                    clearInterval(boDem);
+                    window.location.href = "booking.html";
+                }
+                return;
+            }
+
+            const maVe = kq.data.booking_code;
+            // So tien tren ve lay theo server (nguon chinh xac), khong theo trinh duyet
+            chiTietTien.tongCuoi = Number(kq.data.total_amount);
+            luuVeVaChuyenTrang(maVe, phuongThuc, chiTietTien, khachHang);
             window.location.href = `e_ticket.html?maVe=${encodeURIComponent(maVe)}`;
-        });
+        }
     }
 
-    function khoiTaoTrangVeDienTu() {
+    const TEN_PHUONG_THUC = {
+        cash: "Tiền mặt", bank_transfer: "Chuyển khoản ngân hàng", card: "Thẻ quốc tế", ewallet: "Ví điện tử"
+    };
+
+    // Doi 1 don tu API (api/bookings.php) sang dang ve ma giao dien dang dung
+    function chuyenDonThanhVe(d) {
+        const ngayGio = tachNgayGio(d.start_time);
+        return {
+            maVe: d.booking_code,
+            suat: {
+                tenPhim: d.movie_title,
+                rap: d.cluster_name ? `${d.cluster_name} - ${d.cinema_name}` : d.cinema_name,
+                phong: d.hall_name,
+                gio: ngayGio.gio,
+                ngay: chuanHoaNgay(ngayGio.ngayId)
+            },
+            ghe: String(d.seats || "").split(", ").filter(Boolean),
+            combo: d.combo_detail || "Không có",
+            tongTien: d.total_amount,
+            khachHang: { hoTen: d.contact_name || "", email: d.contact_email || "", sdt: d.contact_phone || "" },
+            phuongThuc: TEN_PHUONG_THUC[d.payment_method] || "—"
+        };
+    }
+
+    async function layVeCuaToi() {
+        if (cheDoApi()) {
+            const kq = await goiApi("api/bookings.php");
+            if (kq.status === 401) return null; // chua dang nhap
+            // Chi hien ve da thanh toan (don dang giu / da huy khong co ve)
+            return kq.ok && Array.isArray(kq.data)
+                ? kq.data.filter((d) => d.status === "paid").map(chuyenDonThanhVe)
+                : [];
+        }
+
+        const userId = layDinhDanhTaiKhoan(layTaiKhoanDangNhap());
+        const tatCaVe = JSON.parse(localStorage.getItem(KEY_LICH_SU_VE) || "[]");
+        return userId ? tatCaVe.filter((v) => !v.userId || v.userId === userId) : tatCaVe;
+    }
+
+    async function khoiTaoTrangVeDienTu() {
         const khungQr = document.getElementById("khungQrVe");
         if (!khungQr) return;
 
-        const taiKhoan = layTaiKhoanDangNhap();
-        const userId = layDinhDanhTaiKhoan(taiKhoan);
-        const tatCaVe = JSON.parse(localStorage.getItem(KEY_LICH_SU_VE) || "[]");
+        const veCuaTaiKhoan = await layVeCuaToi();
 
-        const veCuaTaiKhoan = userId
-            ? tatCaVe.filter((v) => !v.userId || v.userId === userId)
-            : tatCaVe;
+        if (veCuaTaiKhoan === null) {
+            alert("Vui lòng đăng nhập để xem vé của bạn.");
+            window.location.href = "index.html";
+            return;
+        }
 
         if (!veCuaTaiKhoan || veCuaTaiKhoan.length === 0) {
             alert("Tài khoản của bạn chưa có vé nào. Hãy chọn phim và đặt vé nhé!");
@@ -856,12 +1126,12 @@
                 .map((v) => {
                     const dangXem = v.maVe === veDangHien.maVe ? " lich-su-ve__item--dang-xem" : "";
                     return `
-                        <div class="lich-su-ve__item${dangXem}" data-mave="${v.maVe}">
+                        <div class="lich-su-ve__item${dangXem}" data-mave="${escapeHtml(v.maVe)}">
                             <div>
-                                <div class="lich-su-ve__phim">${v.suat.tenPhim} (#${v.maVe})</div>
-                                <div class="lich-su-ve__phu">${v.suat.rap} • ${v.suat.phong} • ${v.suat.gio} (${v.suat.ngay}) • Ghế: ${v.ghe.join(", ")}</div>
+                                <div class="lich-su-ve__phim">${escapeHtml(v.suat.tenPhim)} (#${escapeHtml(v.maVe)})</div>
+                                <div class="lich-su-ve__phu">${escapeHtml(v.suat.rap)} • ${escapeHtml(v.suat.phong)} • ${escapeHtml(v.suat.gio)} (${escapeHtml(v.suat.ngay)}) • Ghế: ${escapeHtml(v.ghe.join(", "))}</div>
                             </div>
-                            <strong>${dinhDangTien(v.tongTien)}</strong>
+                            <strong>${escapeHtml(dinhDangTien(v.tongTien))}</strong>
                         </div>
                     `;
                 })
@@ -883,8 +1153,15 @@
     }
 
     document.addEventListener("DOMContentLoaded", () => {
-        khoiTaoTrangChonGhe();
-        khoiTaoTrangThanhToan();
-        khoiTaoTrangVeDienTu();
+        // Cho script.js tai xong du lieu tu API (neu co server) roi moi ve trang
+        const choDuLieu = typeof batDauKhoiTao === "function"
+            ? Promise.resolve(batDauKhoiTao()).catch(() => {})
+            : Promise.resolve();
+
+        choDuLieu.then(() => {
+            khoiTaoTrangChonGhe();
+            khoiTaoTrangThanhToan();
+            khoiTaoTrangVeDienTu();
+        });
     });
 })();

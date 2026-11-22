@@ -53,6 +53,9 @@
 }
 
 .chon-suat-nhanh__o {
+    /* Khong de rule .bo-loc__chon { flex: 1 1 22% } (danh cho thanh loc ngang)
+       ep chieu cao o chon trong khung xep doc tren man hinh nho */
+    flex: none;
     width: 100%;
     height: 42px;
     padding: 0 12px;

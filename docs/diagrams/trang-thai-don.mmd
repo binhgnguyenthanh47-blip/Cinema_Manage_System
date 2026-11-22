@@ -1,0 +1,18 @@
+stateDiagram-v2
+    direction LR
+    [*] --> pending: Khách giữ ghế<br/>(vé = held)
+    pending --> paid: Thanh toán trong 15 phút<br/>(vé = paid, có mã QR)
+    pending --> expired: Quá 15 phút<br/>(event / lần đặt kế tiếp)
+    pending --> cancelled: Admin hủy
+    paid --> cancelled: Admin hủy<br/>(thanh toán = refunded)
+    expired --> [*]: Admin có thể xóa
+    cancelled --> [*]: Admin có thể xóa
+
+    note right of pending
+        Ghế bị khóa cho người khác
+        (unique show_id + active_seat_id)
+    end note
+    note right of cancelled
+        Vé hủy / hết hạn → active_seat_id = NULL
+        → ghế mở bán lại ngay
+    end note

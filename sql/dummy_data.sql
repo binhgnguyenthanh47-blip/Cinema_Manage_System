@@ -1,199 +1,164 @@
-
-USE cinema_management;
-
-
-
-INSERT INTO Cinemas (cinema_id, name, address)
-VALUES (1, 'Cinema Demo Quan 1', 'Quan 1, TP. Ho Chi Minh');
-
-INSERT INTO Cinemas (cinema_id, name, address)
-VALUES (2, 'Cinema Demo Thu Duc', 'TP. Thu Duc, TP. Ho Chi Minh');
-
-INSERT INTO CinemaHalls (hall_id, cinema_id, hall_name)
-VALUES (1, 1, 'Phong 01');
-
-INSERT INTO CinemaHalls (hall_id, cinema_id, hall_name)
-VALUES (2, 1, 'Phong 02');
-
-INSERT INTO CinemaHalls (hall_id, cinema_id, hall_name)
-VALUES (3, 2, 'Phong 01');
-
-INSERT INTO Movies (movie_id, title, genre, duration_minutes, age_rating, release_date, poster_url, trailer_url, description, status)
-VALUES (4, 'Tee Yod – Quỷ Ăn Tạng', 'Kinh di', 121, 'T18', '2023-10-26', 'assets/posters/tee-yod-1.jpg', NULL, 'Gia dinh Yak doi mat voi the luc ta ac.', 'now_showing');
-
-INSERT INTO Movies (movie_id, title, genre, duration_minutes, age_rating, release_date, poster_url, trailer_url, description, status)
-VALUES (5, 'Tee Yod 2 – Quỷ Ăn Tạng 2', 'Kinh di', 112, 'T18', '2024-10-10', 'assets/posters/tee-yod-2.jpg', NULL, 'Yak quyet tam san lung hon ma de tra thu.', 'now_showing');
-
-INSERT INTO Movies (movie_id, title, genre, duration_minutes, age_rating, release_date, poster_url, trailer_url, description, status)
-VALUES (6, 'Tee Yod 3 – Quỷ Ăn Tạng 3', 'Kinh di', 104, 'T18', '2025-10-01', 'assets/posters/tee-yod-3.jpg', NULL, 'Yak doi dau voi nhung the luc tam linh moi.', 'now_showing');
-
-INSERT INTO Movies (movie_id, title, genre, duration_minutes, age_rating, release_date, poster_url, trailer_url, description, status)
-VALUES (7, 'Tee Yod 4 – Quỷ Ăn Tạng 4', 'Kinh di', 111, 'T18', '2026-01-01', 'assets/posters/tee-yod-4.jpg', NULL, 'Yak tim hieu bi an cua Ho Tinh.', 'coming_soon');
-
-INSERT INTO Movies (movie_id, title, genre, duration_minutes, age_rating, release_date, poster_url, trailer_url, description, status)
-VALUES (8, 'Avatar – Thế Thần', 'Khoa hoc vien tuong', 162, 'T13', '2009-12-18', 'assets/posters/avatar-1.jpg', NULL, 'Jake Sully kham pha hanh tinh Pandora.', 'now_showing');
-
-INSERT INTO Movies (movie_id, title, genre, duration_minutes, age_rating, release_date, poster_url, trailer_url, description, status)
-VALUES (9, 'Avatar: Dòng Chảy Của Nước', 'Khoa hoc vien tuong', 192, 'T13', '2022-12-16', 'assets/posters/avatar-2.jpg', NULL, 'Gia dinh Jake Sully kham pha dai duong Pandora.', 'now_showing');
-
-INSERT INTO Movies (movie_id, title, genre, duration_minutes, age_rating, release_date, poster_url, trailer_url, description, status)
-VALUES (10, 'Avatar: Lửa Và Tro Tàn', 'Khoa hoc vien tuong', 195, 'T13', '2025-12-19', 'assets/posters/avatar-3.jpg', NULL, 'Gia dinh Sully doi mat voi toc Mangkwan.', 'now_showing');
-
-INSERT INTO Movies (movie_id, title, genre, duration_minutes, age_rating, release_date, poster_url, trailer_url, description, status)
-VALUES (11, 'Lật Mặt', 'Hanh dong, hai', 100, 'T13', '2015-05-15', 'assets/posters/lat-mat-1.jpg', NULL, 'Hanh trinh truy duoi va vu oan.', 'now_showing');
-
-INSERT INTO Movies (movie_id, title, genre, duration_minutes, age_rating, release_date, poster_url, trailer_url, description, status)
-VALUES (12, 'Lật Mặt 2: Phim Trường', 'Hanh dong, hai', 100, 'T13', '2016-04-01', 'assets/posters/lat-mat-2.jpg', NULL, 'Cau chuyen ve nhung nguoi dong the.', 'now_showing');
-
-INSERT INTO Movies (movie_id, title, genre, duration_minutes, age_rating, release_date, poster_url, trailer_url, description, status)
-VALUES (13, 'Lật Mặt 3: Ba Chàng Khuyết', 'Hai, tam ly', 100, 'T13', '2018-04-20', 'assets/posters/lat-mat-3.jpg', NULL, 'Ba nguoi ban tim lai nguoi me.', 'now_showing');
-
-INSERT INTO Movies (movie_id, title, genre, duration_minutes, age_rating, release_date, poster_url, trailer_url, description, status)
-VALUES (14, 'Lật Mặt 4: Nhà Có Khách', 'Kinh di, hai', 100, 'T16', '2019-04-12', 'assets/posters/lat-mat-4.jpg', NULL, 'Nhung bi an trong ngoi nha o que.', 'now_showing');
-
-INSERT INTO Movies (movie_id, title, genre, duration_minutes, age_rating, release_date, poster_url, trailer_url, description, status)
-VALUES (15, 'Lật Mặt 5: 48H', 'Hanh dong', 100, 'T16', '2021-04-16', 'assets/posters/lat-mat-5.jpg', NULL, 'Nguoi cha bao ve gia dinh khoi toi pham.', 'now_showing');
-
-INSERT INTO Movies (movie_id, title, genre, duration_minutes, age_rating, release_date, poster_url, trailer_url, description, status)
-VALUES (16, 'Lật Mặt 6: Tấm Vé Định Mệnh', 'Tam ly, giat gan', 100, 'T16', '2023-04-28', 'assets/posters/lat-mat-6.jpg', NULL, 'Tam ve so va bi mat tinh ban.', 'now_showing');
-
-INSERT INTO Movies (movie_id, title, genre, duration_minutes, age_rating, release_date, poster_url, trailer_url, description, status)
-VALUES (17, 'Lật Mặt 7: Một Điều Ước', 'Tinh cam, gia dinh', 100, 'P', '2024-04-26', 'assets/posters/lat-mat-7.jpg', NULL, 'Cau chuyen cam dong ve tinh mau tu.', 'now_showing');
-
-INSERT INTO Movies (movie_id, title, genre, duration_minutes, age_rating, release_date, poster_url, trailer_url, description, status)
-VALUES (18, 'Lật Mặt 8: Vòng Tay Nắng', 'Tinh cam, gia dinh', 100, 'K', '2025-04-30', 'assets/posters/lat-mat-8.jpg', NULL, 'Hanh trinh theo duoi uoc mo am nhac.', 'now_showing');
-
-INSERT INTO Shows (show_id, movie_id, hall_id, start_time, end_time, base_price, status)
-VALUES (1, 4, 1, '2026-11-10 09:00:00', '2026-11-10 11:01:00', 65000, 'scheduled');
-
-INSERT INTO Shows (show_id, movie_id, hall_id, start_time, end_time, base_price, status)
-VALUES (2, 11, 1, '2026-11-10 14:00:00', '2026-11-10 15:40:00', 75000, 'scheduled');
-
-INSERT INTO Shows (show_id, movie_id, hall_id, start_time, end_time, base_price, status)
-VALUES (3, 18, 1, '2026-11-10 19:00:00', '2026-11-10 20:40:00', 90000, 'scheduled');
-
-INSERT INTO Shows (show_id, movie_id, hall_id, start_time, end_time, base_price, status)
-VALUES (4, 10, 2, '2026-11-10 09:00:00', '2026-11-10 12:15:00', 65000, 'scheduled');
-
-INSERT INTO Shows (show_id, movie_id, hall_id, start_time, end_time, base_price, status)
-VALUES (5, 17, 2, '2026-11-10 14:00:00', '2026-11-10 15:40:00', 75000, 'scheduled');
-
-INSERT INTO Shows (show_id, movie_id, hall_id, start_time, end_time, base_price, status)
-VALUES (6, 9, 2, '2026-11-10 19:00:00', '2026-11-10 22:12:00', 90000, 'scheduled');
-
-INSERT INTO Shows (show_id, movie_id, hall_id, start_time, end_time, base_price, status)
-VALUES (7, 16, 3, '2026-11-10 09:00:00', '2026-11-10 10:40:00', 65000, 'scheduled');
-
-INSERT INTO Shows (show_id, movie_id, hall_id, start_time, end_time, base_price, status)
-VALUES (8, 8, 3, '2026-11-10 14:00:00', '2026-11-10 16:42:00', 75000, 'scheduled');
-
-INSERT INTO Shows (show_id, movie_id, hall_id, start_time, end_time, base_price, status)
-VALUES (9, 15, 3, '2026-11-10 19:00:00', '2026-11-10 20:40:00', 90000, 'scheduled');
-
-INSERT INTO Shows (show_id, movie_id, hall_id, start_time, end_time, base_price, status)
-VALUES (10, 7, 1, '2026-11-11 09:00:00', '2026-11-11 10:51:00', 65000, 'scheduled');
-
-INSERT INTO Shows (show_id, movie_id, hall_id, start_time, end_time, base_price, status)
-VALUES (11, 14, 1, '2026-11-11 14:00:00', '2026-11-11 15:40:00', 75000, 'scheduled');
-
-INSERT INTO Shows (show_id, movie_id, hall_id, start_time, end_time, base_price, status)
-VALUES (12, 6, 1, '2026-11-11 19:00:00', '2026-11-11 20:44:00', 90000, 'scheduled');
-
-INSERT INTO Shows (show_id, movie_id, hall_id, start_time, end_time, base_price, status)
-VALUES (13, 13, 2, '2026-11-11 09:00:00', '2026-11-11 10:40:00', 65000, 'scheduled');
-
-INSERT INTO Shows (show_id, movie_id, hall_id, start_time, end_time, base_price, status)
-VALUES (14, 5, 2, '2026-11-11 14:00:00', '2026-11-11 15:52:00', 75000, 'scheduled');
-
-INSERT INTO Shows (show_id, movie_id, hall_id, start_time, end_time, base_price, status)
-VALUES (15, 12, 2, '2026-11-11 19:00:00', '2026-11-11 20:40:00', 90000, 'scheduled');
-
-INSERT INTO Shows (show_id, movie_id, hall_id, start_time, end_time, base_price, status)
-VALUES (16, 4, 3, '2026-11-11 09:00:00', '2026-11-11 11:01:00', 65000, 'scheduled');
-
-INSERT INTO Shows (show_id, movie_id, hall_id, start_time, end_time, base_price, status)
-VALUES (17, 11, 3, '2026-11-11 14:00:00', '2026-11-11 15:40:00', 75000, 'scheduled');
-
-INSERT INTO Shows (show_id, movie_id, hall_id, start_time, end_time, base_price, status)
-VALUES (18, 18, 3, '2026-11-11 19:00:00', '2026-11-11 20:40:00', 90000, 'scheduled');
-
-INSERT INTO Shows (show_id, movie_id, hall_id, start_time, end_time, base_price, status)
-VALUES (19, 10, 1, '2026-11-12 09:00:00', '2026-11-12 12:15:00', 65000, 'scheduled');
-
-INSERT INTO Shows (show_id, movie_id, hall_id, start_time, end_time, base_price, status)
-VALUES (20, 17, 1, '2026-11-12 14:00:00', '2026-11-12 15:40:00', 75000, 'scheduled');
-
-INSERT INTO Shows (show_id, movie_id, hall_id, start_time, end_time, base_price, status)
-VALUES (21, 9, 1, '2026-11-12 19:00:00', '2026-11-12 22:12:00', 90000, 'scheduled');
-
-INSERT INTO Shows (show_id, movie_id, hall_id, start_time, end_time, base_price, status)
-VALUES (22, 16, 2, '2026-11-12 09:00:00', '2026-11-12 10:40:00', 65000, 'scheduled');
-
-INSERT INTO Shows (show_id, movie_id, hall_id, start_time, end_time, base_price, status)
-VALUES (23, 8, 2, '2026-11-12 14:00:00', '2026-11-12 16:42:00', 75000, 'scheduled');
-
-INSERT INTO Shows (show_id, movie_id, hall_id, start_time, end_time, base_price, status)
-VALUES (24, 15, 2, '2026-11-12 19:00:00', '2026-11-12 20:40:00', 90000, 'scheduled');
-
-INSERT INTO Shows (show_id, movie_id, hall_id, start_time, end_time, base_price, status)
-VALUES (25, 7, 3, '2026-11-12 09:00:00', '2026-11-12 10:51:00', 65000, 'scheduled');
-
-INSERT INTO Shows (show_id, movie_id, hall_id, start_time, end_time, base_price, status)
-VALUES (26, 14, 3, '2026-11-12 14:00:00', '2026-11-12 15:40:00', 75000, 'scheduled');
-
-INSERT INTO Shows (show_id, movie_id, hall_id, start_time, end_time, base_price, status)
-VALUES (27, 6, 3, '2026-11-12 19:00:00', '2026-11-12 20:44:00', 90000, 'scheduled');
-
-INSERT INTO Shows (show_id, movie_id, hall_id, start_time, end_time, base_price, status)
-VALUES (28, 13, 1, '2026-11-13 09:00:00', '2026-11-13 10:40:00', 65000, 'scheduled');
-
-INSERT INTO Shows (show_id, movie_id, hall_id, start_time, end_time, base_price, status)
-VALUES (29, 5, 1, '2026-11-13 14:00:00', '2026-11-13 15:52:00', 75000, 'scheduled');
-
-INSERT INTO Shows (show_id, movie_id, hall_id, start_time, end_time, base_price, status)
-VALUES (30, 12, 1, '2026-11-13 19:00:00', '2026-11-13 20:40:00', 90000, 'scheduled');
-
-INSERT INTO Shows (show_id, movie_id, hall_id, start_time, end_time, base_price, status)
-VALUES (31, 4, 2, '2026-11-13 09:00:00', '2026-11-13 11:01:00', 65000, 'scheduled');
-
-INSERT INTO Shows (show_id, movie_id, hall_id, start_time, end_time, base_price, status)
-VALUES (32, 11, 2, '2026-11-13 14:00:00', '2026-11-13 15:40:00', 75000, 'scheduled');
-
-INSERT INTO Shows (show_id, movie_id, hall_id, start_time, end_time, base_price, status)
-VALUES (33, 18, 2, '2026-11-13 19:00:00', '2026-11-13 20:40:00', 90000, 'scheduled');
-
-INSERT INTO Shows (show_id, movie_id, hall_id, start_time, end_time, base_price, status)
-VALUES (34, 10, 3, '2026-11-13 09:00:00', '2026-11-13 12:15:00', 65000, 'scheduled');
-
-INSERT INTO Shows (show_id, movie_id, hall_id, start_time, end_time, base_price, status)
-VALUES (35, 17, 3, '2026-11-13 14:00:00', '2026-11-13 15:40:00', 75000, 'scheduled');
-
-INSERT INTO Shows (show_id, movie_id, hall_id, start_time, end_time, base_price, status)
-VALUES (36, 9, 3, '2026-11-13 19:00:00', '2026-11-13 22:12:00', 90000, 'scheduled');
-
-INSERT INTO Shows (show_id, movie_id, hall_id, start_time, end_time, base_price, status)
-VALUES (37, 16, 1, '2026-11-14 09:00:00', '2026-11-14 10:40:00', 65000, 'scheduled');
-
-INSERT INTO Shows (show_id, movie_id, hall_id, start_time, end_time, base_price, status)
-VALUES (38, 8, 1, '2026-11-14 14:00:00', '2026-11-14 16:42:00', 75000, 'scheduled');
-
-INSERT INTO Shows (show_id, movie_id, hall_id, start_time, end_time, base_price, status)
-VALUES (39, 15, 1, '2026-11-14 19:00:00', '2026-11-14 20:40:00', 90000, 'scheduled');
-
-INSERT INTO Shows (show_id, movie_id, hall_id, start_time, end_time, base_price, status)
-VALUES (40, 7, 2, '2026-11-14 09:00:00', '2026-11-14 10:51:00', 65000, 'scheduled');
-
-INSERT INTO Shows (show_id, movie_id, hall_id, start_time, end_time, base_price, status)
-VALUES (41, 14, 2, '2026-11-14 14:00:00', '2026-11-14 15:40:00', 75000, 'scheduled');
-
-INSERT INTO Shows (show_id, movie_id, hall_id, start_time, end_time, base_price, status)
-VALUES (42, 6, 2, '2026-11-14 19:00:00', '2026-11-14 20:44:00', 90000, 'scheduled');
-
-INSERT INTO Shows (show_id, movie_id, hall_id, start_time, end_time, base_price, status)
-VALUES (43, 13, 3, '2026-11-14 09:00:00', '2026-11-14 10:40:00', 65000, 'scheduled');
-
-INSERT INTO Shows (show_id, movie_id, hall_id, start_time, end_time, base_price, status)
-VALUES (44, 5, 3, '2026-11-14 14:00:00', '2026-11-14 15:52:00', 75000, 'scheduled');
-
-INSERT INTO Shows (show_id, movie_id, hall_id, start_time, end_time, base_price, status)
-VALUES (45, 12, 3, '2026-11-14 19:00:00', '2026-11-14 20:40:00', 90000, 'scheduled');
+-- ==========================================
+-- DU LIEU MAU (chay sau schema.sql, procedures.sql, triggers.sql)
+-- 12 phim co san poster trong assets/images, 4 rap, 8 phong,
+-- lich chieu 7 ngay TINH TU NGAY CHAY FILE (luon co suat de dat ve).
+-- Sau file nay chay seed_seats.sql va seed_extra_seats.sql de tao ghe.
+--
+-- CANH BAO: file XOA TOAN BO du lieu cu (phim, rap, suat, don ve, user)
+-- truoc khi nap lai. Chi dung khi cai dat / lam moi du lieu demo.
+-- ==========================================
+
+USE cinema_management_dev;
+
+SET FOREIGN_KEY_CHECKS = 0;
+TRUNCATE TABLE payments;
+TRUNCATE TABLE tickets;
+TRUNCATE TABLE bookings;
+TRUNCATE TABLE shows;
+TRUNCATE TABLE seats;
+TRUNCATE TABLE cinemahalls;
+TRUNCATE TABLE cinemas;
+TRUNCATE TABLE movie_images;
+TRUNCATE TABLE movies;
+TRUNCATE TABLE users;
+SET FOREIGN_KEY_CHECKS = 1;
+
+
+-- ==========================================
+-- TAI KHOAN MAU (mat khau bcrypt, PHP password_verify doc duoc)
+--   Admin:      admin@cinema.local    / admin123
+--   Khach hang: customer@cinema.local / 123456
+-- DOI MAT KHAU ADMIN sau khi cai dat (Admin > Nguoi dung).
+-- ==========================================
+
+INSERT INTO users (user_id, full_name, email, password_hash, role) VALUES
+    (1, 'Quản trị viên', 'admin@cinema.local',
+     '$2y$10$1Y9BIvMjCIOTAg4G.GAgVOyZPMnQRp2fsEc9s8SC5K9jqrcJyNe.m', 'admin'),
+    (2, 'Khách hàng demo', 'customer@cinema.local',
+     '$2y$10$HS4WwXkHUiLs.oNBwdn2O.blWtfR/y18GE3ExmNqBw5LAzuIEgXMW', 'customer');
+
+
+-- ==========================================
+-- RAP CHIEU & PHONG CHIEU (moi rap 2 phong)
+-- ==========================================
+
+INSERT INTO cinemas (cinema_id, name, address, cluster_name) VALUES
+    (1, 'Rạp 1', '72 Lê Thánh Tôn, Quận 1, TP. Hồ Chí Minh', 'Cụm rạp A'),
+    (2, 'Rạp 2', '469 Nguyễn Hữu Thọ, Quận 7, TP. Hồ Chí Minh', 'Cụm rạp B'),
+    (3, 'Rạp 3', '190 Quang Trung, Quận Gò Vấp, TP. Hồ Chí Minh', 'Cụm rạp A'),
+    (4, 'Rạp 4', '216 Võ Văn Ngân, TP. Thủ Đức, TP. Hồ Chí Minh', 'Cụm rạp B');
+
+INSERT INTO cinemahalls (hall_id, cinema_id, hall_name) VALUES
+    (1, 1, 'Phòng 01'), (2, 1, 'Phòng 02'),
+    (3, 2, 'Phòng 01'), (4, 2, 'Phòng 02'),
+    (5, 3, 'Phòng 01'), (6, 3, 'Phòng 02'),
+    (7, 4, 'Phòng 01'), (8, 4, 'Phòng 02');
+
+
+-- ==========================================
+-- PHIM (poster co san trong assets/images)
+-- ==========================================
+
+INSERT INTO movies (movie_id, title, genre, duration_minutes, age_rating, release_date, release_date_text,
+                    poster_url, trailer_url, description,
+                    status, director, actors, country, language, rating) VALUES
+    (1, 'Spider-Man: Brand New Day', 'Hành động', 135, 'T13', '2026-07-31', '31/07/2026',
+     'assets/images/spiderman-brand-new-day.jpeg', 'https://www.youtube.com/watch?v=62bIsvRcPv0',
+     '<p>Phần phim mới về Người Nhện, tiếp nối cuộc sống của Peter Parker sau các sự kiện trước đó.</p>',
+     'now_showing', 'Destin Daniel Cretton', 'Tom Holland, Zendaya', 'Mỹ', 'Tiếng Anh, phụ đề tiếng Việt', 7.8),
+    (2, 'Avengers: Doomsday', 'Hành động', 150, 'T13', '2026-12-18', '18/12/2026',
+     'assets/images/avengers-doomsday.jpeg', 'https://www.youtube.com/watch?v=irVNGjRFZGk',
+     '<p>Biệt đội Avengers phải đối đầu với mối đe dọa mới mang tên Doom.</p>',
+     'coming_soon', 'Anthony Russo, Joe Russo', 'Đang cập nhật', 'Mỹ', 'Tiếng Anh, phụ đề tiếng Việt', NULL),
+    (3, 'Dune: Part Three', 'Khoa học viễn tưởng', 165, 'T13', '2026-12-18', '18/12/2026',
+     'assets/images/dune-part-three.jpeg', 'https://www.youtube.com/watch?v=uJqaGLmZpGo',
+     '<p>Phần kết của loạt phim Dune, tiếp nối hành trình của Paul Atreides trên hành tinh Arrakis.</p>',
+     'coming_soon', 'Denis Villeneuve', 'Timothée Chalamet, Zendaya, Jason Momoa, Florence Pugh, Rebecca Ferguson', 'Mỹ', 'Tiếng Anh, phụ đề tiếng Việt', NULL),
+    (4, 'The Odyssey', 'Phiêu lưu', 170, 'T16', '2026-07-17', '17/07/2026',
+     'assets/images/the-odyssey.jpeg', 'https://www.youtube.com/watch?v=Mzw2ttJD2qQ',
+     '<p>Chuyển thể từ sử thi của Homer, kể về hành trình trở về quê nhà của Odysseus sau cuộc chiến thành Troy.</p>',
+     'now_showing', 'Christopher Nolan', 'Matt Damon, Tom Holland, Anne Hathaway, Zendaya, Lupita Nyong''o, Robert Pattinson, Charlize Theron', 'Mỹ', 'Tiếng Anh, phụ đề tiếng Việt', 8.2),
+    (5, 'Toy Story 5', 'Hoạt hình', 100, 'P', '2026-06-17', '17/06/2026',
+     'assets/images/toy-story-5.jpeg', 'https://www.youtube.com/watch?v=c51ND9Hdbw0',
+     '<p>Nhóm đồ chơi quen thuộc phải đối mặt với sự xuất hiện của một thiết bị công nghệ mới trong nhà.</p>',
+     'now_showing', 'Andrew Stanton', 'Tom Hanks, Tim Allen', 'Mỹ', 'Tiếng Anh, phụ đề tiếng Việt', 7.6),
+    (6, 'The Super Mario Galaxy Movie', 'Hoạt hình', 98, 'P', NULL, '04/2026',
+     'assets/images/super-mario-galaxy.jpeg', 'https://www.youtube.com/watch?v=GuCejewteF8',
+     '<p>Mario, Công chúa Peach và những người bạn bước vào cuộc phiêu lưu mới giữa vũ trụ.</p>',
+     'now_showing', 'Aaron Horvath, Michael Jelenic', 'Chris Pratt, Anya Taylor-Joy, Charlie Day, Jack Black', 'Mỹ', 'Tiếng Anh, phụ đề tiếng Việt', 6.9),
+    (7, 'The Hunger Games: Sunrise on the Reaping', 'Khoa học viễn tưởng', 140, 'T16', '2026-11-20', '20/11/2026',
+     'assets/images/hunger-games-sunrise.jpeg', 'https://www.youtube.com/watch?v=lYXtL5TreOE',
+     '<p>Phần tiền truyện của loạt phim Hunger Games, lấy bối cảnh trước các phần đã ra mắt.</p>',
+     'coming_soon', 'Francis Lawrence', 'Đang cập nhật', 'Mỹ', 'Tiếng Anh, phụ đề tiếng Việt', NULL),
+    (8, 'Resident Evil', 'Kinh dị', 105, 'T18', '2026-09-18', '18/09/2026',
+     'assets/images/resident-evil.jpeg', 'https://www.youtube.com/watch?v=mNd1gb19A-c',
+     '<p>Phiên bản điện ảnh mới của loạt trò chơi kinh dị sinh tồn Resident Evil.</p>',
+     'now_showing', 'Zach Cregger', 'Đang cập nhật', 'Mỹ', 'Tiếng Anh, phụ đề tiếng Việt', 6.5),
+    (9, 'Moana', 'Gia đình', 105, 'P', NULL, '07/2026',
+     'assets/images/moana.jpeg', 'https://www.youtube.com/watch?v=n7f6hlKsxxo',
+     '<p>Phiên bản người đóng của Moana, kể về cô gái trẻ và hành trình vượt đại dương cùng sức mạnh của biển cả.</p>',
+     'now_showing', 'Thomas Kail', 'Catherine Laga''aia, Dwayne Johnson', 'Mỹ', 'Tiếng Anh, phụ đề tiếng Việt', 6.8),
+    (10, 'Minions & Monsters', 'Hoạt hình', 95, 'P', '2026-07-01', '01/07/2026',
+     'assets/images/minions-monsters.jpeg', 'https://www.youtube.com/watch?v=V-O-uBaHk3c',
+     '<p>Những chú Minion bước vào cuộc phiêu lưu mới cùng các sinh vật kỳ lạ.</p>',
+     'now_showing', 'Pierre Coffin', 'Đang cập nhật', 'Mỹ', 'Tiếng Anh, phụ đề tiếng Việt', 6.7),
+    (11, 'The Dog Stars', 'Phiêu lưu', 120, 'T18', '2026-08-28', '28/08/2026',
+     'assets/images/the-dog-stars.jpeg', 'https://www.youtube.com/watch?v=cmzVY1goqwQ',
+     '<p>Chuyển thể từ tiểu thuyết của Peter Heller, kể về những người sống sót tìm cách tồn tại trong thế giới hậu tận thế.</p>',
+     'now_showing', 'Ridley Scott', 'Jacob Elordi, Josh Brolin, Margaret Qualley', 'Mỹ', 'Tiếng Anh, phụ đề tiếng Việt', 7.4),
+    (12, 'Mortal Kombat II', 'Hành động', 115, 'T18', '2026-05-08', '08/05/2026',
+     'assets/images/mortal-kombat-2.jpeg', 'https://www.youtube.com/watch?v=mITiMK1g338',
+     '<p>Các chiến binh của Trái Đất tiếp tục tham gia giải đấu Mortal Kombat để bảo vệ thế giới.</p>',
+     'now_showing', 'Simon McQuoid', 'Karl Urban, Jessica McNamee, Lewis Tan', 'Mỹ', 'Tiếng Anh, phụ đề tiếng Việt', 6.6);
+
+
+-- ==========================================
+-- LICH CHIEU: 7 ngay tu hom nay, moi phong 4 suat/ngay
+-- (09:00, 12:30, 16:00, 19:30 - cach nhau 3h30, du cho phim dai nhat
+--  170 phut + 15 phut don phong, khong vi pham trigger chong trung gio).
+-- Phim duoc xoay vong trong so cac phim chieu tai rap do.
+-- ==========================================
+
+-- Phim nao chieu o rap nao
+CREATE TEMPORARY TABLE tmp_movie_cinema (
+    movie_id BIGINT NOT NULL,
+    cinema_id BIGINT NOT NULL
+);
+
+INSERT INTO tmp_movie_cinema (movie_id, cinema_id) VALUES
+    (1, 1), (1, 2), (1, 3), (1, 4), (4, 1), (4, 2), (4, 4), (5, 1), (5, 3), (6, 2), (6, 3), (8, 2), (8, 4), (9, 1), (9, 3), (10, 3), (10, 4), (11, 1), (11, 4), (12, 2), (12, 3), (12, 4);
+
+INSERT INTO shows (movie_id, hall_id, start_time, end_time, base_price, show_format, status)
+SELECT
+    mc.movie_id,
+    g.hall_id,
+    g.start_time,
+    g.start_time + INTERVAL (m.duration_minutes + 15) MINUTE,
+    g.price,
+    IF(m.genre IN ('Hoạt hình', 'Gia đình'), '2d_dubbed', '2d_sub'),
+    'scheduled'
+FROM (
+    SELECT h.hall_id, h.cinema_id, h.hall_idx, d.n AS day_no, s.n AS slot_no,
+           TIMESTAMP(CURDATE() + INTERVAL d.n DAY, s.t) AS start_time,
+           s.price
+    FROM (SELECT hall_id, cinema_id, ROW_NUMBER() OVER (ORDER BY hall_id) AS hall_idx
+          FROM cinemahalls) h
+    CROSS JOIN (SELECT 0 AS n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3
+                UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6) d
+    CROSS JOIN (SELECT 0 AS n, '09:00:00' AS t, 65000 AS price
+                UNION ALL SELECT 1, '12:30:00', 75000
+                UNION ALL SELECT 2, '16:00:00', 75000
+                UNION ALL SELECT 3, '19:30:00', 90000) s
+) g
+JOIN (
+    SELECT movie_id, cinema_id,
+           ROW_NUMBER() OVER (PARTITION BY cinema_id ORDER BY movie_id) - 1 AS rn,
+           COUNT(*) OVER (PARTITION BY cinema_id) AS cnt
+    FROM tmp_movie_cinema
+) mc
+    ON mc.cinema_id = g.cinema_id
+   AND mc.rn = (g.day_no * 4 + g.slot_no + g.hall_idx) % mc.cnt
+JOIN movies m ON m.movie_id = mc.movie_id
+ORDER BY g.start_time, g.hall_id;
+
+DROP TEMPORARY TABLE tmp_movie_cinema;

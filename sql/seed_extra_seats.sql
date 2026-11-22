@@ -37,7 +37,7 @@ BEGIN
                 INSERT INTO seats
                     (hall_id, row_label, seat_number, seat_type)
                 VALUES
-                    (v_hall_id, CHAR(64 + v_row),
+                    (v_hall_id, CHAR(64 + v_row USING utf8mb4),
                      v_number, 'vip')
                 ON DUPLICATE KEY UPDATE
                     seat_id = seat_id;

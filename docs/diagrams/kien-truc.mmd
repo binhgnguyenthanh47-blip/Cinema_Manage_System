@@ -1,0 +1,29 @@
+flowchart LR
+    subgraph Client["Trình duyệt"]
+        FE["Trang khách<br/>HTML + CSS + JavaScript<br/>(index, danhsach, chitiet,<br/>booking, checkout, e_ticket)"]
+        ADUI["Trang Admin<br/>HTML do PHP sinh ra<br/>+ Quill editor + Chart.js"]
+    end
+
+    subgraph Server["Apache + PHP 8 (XAMPP)"]
+        API["api/*.php<br/>JSON API<br/>auth, movies, shows,<br/>seats, bookings"]
+        ADM["admin/*.php<br/>CRUD, phân trang,<br/>upload ảnh"]
+        INC["includes/<br/>config, db (PDO),<br/>auth (session, bcrypt),<br/>helpers (CSRF, XSS, upload)"]
+        UP[("uploads/movies<br/>ảnh phim")]
+    end
+
+    subgraph DB["MySQL / MariaDB"]
+        TB[("10 bảng")]
+        SP["Procedure sp_book_seat,<br/>sp_expire_bookings"]
+        TR["Trigger chống trùng<br/>lịch chiếu"]
+        EV["Event hủy giữ ghế<br/>quá hạn mỗi phút"]
+    end
+
+    FE -- "fetch() JSON<br/>cookie session" --> API
+    ADUI -- "Form POST + CSRF token" --> ADM
+    API --> INC
+    ADM --> INC
+    ADM --> UP
+    INC -- "PDO prepared statement" --> TB
+    INC --> SP
+    TB --- TR
+    TB --- EV

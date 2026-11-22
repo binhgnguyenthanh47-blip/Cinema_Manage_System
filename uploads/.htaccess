@@ -1,0 +1,8 @@
+# Chi phuc vu anh, khong bao gio chay file script trong thu muc upload
+<FilesMatch "\.(php[0-9]?|phtml|phar|pl|py|cgi|sh|html?|js|svg)$">
+    Require all denied
+</FilesMatch>
+<IfModule mod_php.c>
+    php_flag engine off
+</IfModule>
+Options -Indexes

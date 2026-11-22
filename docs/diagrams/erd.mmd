@@ -1,0 +1,106 @@
+erDiagram
+    users ||--o{ bookings : "đặt"
+    cinemas ||--o{ cinemahalls : "có"
+    movies ||--o{ movie_images : "có ảnh"
+    bookings ||--o{ payments : "thanh toán"
+    cinemahalls ||--|{ seats : "gồm"
+    movies ||--o{ shows : "chiếu trong"
+    cinemahalls ||--o{ shows : "diễn ra ở"
+    shows ||--o{ tickets : "bán"
+    seats ||--o{ tickets : "được đặt"
+    bookings ||--|{ tickets : "gồm"
+    users {
+        BIGINT user_id PK
+        VARCHAR full_name
+        VARCHAR email UK
+        VARCHAR password_hash
+        ENUM role
+        DATETIME created_at
+    }
+    movies {
+        BIGINT movie_id PK
+        VARCHAR title
+        VARCHAR genre
+        SMALLINT duration_minutes
+        VARCHAR age_rating
+        DATE release_date
+        VARCHAR release_date_text
+        VARCHAR poster_url
+        VARCHAR trailer_url
+        TEXT description
+        ENUM status
+        VARCHAR director
+        TEXT actors
+        VARCHAR country
+        VARCHAR language
+        DECIMAL rating
+    }
+    movie_images {
+        BIGINT image_id PK
+        BIGINT movie_id FK
+        VARCHAR image_url
+        INT sort_order
+        DATETIME created_at
+    }
+    cinemas {
+        BIGINT cinema_id PK
+        VARCHAR name
+        VARCHAR address
+        VARCHAR cluster_name
+    }
+    cinemahalls {
+        BIGINT hall_id PK
+        BIGINT cinema_id FK
+        VARCHAR hall_name
+    }
+    seats {
+        BIGINT seat_id PK
+        BIGINT hall_id FK
+        VARCHAR row_label
+        SMALLINT seat_number
+        ENUM seat_type
+    }
+    shows {
+        BIGINT show_id PK
+        BIGINT movie_id FK
+        BIGINT hall_id FK
+        DATETIME start_time
+        DATETIME end_time
+        DECIMAL base_price
+        ENUM show_format
+        ENUM status
+    }
+    bookings {
+        BIGINT booking_id PK
+        BIGINT user_id FK
+        DATETIME booking_time
+        DATETIME expires_at
+        ENUM status
+        DECIMAL total_amount
+        VARCHAR combo_detail
+        DECIMAL combo_amount
+        VARCHAR voucher_code
+        DECIMAL discount_amount
+        VARCHAR contact_name
+        VARCHAR contact_email
+        VARCHAR contact_phone
+    }
+    tickets {
+        BIGINT ticket_id PK
+        BIGINT booking_id FK
+        BIGINT show_id FK
+        BIGINT seat_id FK
+        DECIMAL price
+        ENUM status
+        VARCHAR qr_code UK
+        BIGINT active_seat_id
+    }
+    payments {
+        BIGINT payment_id PK
+        BIGINT booking_id FK
+        ENUM method
+        DECIMAL amount
+        ENUM status
+        VARCHAR transaction_code UK
+        DATETIME paid_at
+    }
