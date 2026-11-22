@@ -97,7 +97,3 @@ Website đặt vé xem phim và quản lý lịch chiếu.
 | GET | `api/bookings.php` | Lịch sử đặt vé (cần đăng nhập) |
 | POST | `api/bookings.php` `{action:"create", show_id, seat_ids}` | Giữ ghế |
 | POST | `api/bookings.php` `{action:"pay", booking_id, method}` | Thanh toán |
-
-## Tài liệu
-- [Phân tích thiết kế hệ thống](docs/PhanTichThietKe.md) — use case, kiến trúc, luồng đặt vé, ERD và mô tả 10 bảng, bảo mật, API, kiểm thử.
-- [Khung báo cáo thuyết trình](docs/BaoCao_ThuyetTrinh.md) — dàn ý 15 slide, kịch bản demo, bảng phân công và đánh giá thành viên.
