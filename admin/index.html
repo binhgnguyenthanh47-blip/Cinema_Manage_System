@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+        <div class="brand">
+            <span>🎬 Love Cinema Admin</span>
+        </div>
+        <ul class="nav-menu">
+            <li class="nav-item active" onclick="switchTab('analytics')">📊 Thống kê Doanh thu</li>
+            <li class="nav-item" onclick="switchTab('movies')">🎥 Quản lý Phim</li>
+            <li class="nav-item" onclick="switchTab('showtimes')">📅 Quản lý Lịch chiếu</li>
+            <li class="nav-item" onclick="switchTab('rooms')">💺 Quản lý Phòng & Ghế</li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <header class="header">
+            <h2>Hệ Thống Quản Lý Rạp Phim</h2>
+            <div class="user-profile">
+                <div class="avatar">A</div>
+                <span>Administrator</span>
+            </div>
+        </header>
+
+        <div class="content-body">
+            
+            <!-- Module 1: Thống kê Doanh thu -->
+            <section id="analytics" class="section active">
+                <div class="metrics-grid">
+                    <div class="card metric-card">
+                        <h3>Tổng Doanh Thu</h3>
+                        <div class="val">2,160,000,000 ₫</div>
+                    </div>
+                    <div class="card metric-card">
+                        <h3>Số Vé Đã Bán</h3>
+                        <div class="val">24,500 vé</div>
+                    </div>
+                    <div class="card metric-card">
+                        <h3>Phim Chiếu Rạp</h3>
+                        <div class="val">12 Phim</div>
+                    </div>
+                </div>
+
+                <div class="analytics-grid">
+                    <div class="card">
+                        <h3>Biểu Đồ Doanh Thu Phim (VNĐ)</h3>
+                        <canvas id="revenueChart" style="margin-top: 15px;"></canvas>
+                    </div>
+                    
+                </div>
+            </section>
+
+            <!-- Module 2: Quản lý Phim -->
+            <section id="movies" class="section">
+                <div class="card">
+                    <h3>Thêm / Cập Nhật Phim</h3>
+                    <form onsubmit="saveMovie(event)" style="margin-top: 15px;">
+                        <input type="hidden" id="movie-id">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div class="form-group">
+                                <label>Tên Phim</label>
+                                <input type="text" id="movie-name" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Thời Lượng (Phút)</label>
+                                <input type="number" id="movie-duration" class="form-control" required>
+                            </div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div class="form-group">
+                                <label>Thể Loại</label>
+                                <input type="text" id="movie-genre" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Link Poster</label>
+                                <input type="url" id="movie-poster" class="form-control" placeholder="https://example.com/poster.jpg">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Lưu Thông Tin Phim</button>
+                        <button type="button" class="btn btn-danger" onclick="resetMovieForm()">Hủy</button>
+                    </form>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Poster</th>
+                                <th>Tên Phim</th>
+                                <th>Thể Loại</th>
+                                <th>Thời Lượng</th>
+                                <th>Thao Tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="movie-table"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Module 3: Quản lý Lịch chiếu -->
+            <section id="showtimes" class="section">
+                <div class="card">
+                    <h3>Tạo Lịch Chiếu Mới</h3>
+                    <form onsubmit="addShowtime(event)" style="display: flex; gap: 15px; align-items: flex-end; margin-top: 15px;">
+                        <div class="form-group" style="flex: 1;">
+                            <label>Chọn Phòng</label>
+                            <select id="st-room" class="form-control">
+                                <option value="Phòng 1">Phòng 1</option>
+                                <option value="Phòng 2">Phòng 2</option>
+                                <option value="Phòng 3">Phòng 3</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label>Giờ Chiếu</label>
+                            <input type="time" id="st-time" class="form-control" required>
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label>Chọn Phim</label>
+                            <select id="st-movie" class="form-control"></select>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">Thêm Lịch Chiếu</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Phòng Chiếu</th>
+                                <th>Khung Giờ</th>
+                                <th>Phim Được Chiếu</th>
+                                <th>Thao Tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="showtime-table"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Module 4: Quản lý Phòng chiếu & Ghế (Đã thêm bộ lọc phòng) -->
+            <section id="rooms" class="section">
+                <div class="card" style="text-align: center;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3 id="room-title">Sơ Đồ Ghế - Phòng 1</h3>
+                        <div style="width: 200px;">
+                            <select id="room-selector" class="form-control" onchange="changeRoom(this.value)">
+                                <option value="Phòng 1">Phòng 1</option>
+                                <option value="Phòng 2">Phòng 2</option>
+                                <option value="Phòng 3">Phòng 3</option>
+                            </select>
+                        </div>
+                    </div>
+                    <p style="font-size: 13px; color: #666; margin-bottom: 20px;">Click vào ghế để chuyển trạng thái Bật / Tắt (Hỏng)</p>
+                    
+                    <div class="screen">MÀN HÌNH CHIẾU</div>
+                    <div class="seat-grid" id="seat-grid"></div>
+
+                    <div class="legend">
+                        <div class="legend-item"><div class="legend-box" style="border: 1px solid var(--primary);"></div> Thường</div>
+                        <div class="legend-item"><div class="legend-box" style="background: var(--primary-light); border: 1px solid var(--primary);"></div> VIP</div>
+                        <div class="legend-item"><div class="legend-box" style="background: #bdbdbd;"></div> Đã đặt</div>
+                        <div class="legend-item"><div class="legend-box" style="background: #424242;"></div> Khóa / Hỏng</div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <script src="js/script.js"></script>
+</body>
+</html>

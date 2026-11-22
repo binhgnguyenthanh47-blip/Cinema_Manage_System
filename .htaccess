@@ -1,6 +1,0 @@
-Options -Indexes
-
-# Chan cac file nhay cam (cau hinh, git, package...)
-<FilesMatch "^(\.env.*|\.git.*|composer\.(json|lock)|README\.md)$">
-    Require all denied
-</FilesMatch>

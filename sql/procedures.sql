@@ -1,5 +1,3 @@
-USE cinema_management_dev;
-
 
 DELIMITER $$
 
@@ -18,18 +16,12 @@ BEGIN
     DECLARE v_base_price DECIMAL(12,2) DEFAULT NULL;
     DECLARE v_price DECIMAL(12,2);
 
-    -- Lay thong tin suat chieu (chi suat con lich va chua bat dau)
+    -- Lay thong tin suat chieu
     SELECT hall_id, base_price
     INTO v_hall_id, v_base_price
     FROM shows
     WHERE show_id = p_show_id
-      AND status = 'scheduled'
-      AND start_time > NOW();
-
-    IF v_hall_id IS NULL THEN
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Suat chieu khong ton tai, da huy hoac da bat dau';
-    END IF;
+      AND status = 'scheduled';
 
     -- Lay thong tin ghe
     SELECT hall_id, seat_type

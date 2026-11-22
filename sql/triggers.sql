@@ -1,5 +1,3 @@
-USE cinema_management_dev;
-
 
 DELIMITER $$
 
