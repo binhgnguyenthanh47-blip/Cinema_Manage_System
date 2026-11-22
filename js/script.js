@@ -40,6 +40,10 @@ function thayAnhLoi(anh) {
     anh.replaceWith(khoi);
 }
 
+function tenRapDayDu(rap) {
+    return rap.cum ? rap.cum + " - " + rap.ten : rap.ten;
+}
+
 function taoAnh(p, lop) {
     return '<img' + (lop ? ' class="' + lop + '"' : '') + ' src="' + p.anh + '" alt="' + p.ten + '" onerror="thayAnhLoi(this)">';
 }
@@ -74,49 +78,6 @@ function veLuoiPhim(ds, luoi) {
         html += taoThePhim(ds[i]);
     }
     luoi.innerHTML = html;
-}
-
-function khoiTaoTimKiem() {
-    const oTim = document.getElementById("oTim");
-    const goiY = document.getElementById("goiY");
-    if (!oTim || !goiY) return;
-
-    oTim.addEventListener("input", function () {
-        const tuKhoa = boDau(oTim.value.trim());
-        if (tuKhoa == "") {
-            goiY.classList.remove("o-tim__goi-y--hien");
-            return;
-        }
-        const ketQua = dsPhim.filter(function (p) {
-            return boDau(p.ten).indexOf(tuKhoa) != -1;
-        }).slice(0, 5);
-
-        if (ketQua.length == 0) {
-            goiY.innerHTML = '<p class="o-tim__trong">Không tìm thấy phim</p>';
-        } else {
-            let html = "";
-            for (let i = 0; i < ketQua.length; i++) {
-                html += '<a class="o-tim__muc" href="chitiet.html?id=' + ketQua[i].id + '">' +
-                    taoAnh(ketQua[i], "o-tim__anh") +
-                    '<span><span class="o-tim__ten">' + ketQua[i].ten + '</span>' +
-                    '<span class="o-tim__loai">' + ketQua[i].theLoai + '</span></span></a>';
-            }
-            goiY.innerHTML = html;
-        }
-        goiY.classList.add("o-tim__goi-y--hien");
-    });
-
-    oTim.addEventListener("keydown", function (e) {
-        if (e.key == "Enter" && oTim.value.trim() != "") {
-            location.href = "danhsach.html?tukhoa=" + encodeURIComponent(oTim.value.trim());
-        }
-    });
-
-    document.addEventListener("click", function (e) {
-        if (!e.target.closest(".o-tim")) {
-            goiY.classList.remove("o-tim__goi-y--hien");
-        }
-    });
 }
 
 function layDanhSachNguoiDung() {
@@ -410,8 +371,8 @@ function khoiTaoDanhSach() {
     locCum.innerHTML = htmlCum;
 
     let htmlNgay = '<option value="">Ngày chiếu</option>';
-    for (let i = 0; i < lichChieu.cacNgay.length; i++) {
-        htmlNgay += '<option value="' + lichChieu.cacNgay[i].so + '">' + lichChieu.cacNgay[i].nhan + '</option>';
+    for (let i = 0; i < dsNgayHienTai.length; i++) {
+        htmlNgay += '<option value="' + dsNgayHienTai[i].so + '">' + dsNgayHienTai[i].nhan + '</option>';
     }
     locNgay.innerHTML = htmlNgay;
 
@@ -440,7 +401,7 @@ function khoiTaoDanhSach() {
                 });
                 if (!coCum) return false;
             }
-            if (boLoc.ngay != "" && p.ngayChieu.indexOf(Number(boLoc.ngay)) == -1) return false;
+            if (boLoc.ngay != "" && !coNgayChieu(p, boLoc.ngay)) return false;
             return true;
         });
     }
@@ -547,9 +508,9 @@ function khoiTaoChiTiet() {
     const dsSuat = document.getElementById("dsSuat");
 
     let htmlNgay = "";
-    for (let i = 0; i < lichChieu.cacNgay.length; i++) {
-        const phan = lichChieu.cacNgay[i].nhan.split(" ");
-        htmlNgay += '<button class="lich-chieu__ngay-nut" data-ngay="' + lichChieu.cacNgay[i].so + '">' +
+    for (let i = 0; i < dsNgayHienTai.length; i++) {
+        const phan = dsNgayHienTai[i].nhan.split(" ");
+        htmlNgay += '<button class="lich-chieu__ngay-nut" data-ngay="' + dsNgayHienTai[i].so + '">' +
             '<span class="lich-chieu__thu">' + phan[0] + '</span>' +
             '<span class="lich-chieu__so">' + phan[1] + '</span></button>';
     }
@@ -559,37 +520,36 @@ function khoiTaoChiTiet() {
 
     function veSuatChieu(ngay) {
         for (let i = 0; i < dsNut.length; i++) {
-            dsNut[i].classList.toggle("lich-chieu__ngay-nut--chon", Number(dsNut[i].dataset.ngay) == ngay);
+            dsNut[i].classList.toggle("lich-chieu__ngay-nut--chon", dsNut[i].dataset.ngay == String(ngay));
         }
 
         if (phim.trangThai == "sap") {
             dsSuat.innerHTML = '<p class="lich-chieu__thong-bao">Phim chưa có lịch chiếu.</p>';
             return;
         }
-        if (phim.ngayChieu.indexOf(ngay) == -1) {
+        if (!coNgayChieu(phim, ngay)) {
             dsSuat.innerHTML = '<p class="lich-chieu__thong-bao">Không có suất chiếu trong ngày này.</p>';
             return;
         }
 
-        const ngayDuocChon = lichChieu.cacNgay.find(function (n) {
-            return n.so == ngay;
+        const ngayDuocChon = dsNgayHienTai.find(function (n) {
+            return String(n.so) == String(ngay);
         });
         const ngayDayDu = ngayDuocChon.nhan.split(" ")[1] + "/2026";
 
+        const dsSuatTrongNgay = laySuatTheoNgay(phim, ngay);
         let html = "";
-        for (let i = 0; i < phim.rap.length; i++) {
-            const rap = timRap(phim.rap[i]);
-            const suatCuaRap = lichChieu.suatTheoRap.find(function (s) {
-                return s.rap == rap.id;
-            });
-            const tenRapDayDu = rap.cum + ' - ' + rap.ten;
-            html += '<div class="lich-chieu__rap"><b class="lich-chieu__tieu-de">' + tenRapDayDu + '</b>';
+        for (let i = 0; i < dsSuatTrongNgay.length; i++) {
+            const rap = timRap(dsSuatTrongNgay[i].rap);
+            const suatCuaRap = dsSuatTrongNgay[i];
+            const tenRapHienThi = tenRapDayDu(rap);
+            html += '<div class="lich-chieu__rap"><b class="lich-chieu__tieu-de">' + tenRapHienThi + '</b>';
             for (let j = 0; j < suatCuaRap.suat.length; j++) {
                 html += '<div class="lich-chieu__suat"><span class="lich-chieu__dinh-dang">' + suatCuaRap.suat[j].dinhDang + '</span>';
                 for (let k = 0; k < suatCuaRap.suat[j].gio.length; k++) {
                     const gio = suatCuaRap.suat[j].gio[k];
                     const duongDanDatVe = "booking.html?movie=" + encodeURIComponent(phim.ten) +
-                        "&cinema=" + encodeURIComponent(tenRapDayDu) +
+                        "&cinema=" + encodeURIComponent(tenRapHienThi) +
                         "&date=" + encodeURIComponent(ngayDayDu) +
                         "&time=" + encodeURIComponent(gio);
                     html += '<a class="lich-chieu__gio" href="' + duongDanDatVe + '">' + gio + '</a>';
@@ -603,13 +563,12 @@ function khoiTaoChiTiet() {
 
     for (let i = 0; i < dsNut.length; i++) {
         dsNut[i].addEventListener("click", function () {
-            const ngay = Number(dsNut[i].dataset.ngay);
-            veSuatChieu(ngay);
+            veSuatChieu(dsNut[i].dataset.ngay);
         });
     }
 
-    if (lichChieu.cacNgay.length > 0) {
-        veSuatChieu(lichChieu.cacNgay[0].so);
+    if (dsNgayHienTai.length > 0) {
+        veSuatChieu(dsNgayHienTai[0].so);
     }
 }
 
@@ -622,7 +581,6 @@ async function khoiTao() {
         }
     }
 
-    khoiTaoTimKiem();
     khoiTaoTaiKhoan();
 
     if (document.getElementById("dsAnhBanner")) {

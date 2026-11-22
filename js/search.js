@@ -15,8 +15,6 @@
         if (oTim.dataset.daGanTimKiem === "1") return;
         oTim.dataset.daGanTimKiem = "1";
 
-        const nguonPhim = typeof dsPhim !== "undefined" && Array.isArray(dsPhim) ? dsPhim : [];
-
         oTim.addEventListener("input", function () {
             const tuKhoa = boDauChuoi(oTim.value.trim());
             if (!tuKhoa) {
@@ -25,6 +23,7 @@
                 return;
             }
 
+            const nguonPhim = typeof dsPhim !== "undefined" && Array.isArray(dsPhim) ? dsPhim : [];
             const ketQua = nguonPhim.filter(function (p) {
                 const ten = boDauChuoi(p.ten);
                 const theLoai = boDauChuoi(p.theLoai);
@@ -33,12 +32,12 @@
             }).slice(0, 5);
 
             if (ketQua.length === 0) {
-                goiY.innerHTML = '<p class="o-tim__trong">Không tìm thấy phim phù hợp</p>';
+                goiY.innerHTML = '<p class="o-tim__trong">Không tìm thấy phim</p>';
             } else {
                 let html = "";
                 for (let i = 0; i < ketQua.length; i++) {
                     html += '<a class="o-tim__muc" href="chitiet.html?id=' + ketQua[i].id + '">' +
-                        '<img class="o-tim__anh" src="' + ketQua[i].anh + '" alt="' + ketQua[i].ten + '">' +
+                        taoAnh(ketQua[i], "o-tim__anh") +
                         '<span><span class="o-tim__ten">' + ketQua[i].ten + '</span>' +
                         '<span class="o-tim__loai">' + ketQua[i].theLoai + ' • ' + ketQua[i].doTuoi + '</span></span></a>';
                 }
