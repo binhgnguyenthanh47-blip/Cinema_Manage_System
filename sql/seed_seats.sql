@@ -2,7 +2,7 @@
 -- Tao 50 ghe mau cho moi phong chieu
 -- 5 hang A-E, moi hang 10 ghe
 
-USE cinema_management_dev;
+USE cinema_management;
 
 DELIMITER $$
 

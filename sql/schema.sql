@@ -4,11 +4,11 @@
 -- MySQL / MariaDB
 -- ==========================================
 
-CREATE DATABASE IF NOT EXISTS cinema_management_dev
+CREATE DATABASE IF NOT EXISTS cinema_management
 CHARACTER SET utf8mb4
 COLLATE utf8mb4_unicode_ci;
 
-USE cinema_management_dev;
+USE cinema_management;
 
 
 -- ==========================================
@@ -123,6 +123,7 @@ CREATE TABLE IF NOT EXISTS Shows (
     start_time DATETIME NOT NULL,
     end_time DATETIME NOT NULL,
     base_price DECIMAL(12,2) NOT NULL,
+    show_format VARCHAR(20) NOT NULL DEFAULT '2D',
 
     status ENUM('scheduled', 'cancelled', 'finished')
         NOT NULL DEFAULT 'scheduled',

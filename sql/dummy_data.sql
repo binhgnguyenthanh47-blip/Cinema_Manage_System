@@ -1,5 +1,5 @@
 
-USE cinema_management_dev;
+USE cinema_management;
 
 
 
