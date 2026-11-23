@@ -45,3 +45,47 @@ cinema-management-website/
 └── e-ticket.html           # Giao diện hiển thị vé điện tử/QR Code[cite: 3]
 
 ```
+# Hướng Dẫn Cài Đặt & Khởi Chạy Backend Server (Cinema Manage System)
+
+Tài liệu tóm tắt quy trình cấu hình môi trường, thiết lập cơ sở dữ liệu MySQL (XAMPP) và vận hành Backend Server (Node.js/Express) trên Windows.
+
+---
+
+## 1. Yêu cầu môi trường (Prerequisites)
+* **Node.js (v18+ LTS):** Cài đặt từ [nodejs.org](https://nodejs.org) để sử dụng `node` và `npm`. *(Sau khi cài đặt mới, cần khởi động lại VS Code để nhận diện biến môi trường `PATH`)*.
+* **XAMPP:** Cài đặt và khởi chạy dịch vụ **MySQL** (cổng mặc định `3306`) cùng **Apache** (để truy cập `phpMyAdmin`).
+
+---
+
+## 2. Cấu hình biến môi trường (`.env`)
+Tạo file `.env` tại thư mục gốc của dự án (tham khảo từ `.env.example`) với nội dung sau:
+
+```env
+PORT=3000
+NODE_ENV=development
+
+DB_HOST=localhost
+DB_PORT=3306
+DB_USER=root
+DB_PASSWORD=
+DB_NAME=cinema_management_dev
+
+
+Cài đặt thư viện & Bổ sung giao diện xác thực
+npm install
+npm install bcryptjs
+
+Khởi chạy & Kiểm tra Backend Server
+node server/test-db.js
+npm start
+
+Các đường dẫn kiểm thử (Endpoints):
+Kiểm tra trạng thái API: http://localhost:3000/api
+
+Kiểm tra dữ liệu phim từ MySQL: http://localhost:3000/api/movies
+
+Trang chủ người dùng: http://localhost:3000
+
+Trang Đăng nhập / Đăng ký: http://localhost:3000/auth.html
+
+Trang Quản trị (Admin): http://localhost:3000/admin/index.html
