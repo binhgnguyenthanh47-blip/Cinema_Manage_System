@@ -68,7 +68,7 @@ DB_HOST=localhost
 DB_PORT=3306
 DB_USER=root
 DB_PASSWORD=
-DB_NAME=cinema_management_dev
+DB_NAME=cinema_management
 
 
 Cài đặt thư viện & Bổ sung giao diện xác thực
