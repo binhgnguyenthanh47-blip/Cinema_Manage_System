@@ -80,171 +80,56 @@ function veLuoiPhim(ds, luoi) {
     luoi.innerHTML = html;
 }
 
-function layDanhSachNguoiDung() {
-    return JSON.parse(localStorage.getItem("dsNguoiDung") || "[]");
-}
-
-function layNguoiDangNhap() {
-    return JSON.parse(localStorage.getItem("nguoiDangNhap") || "null");
-}
-
 function veTaiKhoan() {
     const khung = document.getElementById("taiKhoan");
     if (!khung) return;
-    const nguoi = layNguoiDangNhap();
+
+    localStorage.removeItem("dsNguoiDung");
+    localStorage.removeItem("nguoiDangNhap");
+
+    const nguoi = window.AuthService ? window.AuthService.getCurrentUser() : null;
     khung.innerHTML = "";
 
     if (nguoi) {
+        if (nguoi.role === "admin") {
+            const nutQuanTri = document.createElement("a");
+            nutQuanTri.className = "nut";
+            nutQuanTri.href = "admin/index.html";
+            nutQuanTri.textContent = "Quản trị";
+            khung.appendChild(nutQuanTri);
+        }
+
         const chao = document.createElement("span");
         chao.className = "dau-trang__chao";
-        chao.textContent = "Xin chào, " + nguoi.hoTen;
+        chao.textContent = "Xin chào, " + nguoi.full_name;
+
         const nutThoat = document.createElement("button");
-        nutThoat.className = "nut";
+        nutThoat.className = "nut nut--phu";
+        nutThoat.type = "button";
         nutThoat.textContent = "Đăng xuất";
         nutThoat.addEventListener("click", function () {
-            localStorage.removeItem("nguoiDangNhap");
-            veTaiKhoan();
+            if (window.AuthService) {
+                window.AuthService.logout();
+            }
         });
+
         khung.appendChild(chao);
         khung.appendChild(nutThoat);
         return;
     }
 
-    const nutVao = document.createElement("button");
+    const nutVao = document.createElement("a");
     nutVao.className = "nut";
+    nutVao.href = "auth.html";
     nutVao.textContent = "Đăng nhập";
-    nutVao.addEventListener("click", function () {
-        moHopThoai("dangNhap");
-    });
 
-    const nutDangKy = document.createElement("button");
+    const nutDangKy = document.createElement("a");
     nutDangKy.className = "nut nut--chinh";
+    nutDangKy.href = "auth.html#register";
     nutDangKy.textContent = "Đăng ký";
-    nutDangKy.addEventListener("click", function () {
-        moHopThoai("dangKy");
-    });
 
     khung.appendChild(nutVao);
     khung.appendChild(nutDangKy);
-}
-
-let cheDoHop = "dangNhap";
-
-function moHopThoai(cheDo) {
-    cheDoHop = cheDo;
-    const dangKy = cheDo == "dangKy";
-    document.getElementById("tabDangNhap").classList.toggle("hop-thoai__tab--hien", !dangKy);
-    document.getElementById("tabDangKy").classList.toggle("hop-thoai__tab--hien", dangKy);
-    document.getElementById("dongHoTen").style.display = dangKy ? "block" : "none";
-    document.getElementById("dongNhapLai").style.display = dangKy ? "block" : "none";
-    document.getElementById("nutGui").textContent = dangKy ? "Tạo tài khoản" : "Đăng nhập";
-    document.getElementById("bieuMau").reset();
-    document.getElementById("thongBaoLoi").textContent = "";
-    document.getElementById("hopThoai").classList.add("hop-thoai--hien");
-    document.getElementById(dangKy ? "oHoTen" : "oEmail").focus();
-}
-
-function dongHopThoai() {
-    const hop = document.getElementById("hopThoai");
-    if (hop) hop.classList.remove("hop-thoai--hien");
-}
-
-function dangNhapThanhCong(nguoi) {
-    localStorage.setItem("nguoiDangNhap", JSON.stringify({hoTen: nguoi.hoTen, email: nguoi.email}));
-    dongHopThoai();
-    veTaiKhoan();
-}
-
-function khoiTaoTaiKhoan() {
-    if (!document.getElementById("taiKhoan")) return;
-
-    const hop = document.createElement("div");
-    hop.className = "hop-thoai";
-    hop.id = "hopThoai";
-    hop.innerHTML = '<div class="hop-thoai__noi-dung">' +
-        '<div class="hop-thoai__dau">' +
-        '<button class="hop-thoai__tab" id="tabDangNhap" type="button">Đăng nhập</button>' +
-        '<button class="hop-thoai__tab" id="tabDangKy" type="button">Đăng ký</button>' +
-        '<button class="hop-thoai__dong" id="nutDong" type="button">Đóng</button>' +
-        '</div>' +
-        '<form class="hop-thoai__form" id="bieuMau">' +
-        '<div id="dongHoTen"><label class="hop-thoai__nhan" for="oHoTen">Họ tên</label><input class="hop-thoai__o" type="text" id="oHoTen"></div>' +
-        '<div><label class="hop-thoai__nhan" for="oEmail">Email</label><input class="hop-thoai__o" type="text" id="oEmail"></div>' +
-        '<div><label class="hop-thoai__nhan" for="oMatKhau">Mật khẩu</label><input class="hop-thoai__o" type="password" id="oMatKhau"></div>' +
-        '<div id="dongNhapLai"><label class="hop-thoai__nhan" for="oNhapLai">Nhập lại mật khẩu</label><input class="hop-thoai__o" type="password" id="oNhapLai"></div>' +
-        '<p class="hop-thoai__loi" id="thongBaoLoi"></p>' +
-        '<button class="nut nut--chinh hop-thoai__gui" id="nutGui" type="submit"></button>' +
-        '</form>' +
-        '</div>';
-    document.body.appendChild(hop);
-
-    document.getElementById("nutDong").addEventListener("click", dongHopThoai);
-
-    document.getElementById("tabDangNhap").addEventListener("click", function () {
-        moHopThoai("dangNhap");
-    });
-
-    document.getElementById("tabDangKy").addEventListener("click", function () {
-        moHopThoai("dangKy");
-    });
-
-    hop.addEventListener("click", function (e) {
-        if (e.target == hop) dongHopThoai();
-    });
-
-    document.addEventListener("keydown", function (e) {
-        if (e.key == "Escape") dongHopThoai();
-    });
-
-    document.getElementById("bieuMau").addEventListener("submit", function (e) {
-        e.preventDefault();
-        const thongBao = document.getElementById("thongBaoLoi");
-        const email = document.getElementById("oEmail").value.trim().toLowerCase();
-        const matKhau = document.getElementById("oMatKhau").value;
-        const dsNguoiDung = layDanhSachNguoiDung();
-
-        if (cheDoHop == "dangKy") {
-            const hoTen = document.getElementById("oHoTen").value.trim();
-            if (hoTen == "") {
-                thongBao.textContent = "Vui lòng nhập họ tên.";
-                return;
-            }
-            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-                thongBao.textContent = "Email không hợp lệ.";
-                return;
-            }
-            if (matKhau.length < 6) {
-                thongBao.textContent = "Mật khẩu phải có ít nhất 6 ký tự.";
-                return;
-            }
-            if (matKhau != document.getElementById("oNhapLai").value) {
-                thongBao.textContent = "Mật khẩu nhập lại không khớp.";
-                return;
-            }
-            const daCo = dsNguoiDung.some(function (n) {
-                return n.email == email;
-            });
-            if (daCo) {
-                thongBao.textContent = "Email này đã được đăng ký.";
-                return;
-            }
-            dsNguoiDung.push({hoTen: hoTen, email: email, matKhau: matKhau});
-            localStorage.setItem("dsNguoiDung", JSON.stringify(dsNguoiDung));
-            dangNhapThanhCong({hoTen: hoTen, email: email});
-            return;
-        }
-
-        const nguoi = dsNguoiDung.find(function (n) {
-            return n.email == email && n.matKhau == matKhau;
-        });
-        if (!nguoi) {
-            thongBao.textContent = "Email hoặc mật khẩu không đúng.";
-            return;
-        }
-        dangNhapThanhCong(nguoi);
-    });
-
-    veTaiKhoan();
 }
 
 function khoiTaoTrangChu() {
@@ -581,7 +466,10 @@ async function khoiTao() {
         }
     }
 
-    khoiTaoTaiKhoan();
+    window.duLieuDaTai = true;
+    document.dispatchEvent(new Event("duLieuSanSang"));
+
+    veTaiKhoan();
 
     if (document.getElementById("dsAnhBanner")) {
         khoiTaoTrangChu();

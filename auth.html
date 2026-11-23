@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Đăng nhập & Đăng ký - Cinema Manage System</title>
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/auth.css" />
+</head>
+<body class="auth-page">
+  <div class="auth-container">
+    <div class="auth-header">
+      <a href="index.html" class="auth-logo">CINEMA<span>PRO</span></a>
+      <p class="auth-subtitle">Hệ thống đặt vé xem phim trực tuyến</p>
+    </div>
+
+    <!-- Thanh chuyển đổi Tab Đăng nhập / Đăng ký -->
+    <div class="auth-tabs">
+      <button type="button" class="auth-tab active" data-target="loginForm">Đăng nhập</button>
+      <button type="button" class="auth-tab" data-target="registerForm">Đăng ký</button>
+    </div>
+
+    <!-- Khu vực hiển thị thông báo lỗi / thành công -->
+    <div id="authAlert" class="auth-alert" role="alert"></div>
+
+    <!-- Form Đăng nhập -->
+    <form id="loginForm" class="auth-form active" autocomplete="on">
+      <div class="form-group">
+        <label for="loginEmail">Email</label>
+        <input type="email" id="loginEmail" placeholder="Nhập địa chỉ email của bạn" required />
+      </div>
+
+      <div class="form-group">
+        <label for="loginPassword">Mật khẩu</label>
+        <input type="password" id="loginPassword" placeholder="Nhập mật khẩu" required />
+      </div>
+
+      <button type="submit" class="nut nut--chinh auth-submit">Đăng nhập</button>
+    </form>
+
+    <!-- Form Đăng ký -->
+    <form id="registerForm" class="auth-form" autocomplete="off">
+      <div class="form-group">
+        <label for="regFullName">Họ và tên</label>
+        <input type="text" id="regFullName" placeholder="Ví dụ: Nguyễn Văn A" required />
+      </div>
+
+      <div class="form-group">
+        <label for="regEmail">Email</label>
+        <input type="email" id="regEmail" placeholder="Nhập địa chỉ email" required />
+      </div>
+
+      <div class="form-group">
+        <label for="regPassword">Mật khẩu</label>
+        <input type="password" id="regPassword" placeholder="Tối thiểu 6 ký tự" minlength="6" required />
+      </div>
+
+      <div class="form-group">
+        <label for="regConfirmPassword">Xác nhận mật khẩu</label>
+        <input type="password" id="regConfirmPassword" placeholder="Nhập lại mật khẩu" minlength="6" required />
+      </div>
+
+      <button type="submit" class="nut nut--chinh auth-submit">Tạo tài khoản</button>
+    </form>
+
+    <div class="auth-footer">
+      <a href="index.html">← Quay lại Trang chủ</a>
+    </div>
+  </div>
+
+  <script src="js/auth.js"></script>
+  <script>
+    // Tự động mở tab Đăng ký nếu truy cập từ nút "Đăng ký" (auth.html#register)
+    if (window.location.hash === '#register') {
+      document.addEventListener('DOMContentLoaded', () => {
+        const regTab = document.querySelector('.auth-tab[data-target="registerForm"]');
+        if (regTab) regTab.click();
+      });
+    }
+  </script>
+</body>
+</html>

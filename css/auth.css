@@ -147,3 +147,171 @@
         padding: 8px 20px 24px;
     }
 }
+/* ==========================================================================
+   BỔ SUNG GIAO DIỆN TRANG AUTH.HTML (DARK THEME)
+   ========================================================================== */
+
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at top, #1f2436 0%, var(--nen, #0f111a) 75%);
+  padding: 20px;
+  font-family: inherit;
+  color: var(--chu, #f3f4f6);
+}
+
+.auth-container {
+  width: 100%;
+  max-width: 430px;
+  background-color: var(--nen-the, #181b28);
+  border: 1px solid var(--vien, rgba(255, 255, 255, 0.08));
+  border-radius: 16px;
+  padding: 32px 28px;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.55);
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.auth-logo {
+  display: inline-block;
+  font-size: 1.75rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.auth-logo span {
+  color: var(--chinh, #e50914);
+}
+
+.auth-subtitle {
+  margin-top: 6px;
+  font-size: 0.9rem;
+  color: var(--chu-phu, #9ca3af);
+}
+
+.auth-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background-color: rgba(0, 0, 0, 0.28);
+  border-radius: 10px;
+  padding: 4px;
+  margin-bottom: 20px;
+}
+
+.auth-tab {
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--chu-phu, #9ca3af);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.auth-tab.active {
+  background-color: var(--chinh, #e50914);
+  color: #ffffff;
+}
+
+.auth-alert {
+  display: none;
+  padding: 11px 14px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  margin-bottom: 16px;
+  line-height: 1.4;
+}
+
+.auth-alert.error {
+  display: block;
+  background-color: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.45);
+  color: #fca5a5;
+}
+
+.auth-alert.success {
+  display: block;
+  background-color: rgba(34, 197, 94, 0.15);
+  border: 1px solid rgba(34, 197, 94, 0.45);
+  color: #86efac;
+}
+
+.auth-form {
+  display: none;
+}
+
+.auth-form.active {
+  display: block;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--chu, #e5e7eb);
+}
+
+.form-group input {
+  width: 100%;
+  padding: 11px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--vien, rgba(255, 255, 255, 0.12));
+  background-color: rgba(15, 17, 26, 0.75);
+  color: #ffffff;
+  font-size: 0.95rem;
+  box-sizing: border-box;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.form-group input:focus {
+  border-color: var(--chinh, #e50914);
+}
+
+.auth-submit {
+  width: 100%;
+  padding: 12px;
+  margin-top: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  background-color: var(--chinh, #e50914);
+  color: #ffffff;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.auth-submit:hover {
+  opacity: 0.9;
+}
+
+.auth-footer {
+  margin-top: 22px;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.auth-footer a {
+  color: var(--chu-phu, #9ca3af);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.auth-footer a:hover {
+  color: #ffffff;
+}
