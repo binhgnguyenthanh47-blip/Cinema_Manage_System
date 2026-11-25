@@ -1,5 +1,6 @@
 
 const pool = require('../config/db');
+const { broadcast } = require('../utils/realtime'); // <-- Thêm dòng này
 
 const createBooking = async (req, res) => {
     let connection;
@@ -107,6 +108,25 @@ const createBooking = async (req, res) => {
 
         // 10. Luu transaction
         await connection.commit();
+
+        broadcast('booking_created', {
+            booking_id: bookingId,
+            show_id,
+            seat_ids,
+            total_amount: totalAmount
+        });
+
+        return res.status(201).json({
+            success: true,
+            message: 'Giu ghe thanh cong',
+            data: {
+                booking_id: bookingId,
+                show_id,
+                seat_ids,
+                total_amount: totalAmount,
+                status: 'pending'
+            }
+        });
 
         return res.status(201).json({
             success: true,

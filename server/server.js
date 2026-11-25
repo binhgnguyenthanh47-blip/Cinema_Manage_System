@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const path = require('path');
 
@@ -5,7 +6,8 @@ const movieRoutes = require('./routes/movieRoutes');
 const showRoutes = require('./routes/showRoutes');
 const bookingRoutes = require('./routes/bookingRoutes');
 const cinemaRoutes = require('./routes/cinemaRoutes');
-const authRoutes = require('./routes/authRoutes'); // [1] Thêm route Auth (BUG-14)
+const authRoutes = require('./routes/authRoutes');
+const adminRoutes = require('./routes/adminRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -19,7 +21,8 @@ app.use('/api/movies', movieRoutes);
 app.use('/api/shows', showRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/cinemas', cinemaRoutes);
-app.use('/api/auth', authRoutes); // [1] Kích hoạt API /api/auth/login & /register
+app.use('/api/auth', authRoutes);
+app.use('/api/admin', adminRoutes);
 
 // API kiểm tra server
 app.get('/api', (req, res) => {
@@ -32,9 +35,9 @@ app.get('/api', (req, res) => {
 app.use('/css', express.static(path.join(root, 'css')));
 app.use('/js', express.static(path.join(root, 'js')));
 app.use('/assets', express.static(path.join(root, 'assets')));
-app.use('/admin', express.static(path.join(root, 'admin'))); // [2] Phục vụ thư mục /admin (BUG-17)
+app.use('/admin', express.static(path.join(root, 'admin')));
 
-// Điều hướng 2 file rỗng sang trang thật (BUG-16)
+// Điều hướng 2 file rỗng sang trang thật
 app.get('/movies.html', (req, res) => res.redirect('/danhsach.html'));
 app.get('/movie_detail.html', (req, res) => res.redirect('/chitiet.html'));
 
@@ -46,7 +49,7 @@ app.get('/', (req, res) => {
 // Các trang HTML chính thức
 const pages = [
     'index.html',
-    'auth.html', // [1] Thêm trang Đăng nhập / Đăng ký
+    'auth.html',
     'booking.html',
     'checkout.html',
     'chitiet.html',
@@ -60,7 +63,7 @@ pages.forEach(page => {
     });
 });
 
-// [4] Middleware bắt lỗi JSON sai cú pháp & lỗi server (BUG-23)
+// Middleware bắt lỗi JSON sai cú pháp & lỗi server
 app.use((err, req, res, next) => {
     if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {
         return res.status(400).json({
@@ -75,7 +78,6 @@ app.use((err, req, res, next) => {
     });
 });
 
-// Khởi động server
 app.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}`);
 });

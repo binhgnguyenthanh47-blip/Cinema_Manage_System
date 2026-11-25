@@ -2,8 +2,12 @@ const AUTH_STORAGE_KEY = 'cinema_current_user';
 
 const AuthService = {
   getCurrentUser() {
-    const data = localStorage.getItem(AUTH_STORAGE_KEY);
-    return data ? JSON.parse(data) : null;
+    try {
+      const data = localStorage.getItem(AUTH_STORAGE_KEY);
+      return data ? JSON.parse(data) : null;
+    } catch (e) {
+      return null;
+    }
   },
 
   isLoggedIn() {
@@ -12,12 +16,13 @@ const AuthService = {
 
   isAdmin() {
     const user = this.getCurrentUser();
-    return user && user.role === 'admin';
+    return Boolean(user && String(user.role || '').trim().toLowerCase() === 'admin');
   },
 
   logout() {
     localStorage.removeItem(AUTH_STORAGE_KEY);
-    window.location.href = 'auth.html';
+    const inAdminFolder = window.location.pathname.includes('/admin/');
+    window.location.href = inAdminFolder ? '../auth.html' : 'auth.html';
   },
 
   requireLogin() {
@@ -32,11 +37,35 @@ const AuthService = {
     if (!user) {
       alert('Vui lòng đăng nhập bằng tài khoản Quản trị viên!');
       window.location.href = '../auth.html';
-      return;
+      return false;
     }
-    if (user.role !== 'admin') {
+    if (!this.isAdmin()) {
       alert('Bạn không có quyền truy cập trang Quản trị!');
       window.location.href = '../index.html';
+      return false;
+    }
+    return true;
+  },
+
+  renderHeaderAccount() {
+    const taiKhoanBox = document.getElementById('taiKhoan');
+    if (!taiKhoanBox) return;
+
+    const user = this.getCurrentUser();
+    if (user) {
+      const adminBtn = this.isAdmin()
+        ? `<a href="admin/index.html" class="nut nut--admin" title="Mở bảng điều khiển Quản trị">⚙ Trang Quản Trị</a>`
+        : '';
+      taiKhoanBox.innerHTML = `
+        ${adminBtn}
+        <span class="dau-trang__chao">Xin chào, ${user.full_name}</span>
+        <button type="button" class="nut nut--phu" onclick="AuthService.logout()">Đăng xuất</button>
+      `;
+    } else {
+      taiKhoanBox.innerHTML = `
+        <a href="auth.html" class="nut">Đăng nhập</a>
+        <a href="auth.html#register" class="nut nut--chinh">Đăng ký</a>
+      `;
     }
   }
 };
@@ -44,22 +73,7 @@ const AuthService = {
 window.AuthService = AuthService;
 
 document.addEventListener('DOMContentLoaded', () => {
-  const taiKhoanBox = document.getElementById('taiKhoan');
-  if (taiKhoanBox) {
-    const user = AuthService.getCurrentUser();
-    if (user) {
-      const adminBtn = user.role === 'admin'
-        ? `<a href="admin/index.html" class="nut" style="margin-right: 8px;">Quản trị</a>`
-        : '';
-      taiKhoanBox.innerHTML = `
-        ${adminBtn}
-        <span style="margin-right: 10px; font-weight: 600; color: var(--chinh);">${user.full_name}</span>
-        <button type="button" class="nut nut--phu" onclick="AuthService.logout()">Đăng xuất</button>
-      `;
-    } else {
-      taiKhoanBox.innerHTML = `<a href="auth.html" class="nut nut--chinh">Đăng nhập</a>`;
-    }
-  }
+  AuthService.renderHeaderAccount();
 
   const tabs = document.querySelectorAll('.auth-tab');
   const forms = document.querySelectorAll('.auth-form');
@@ -68,6 +82,16 @@ document.addEventListener('DOMContentLoaded', () => {
   const registerForm = document.getElementById('registerForm');
 
   if (!loginForm || !registerForm) return;
+
+  if (window.location.hash === '#register') {
+    const regTab = document.querySelector('.auth-tab[data-target="registerForm"]');
+    if (regTab) {
+      tabs.forEach(t => t.classList.remove('active'));
+      forms.forEach(f => f.classList.remove('active'));
+      regTab.classList.add('active');
+      registerForm.classList.add('active');
+    }
+  }
 
   function showAlert(message, type = 'error') {
     alertBox.textContent = message;
@@ -124,12 +148,12 @@ document.addEventListener('DOMContentLoaded', () => {
       showAlert('Đăng nhập thành công! Đang chuyển hướng...', 'success');
 
       setTimeout(() => {
-        if (sessionUser.role === 'admin') {
+        if (String(sessionUser.role || '').toLowerCase() === 'admin') {
           window.location.href = 'admin/index.html';
         } else {
           window.location.href = 'index.html';
         }
-      }, 700);
+      }, 600);
     } catch (error) {
       console.error('Lỗi kết nối API Login:', error);
       showAlert('Không thể kết nối đến máy chủ. Vui lòng thử lại!', 'error');
@@ -171,7 +195,7 @@ document.addEventListener('DOMContentLoaded', () => {
       setTimeout(() => {
         document.querySelector('.auth-tab[data-target="loginForm"]').click();
         document.getElementById('loginEmail').value = email;
-      }, 900);
+      }, 800);
     } catch (error) {
       console.error('Lỗi kết nối API Register:', error);
       showAlert('Không thể kết nối đến máy chủ. Vui lòng thử lại!', 'error');
