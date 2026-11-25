@@ -45,7 +45,8 @@ function tenRapDayDu(rap) {
 }
 
 function taoAnh(p, lop) {
-    return '<img' + (lop ? ' class="' + lop + '"' : '') + ' src="' + p.anh + '" alt="' + p.ten + '" onerror="thayAnhLoi(this)">';
+    const src = (p.anh || '').replace(/^(\.\.\/|\/)+/, '');
+    return '<img' + (lop ? ' class="' + lop + '"' : '') + ' src="' + src + '" alt="' + p.ten + '" onerror="thayAnhLoi(this)">';
 }
 
 function taoThePhim(p) {
@@ -81,55 +82,11 @@ function veLuoiPhim(ds, luoi) {
 }
 
 function veTaiKhoan() {
-    const khung = document.getElementById("taiKhoan");
-    if (!khung) return;
-
     localStorage.removeItem("dsNguoiDung");
     localStorage.removeItem("nguoiDangNhap");
-
-    const nguoi = window.AuthService ? window.AuthService.getCurrentUser() : null;
-    khung.innerHTML = "";
-
-    if (nguoi) {
-        if (nguoi.role === "admin") {
-            const nutQuanTri = document.createElement("a");
-            nutQuanTri.className = "nut";
-            nutQuanTri.href = "admin/index.html";
-            nutQuanTri.textContent = "Quản trị";
-            khung.appendChild(nutQuanTri);
-        }
-
-        const chao = document.createElement("span");
-        chao.className = "dau-trang__chao";
-        chao.textContent = "Xin chào, " + nguoi.full_name;
-
-        const nutThoat = document.createElement("button");
-        nutThoat.className = "nut nut--phu";
-        nutThoat.type = "button";
-        nutThoat.textContent = "Đăng xuất";
-        nutThoat.addEventListener("click", function () {
-            if (window.AuthService) {
-                window.AuthService.logout();
-            }
-        });
-
-        khung.appendChild(chao);
-        khung.appendChild(nutThoat);
-        return;
+    if (window.AuthService && typeof window.AuthService.renderHeaderAccount === "function") {
+        window.AuthService.renderHeaderAccount();
     }
-
-    const nutVao = document.createElement("a");
-    nutVao.className = "nut";
-    nutVao.href = "auth.html";
-    nutVao.textContent = "Đăng nhập";
-
-    const nutDangKy = document.createElement("a");
-    nutDangKy.className = "nut nut--chinh";
-    nutDangKy.href = "auth.html#register";
-    nutDangKy.textContent = "Đăng ký";
-
-    khung.appendChild(nutVao);
-    khung.appendChild(nutDangKy);
 }
 
 function khoiTaoTrangChu() {
