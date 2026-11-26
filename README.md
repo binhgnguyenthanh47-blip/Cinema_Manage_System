@@ -42,6 +42,7 @@ Tiếp theo làm theo kết quả của `npm run test-db`:
 | `Cơ sở dữ liệu sẵn sàng` | Không cần làm gì | Sang bước 4 |
 
 > Chỉ chạy `npm run db:init` hoặc `npm run db:reset` khi chấp nhận **mất dữ liệu đang có**: hai lệnh này nạp lại dữ liệu mẫu.
+> Trước khi xoá hay nạp lại dữ liệu, nên sao lưu database: phpMyAdmin → chọn `cinema_management` → Export, hoặc dùng `mysqldump`. Lưu file vào thư mục `backups/` (đã có trong `.gitignore`, không đưa lên Git).
 > Muốn chạy tay trong phpMyAdmin thì chạy theo thứ tự: `schema.sql → procedures.sql → triggers.sql → expire_bookings.sql → expire_bookings_event.sql → dummy-data.sql → seed_seats.sql → seed_extra_seats.sql`.
 
 ### Chạy server (mỗi lần làm việc)
@@ -61,12 +62,14 @@ Muốn tắt server thì bấm `Ctrl + C` ở terminal đang chạy `npm start`.
 | Trang quản trị (Admin) | http://localhost:3000/admin/index.html |
 
 ### Tài khoản mẫu
-Có sẵn sau khi chạy `npm run db:init`. Database của nhóm dùng tài khoản riêng (quản trị viên: `admin@cinema.vn`).
+Chỉ có khi cài mới bằng `npm run db:init` (dữ liệu mẫu). Trang đăng nhập không hiển thị các tài khoản này. Nên đổi mật khẩu ngay sau khi cài (Admin → Người dùng → đổi mật khẩu).
 
 | Vai trò | Email | Mật khẩu |
 |---|---|---|
 | Quản trị viên | `admin@cinema.local` | `admin123` |
 | Khách hàng | `customer@cinema.local` | `123456` |
+
+Database của nhóm không dùng các tài khoản trên: chỉ có tài khoản quản trị `admin@cinema.vn`, còn khách hàng tự đăng ký ở `auth.html`.
 
 Mã giảm giá dùng thử: `CINEMA20` (giảm 20.000đ), `UTH2026` (giảm 15%).
 
@@ -84,6 +87,8 @@ Mã giảm giá dùng thử: `CINEMA20` (giảm 20.000đ), `UTH2026` (giảm 15%
 ### Lỗi thường gặp
 | Hiện tượng | Cách xử lý |
 |---|---|
+| `Could not read package.json` (ENOENT) | Terminal đang đứng sai thư mục (thường là thư mục ngoài khi giải nén file zip). `cd` vào thư mục có `package.json` rồi chạy lại |
+| `Missing script: "test-db"` | `package.json` là bản cũ, thiếu mục `scripts`. Cập nhật code mới, hoặc chạy thẳng `node server/test-db.js` |
 | `ECONNREFUSED` | MySQL chưa bật, hoặc sai `DB_PORT` trong `.env` |
 | `ER_ACCESS_DENIED_ERROR` | Sai `DB_USER` / `DB_PASSWORD` |
 | `Chưa có database` | Chạy `npm run db:init` |
@@ -109,7 +114,7 @@ Mã giảm giá dùng thử: `CINEMA20` (giảm 20.000đ), `UTH2026` (giảm 15%
 |---|---|
 | Tổng quan | Doanh thu, số vé bán, biểu đồ doanh thu 7 hoặc 30 ngày, doanh thu theo phim và theo rạp, phim bán chạy |
 | Phim | CRUD, tìm kiếm, lọc, phân trang, upload poster và nhiều ảnh cùng lúc, soạn nội dung bằng editor Quill |
-| Lịch chiếu | CRUD, lọc theo phim/rạp/ngày/trạng thái, tự tính giờ kết thúc, chặn hai suất trùng giờ trong một phòng |
+| Lịch chiếu | CRUD, lọc theo phim/rạp/ngày/trạng thái, tự tính giờ kết thúc, chặn hai suất trùng giờ trong một phòng. Chỉ xếp lịch được cho phim "Đang chiếu" (phim "Sắp chiếu" phải đổi trạng thái trước) |
 | Rạp chiếu | CRUD, tìm kiếm, phân trang |
 | Phòng & ghế | CRUD phòng, tự sinh sơ đồ ghế, đổi loại ghế, thêm/xóa ghế |
 | Đơn đặt vé | Xem, lọc, chi tiết vé & thanh toán, hủy đơn (mở lại ghế), xóa đơn |
@@ -185,5 +190,3 @@ cinema-management-website/
 | GET/POST | `/api/auth/me`, `/register`, `/login`, `/logout` | Tài khoản |
 | GET/POST | `/api/bookings`, `/api/bookings/:id/pay` | Lịch sử vé, giữ ghế, thanh toán (cần đăng nhập) |
 | GET/POST/PUT/DELETE | `/api/admin/...` | API quản trị (chỉ admin) |
-
-Mô tả đầy đủ các API có trong `docs/PhanTichThietKe.md`.
