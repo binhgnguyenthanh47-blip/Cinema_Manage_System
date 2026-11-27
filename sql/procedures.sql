@@ -1,3 +1,4 @@
+USE cinema_management;
 
 DELIMITER $$
 

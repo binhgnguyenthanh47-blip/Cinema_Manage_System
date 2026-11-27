@@ -1,44 +1,100 @@
+
+// Danh sách kết nối của quản trị viên
 const clients = new Set();
 
-function sseHandler(req, res) {
-    res.setHeader('Content-Type', 'text/event-stream; charset=utf-8');
-    res.setHeader('Cache-Control', 'no-cache, no-transform');
+// Danh sách kết nối của khách hàng
+const seatClients = new Set();
+
+// Khởi tạo kết nối SSE
+function createSseConnection(req, res, clientSet) {
+    res.setHeader(
+        'Content-Type',
+        'text/event-stream; charset=utf-8'
+    );
+    res.setHeader(
+        'Cache-Control',
+        'no-cache, no-transform'
+    );
     res.setHeader('Connection', 'keep-alive');
+    res.setHeader('X-Accel-Buffering', 'no');
     res.flushHeaders?.();
 
-    const client = { id: Date.now() + Math.random(), res };
-    clients.add(client);
+    const client = {
+        id: Date.now() + Math.random(),
+        res
+    };
 
-    res.write(`event: connected\ndata: ${JSON.stringify({ connected: true, time: new Date().toISOString() })}\n\n`);
+    clientSet.add(client);
+
+    res.write(
+        `event: connected\ndata: ${JSON.stringify({
+            connected: true,
+            time: new Date().toISOString()
+        })}\n\n`
+    );
 
     const heartbeat = setInterval(() => {
         try {
-            res.write(`: ping\n\n`);
+            res.write(': ping\n\n');
         } catch (err) {
-            clearInterval(heartbeat);
-            clients.delete(client);
+            cleanup();
         }
     }, 25000);
 
-    req.on('close', () => {
+    function cleanup() {
         clearInterval(heartbeat);
-        clients.delete(client);
-    });
+        clientSet.delete(client);
+    }
+
+    res.on('close', cleanup);
+    res.on('error', cleanup);
 }
 
-function broadcast(event, payload = {}) {
+// Kết nối realtime dành cho Admin
+function sseHandler(req, res) {
+    createSseConnection(req, res, clients);
+}
+
+// Kết nối realtime dành cho khách hàng
+function seatSseHandler(req, res) {
+    createSseConnection(req, res, seatClients);
+}
+
+// Gửi sự kiện đến một nhóm kết nối
+function sendEvent(clientSet, event, payload = {}) {
     const message = `event: ${event}\ndata: ${JSON.stringify({
         ...payload,
         timestamp: new Date().toISOString()
     })}\n\n`;
 
-    for (const client of clients) {
+    for (const client of clientSet) {
         try {
             client.res.write(message);
         } catch (err) {
-            clients.delete(client);
+            clientSet.delete(client);
         }
     }
 }
 
-module.exports = { sseHandler, broadcast };
+// Phát thông báo realtime
+function broadcast(event, payload = {}) {
+    // Giữ nguyên thông báo cho Admin
+    sendEvent(clients, event, payload);
+
+    // Thông báo thay đổi ghế cho khách hàng
+    if (event === 'booking_created') {
+        const showId = Number(payload.show_id);
+
+        if (Number.isSafeInteger(showId) && showId > 0) {
+            sendEvent(seatClients, 'seats_updated', {
+                show_id: showId
+            });
+        }
+    }
+}
+
+module.exports = {
+    sseHandler,
+    seatSseHandler,
+    broadcast
+};

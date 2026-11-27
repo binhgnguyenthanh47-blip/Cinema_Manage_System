@@ -109,13 +109,19 @@ const createBooking = async (req, res) => {
         // 10. Luu transaction
         await connection.commit();
 
-        broadcast('booking_created', {
-            booking_id: bookingId,
-            show_id,
-            seat_ids,
-            total_amount: totalAmount
-        });
+        // 11. Thong bao realtime
+        try {
+            broadcast('booking_created', {
+                booking_id: bookingId,
+                show_id,
+                seat_ids,
+                total_amount: totalAmount
+            });
+        } catch (realtimeError) {
+            console.error('Realtime error:', realtimeError);
+        }
 
+        // 12. Tra ket qua ve frontend
         return res.status(201).json({
             success: true,
             message: 'Giu ghe thanh cong',
@@ -128,17 +134,6 @@ const createBooking = async (req, res) => {
             }
         });
 
-        return res.status(201).json({
-            success: true,
-            message: 'Giu ghe thanh cong',
-            data: {
-                booking_id: bookingId,
-                show_id,
-                seat_ids,
-                total_amount: totalAmount,
-                status: 'pending'
-            }
-        });
 
     } catch (error) {
         if (connection) {
