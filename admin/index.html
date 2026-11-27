@@ -3,181 +3,577 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin</title>
+    <title>Quản Trị Hệ Thống - CINEMA</title>
     <link rel="stylesheet" href="css/style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../js/auth.js"></script>
+    <script>
+        if (window.AuthService && !window.AuthService.requireAdmin()) {
+            // Chuyển hướng nếu không có quyền admin
+        }
+    </script>
 </head>
 <body>
 
-    <!-- Sidebar Navigation -->
+    <!-- Sidebar -->
     <aside class="sidebar">
         <div class="brand">
-            <span>🎬 Love Cinema Admin</span>
+            <div class="brand-logo">CINEMA</div>
+            <div>
+                <div class="brand-title">Admin Studio</div>
+                <div class="brand-sub">Quản lý rạp chiếu</div>
+            </div>
         </div>
+
         <ul class="nav-menu">
-            <li class="nav-item active" onclick="switchTab('analytics')">📊 Thống kê Doanh thu</li>
-            <li class="nav-item" onclick="switchTab('movies')">🎥 Quản lý Phim</li>
-            <li class="nav-item" onclick="switchTab('showtimes')">📅 Quản lý Lịch chiếu</li>
-            <li class="nav-item" onclick="switchTab('rooms')">💺 Quản lý Phòng & Ghế</li>
+            <li class="nav-item active" data-tab="analytics" onclick="switchTab('analytics', this)">
+                <span class="nav-icon">📊</span>
+                <span>Thống kê & Doanh thu</span>
+            </li>
+            <li class="nav-item" data-tab="movies" onclick="switchTab('movies', this)">
+                <span class="nav-icon">🎬</span>
+                <span>Quản lý Phim</span>
+            </li>
+            <li class="nav-item" data-tab="showtimes" onclick="switchTab('showtimes', this)">
+                <span class="nav-icon">📅</span>
+                <span>Quản lý Suất chiếu</span>
+            </li>
+            <li class="nav-item" data-tab="rooms" onclick="switchTab('rooms', this)">
+                <span class="nav-icon">💺</span>
+                <span>Rạp, Phòng & Ghế</span>
+            </li>
+            <li class="nav-item" data-tab="bookings" onclick="switchTab('bookings', this)">
+                <span class="nav-icon">🎟️</span>
+                <span>Đơn đặt vé</span>
+                <span class="nav-badge" id="badgePendingBookings" style="display:none;">0</span>
+            </li>
         </ul>
+
+        <div class="sidebar-footer">
+            <a href="../index.html" class="btn btn-outline btn-block">← Về Trang Người Dùng</a>
+        </div>
     </aside>
 
     <!-- Main Content -->
     <main class="main-content">
         <header class="header">
-            <h2>Hệ Thống Quản Lý Rạp Phim</h2>
-            <div class="user-profile">
-                <div class="avatar">A</div>
-                <span>Administrator</span>
+            <div class="header-left">
+                <h1 id="pageTitle">Thống Kê & Doanh Thu</h1>
+                <div class="live-status" id="liveStatusBox" title="Đồng bộ thời gian thật với MySQL">
+                    <span class="live-dot" id="liveDot"></span>
+                    <span id="liveStatusText">Đang kết nối Live...</span>
+                    <span class="live-time" id="lastSyncTime"></span>
+                </div>
+            </div>
+
+            <div class="header-right">
+                <button type="button" class="btn btn-light btn-sm" onclick="syncAllData(true)" title="Làm mới dữ liệu ngay">
+                    ↻ Đồng bộ ngay
+                </button>
+                <div class="user-profile">
+                    <div class="avatar" id="adminAvatar">A</div>
+                    <div class="user-meta">
+                        <strong id="adminName">Administrator</strong>
+                        <span>Quản trị viên</span>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-danger btn-sm" onclick="AuthService.logout()">Đăng xuất</button>
             </div>
         </header>
 
         <div class="content-body">
-            
-            <!-- Module 1: Thống kê Doanh thu -->
+
+            <!-- MODULE 1: THỐNG KÊ & DOANH THU -->
             <section id="analytics" class="section active">
                 <div class="metrics-grid">
                     <div class="card metric-card">
-                        <h3>Tổng Doanh Thu</h3>
-                        <div class="val">2,160,000,000 ₫</div>
+                        <div class="metric-top">
+                            <span>Doanh Thu Đã Thanh Toán</span>
+                            <span class="metric-icon">💰</span>
+                        </div>
+                        <div class="val" id="kpiPaidRevenue">0 ₫</div>
+                        <div class="metric-sub" id="kpiPendingRevenue">Chờ thanh toán: 0 ₫</div>
                     </div>
+
                     <div class="card metric-card">
-                        <h3>Số Vé Đã Bán</h3>
-                        <div class="val">24,500 vé</div>
+                        <div class="metric-top">
+                            <span>Tổng Vé Đã Bán</span>
+                            <span class="metric-icon">🎫</span>
+                        </div>
+                        <div class="val" id="kpiSoldTickets">0 vé</div>
+                        <div class="metric-sub" id="kpiHeldTickets">Đang giữ chỗ: 0 vé</div>
                     </div>
+
                     <div class="card metric-card">
-                        <h3>Phim Chiếu Rạp</h3>
-                        <div class="val">12 Phim</div>
+                        <div class="metric-top">
+                            <span>Kho Phim Hệ Thống</span>
+                            <span class="metric-icon">🎥</span>
+                        </div>
+                        <div class="val" id="kpiTotalMovies">0 phim</div>
+                        <div class="metric-sub" id="kpiMovieBreakdown">Đang chiếu: 0 | Sắp chiếu: 0</div>
+                    </div>
+
+                    <div class="card metric-card">
+                        <div class="metric-top">
+                            <span>Suất Chiếu Đang Mở</span>
+                            <span class="metric-icon">🕒</span>
+                        </div>
+                        <div class="val" id="kpiActiveShows">0 suất</div>
+                        <div class="metric-sub">Trạng thái: Đang mở bán</div>
                     </div>
                 </div>
 
                 <div class="analytics-grid">
                     <div class="card">
-                        <h3>Biểu Đồ Doanh Thu Phim (VNĐ)</h3>
-                        <canvas id="revenueChart" style="margin-top: 15px;"></canvas>
+                        <div class="card-header">
+                            <h3>Biểu Đồ Doanh Thu Theo Phim (VNĐ)</h3>
+                        </div>
+                        <div class="chart-wrap">
+                            <canvas id="revenueChart"></canvas>
+                        </div>
                     </div>
-                    
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Tỷ Trọng Doanh Thu Theo Rạp</h3>
+                        </div>
+                        <div class="chart-wrap">
+                            <canvas id="cinemaChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 20px;">
+                    <div class="card-header">
+                        <h3>Đơn Đặt Vé Mới Nhất (Cập nhật trực tiếp)</h3>
+                        <button type="button" class="btn btn-light btn-sm" onclick="switchTab('bookings')">Xem tất cả →</button>
+                    </div>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Mã Đơn</th>
+                                    <th>Khách Hàng</th>
+                                    <th>Phim & Suất Chiếu</th>
+                                    <th>Ghế</th>
+                                    <th>Tổng Tiền</th>
+                                    <th>Trạng Thái</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recent-bookings-table"></tbody>
+                        </table>
+                    </div>
                 </div>
             </section>
 
-            <!-- Module 2: Quản lý Phim -->
+            <!-- MODULE 2: QUẢN LÝ PHIM -->
             <section id="movies" class="section">
-                <div class="card">
-                    <h3>Thêm / Cập Nhật Phim</h3>
-                    <form onsubmit="saveMovie(event)" style="margin-top: 15px;">
-                        <input type="hidden" id="movie-id">
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                            <div class="form-group">
-                                <label>Tên Phim</label>
-                                <input type="text" id="movie-name" class="form-control" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Thời Lượng (Phút)</label>
-                                <input type="number" id="movie-duration" class="form-control" required>
-                            </div>
-                        </div>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                            <div class="form-group">
-                                <label>Thể Loại</label>
-                                <input type="text" id="movie-genre" class="form-control" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Link Poster</label>
-                                <input type="url" id="movie-poster" class="form-control" placeholder="https://example.com/poster.jpg">
-                            </div>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Lưu Thông Tin Phim</button>
-                        <button type="button" class="btn btn-danger" onclick="resetMovieForm()">Hủy</button>
-                    </form>
+                <div class="toolbar">
+                    <div class="toolbar-filters">
+                        <input type="text" id="movieSearchInput" class="form-control" placeholder="Tìm theo tên phim, đạo diễn..." oninput="renderMoviesTable()">
+                        <select id="movieStatusFilter" class="form-control" onchange="renderMoviesTable()">
+                            <option value="all">Tất cả trạng thái</option>
+                            <option value="now_showing">Đang chiếu</option>
+                            <option value="coming_soon">Sắp chiếu</option>
+                            <option value="ended">Ngừng chiếu</option>
+                        </select>
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="openMovieModal()">+ Thêm Phim Mới</button>
                 </div>
 
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Poster</th>
-                                <th>Tên Phim</th>
-                                <th>Thể Loại</th>
-                                <th>Thời Lượng</th>
-                                <th>Thao Tác</th>
-                            </tr>
-                        </thead>
-                        <tbody id="movie-table"></tbody>
-                    </table>
+                <div class="card table-card">
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Poster</th>
+                                    <th>Thông Tin Phim</th>
+                                    <th>Thể Loại & Thời Lượng</th>
+                                    <th>Độ Tuổi / Điểm</th>
+                                    <th>Trạng Thái</th>
+                                    <th>Suất Chiếu</th>
+                                    <th>Thao Tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="movie-table"></tbody>
+                        </table>
+                    </div>
                 </div>
             </section>
 
-            <!-- Module 3: Quản lý Lịch chiếu -->
+            <!-- MODULE 3: QUẢN LÝ SUẤT CHIẾU -->
             <section id="showtimes" class="section">
-                <div class="card">
-                    <h3>Tạo Lịch Chiếu Mới</h3>
-                    <form onsubmit="addShowtime(event)" style="display: flex; gap: 15px; align-items: flex-end; margin-top: 15px;">
-                        <div class="form-group" style="flex: 1;">
-                            <label>Chọn Phòng</label>
-                            <select id="st-room" class="form-control">
-                                <option value="Phòng 1">Phòng 1</option>
-                                <option value="Phòng 2">Phòng 2</option>
-                                <option value="Phòng 3">Phòng 3</option>
-                            </select>
-                        </div>
-                        <div class="form-group" style="flex: 1;">
-                            <label>Giờ Chiếu</label>
-                            <input type="time" id="st-time" class="form-control" required>
-                        </div>
-                        <div class="form-group" style="flex: 1;">
-                            <label>Chọn Phim</label>
-                            <select id="st-movie" class="form-control"></select>
-                        </div>
-                        <div class="form-group">
-                            <button type="submit" class="btn btn-primary">Thêm Lịch Chiếu</button>
-                        </div>
-                    </form>
+                <div class="toolbar">
+                    <div class="toolbar-filters">
+                        <select id="showMovieFilter" class="form-control" onchange="renderShowsTable()">
+                            <option value="all">Tất cả phim</option>
+                        </select>
+                        <select id="showCinemaFilter" class="form-control" onchange="renderShowsTable()">
+                            <option value="all">Tất cả rạp</option>
+                        </select>
+                        <select id="showStatusFilter" class="form-control" onchange="renderShowsTable()">
+                            <option value="all">Tất cả trạng thái</option>
+                            <option value="scheduled">Đang mở bán</option>
+                            <option value="finished">Đã chiếu</option>
+                            <option value="cancelled">Đã hủy</option>
+                        </select>
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="openShowModal()">+ Tạo Suất Chiếu Mới</button>
                 </div>
 
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Phòng Chiếu</th>
-                                <th>Khung Giờ</th>
-                                <th>Phim Được Chiếu</th>
-                                <th>Thao Tác</th>
-                            </tr>
-                        </thead>
-                        <tbody id="showtime-table"></tbody>
-                    </table>
+                <div class="card table-card">
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Phim</th>
+                                    <th>Rạp / Phòng</th>
+                                    <th>Thời Gian Chiếu</th>
+                                    <th>Định Dạng</th>
+                                    <th>Giá Vé Gốc</th>
+                                    <th>Ghế Đã Đặt</th>
+                                    <th>Trạng Thái</th>
+                                    <th>Thao Tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="showtime-table"></tbody>
+                        </table>
+                    </div>
                 </div>
             </section>
 
-            <!-- Module 4: Quản lý Phòng chiếu & Ghế (Đã thêm bộ lọc phòng) -->
+            <!-- MODULE 4: QUẢN LÝ RẠP, PHÒNG & SƠ ĐỒ GHẾ -->
             <section id="rooms" class="section">
-                <div class="card" style="text-align: center;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                        <h3 id="room-title">Sơ Đồ Ghế - Phòng 1</h3>
-                        <div style="width: 200px;">
-                            <select id="room-selector" class="form-control" onchange="changeRoom(this.value)">
-                                <option value="Phòng 1">Phòng 1</option>
-                                <option value="Phòng 2">Phòng 2</option>
-                                <option value="Phòng 3">Phòng 3</option>
+                <div class="rooms-layout">
+                    <!-- Cột trái: Danh sách Rạp & Phòng -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Hệ Thống Rạp & Phòng</h3>
+                            <button type="button" class="btn btn-primary btn-sm" onclick="openHallModal()">+ Thêm Phòng</button>
+                        </div>
+
+                        <div class="form-group" style="margin-top: 12px;">
+                            <label>Chọn Rạp Chiếu</label>
+                            <select id="adminCinemaSelect" class="form-control" onchange="onSelectAdminCinema()"></select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Chọn Phòng Chiếu</label>
+                            <select id="adminHallSelect" class="form-control" onchange="loadHallSeats()"></select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Kiểm Tra Trạng Thái Đặt Chỗ Theo Suất (Tùy chọn)</label>
+                            <select id="adminHallShowSelect" class="form-control" onchange="loadHallSeats()">
+                                <option value="">-- Chế độ cấu hình loại ghế --</option>
                             </select>
+                        </div>
+
+                        <div class="hall-actions">
+                            <button type="button" class="btn btn-light btn-block" onclick="generateDefaultSeats()">
+                                ⚡ Khởi tạo 44 ghế chuẩn cho phòng
+                            </button>
+                            <button type="button" class="btn btn-outline btn-block" onclick="openCinemaModal()">
+                                + Thêm Cụm / Rạp Chiếu Mới
+                            </button>
                         </div>
                     </div>
-                    <p style="font-size: 13px; color: #666; margin-bottom: 20px;">Click vào ghế để chuyển trạng thái Bật / Tắt (Hỏng)</p>
-                    
-                    <div class="screen">MÀN HÌNH CHIẾU</div>
-                    <div class="seat-grid" id="seat-grid"></div>
 
-                    <div class="legend">
-                        <div class="legend-item"><div class="legend-box" style="border: 1px solid var(--primary);"></div> Thường</div>
-                        <div class="legend-item"><div class="legend-box" style="background: var(--primary-light); border: 1px solid var(--primary);"></div> VIP</div>
-                        <div class="legend-item"><div class="legend-box" style="background: #bdbdbd;"></div> Đã đặt</div>
-                        <div class="legend-item"><div class="legend-box" style="background: #424242;"></div> Khóa / Hỏng</div>
+                    <!-- Cột phải: Sơ đồ ghế trực quan -->
+                    <div class="card auditorium-card">
+                        <div class="card-header">
+                            <div>
+                                <h3 id="room-title">Sơ Đồ Ghế Phòng Chiếu</h3>
+                                <p class="text-muted" id="room-subtitle">Click vào từng ghế để đổi loại ghế: Thường → VIP → Ghế Đôi</p>
+                            </div>
+                            <div class="seat-counter" id="seatCounterBadge">0 ghế</div>
+                        </div>
+
+                        <div class="screen-arc">MÀN HÌNH CHIẾU</div>
+
+                        <div class="seat-map-container" id="seat-grid"></div>
+
+                        <div class="legend">
+                            <div class="legend-item"><span class="legend-box seat-standard"></span> Ghế Thường</div>
+                            <div class="legend-item"><span class="legend-box seat-vip"></span> Ghế VIP (+20k)</div>
+                            <div class="legend-item"><span class="legend-box seat-couple"></span> Ghế Đôi (190k)</div>
+                            <div class="legend-item"><span class="legend-box seat-held"></span> Đang giữ chỗ</div>
+                            <div class="legend-item"><span class="legend-box seat-paid"></span> Đã thanh toán</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- MODULE 5: QUẢN LÝ ĐƠN ĐẶT VÉ -->
+            <section id="bookings" class="section">
+                <div class="toolbar">
+                    <div class="toolbar-filters">
+                        <input type="text" id="bookingSearchInput" class="form-control" placeholder="Tìm mã đơn, tên khách, email, phim..." oninput="renderBookingsTable()">
+                        <select id="bookingStatusFilter" class="form-control" onchange="renderBookingsTable()">
+                            <option value="all">Tất cả trạng thái</option>
+                            <option value="pending">Chờ thanh toán (Pending)</option>
+                            <option value="paid">Đã thanh toán (Paid)</option>
+                            <option value="cancelled">Đã hủy (Cancelled)</option>
+                            <option value="expired">Hết hạn (Expired)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="card table-card">
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Mã Đơn</th>
+                                    <th>Khách Hàng</th>
+                                    <th>Phim</th>
+                                    <th>Rạp / Phòng / Suất</th>
+                                    <th>Ghế Đặt</th>
+                                    <th>Tổng Tiền</th>
+                                    <th>Thời Gian Đặt</th>
+                                    <th>Trạng Thái</th>
+                                    <th>Thao Tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bookings-table"></tbody>
+                        </table>
                     </div>
                 </div>
             </section>
 
         </div>
     </main>
+
+    <!-- MODAL THÊM / SỬA PHIM -->
+    <div class="modal-backdrop" id="movieModal">
+        <div class="modal-box modal-lg">
+            <div class="modal-header">
+                <h3 id="movieModalTitle">Thêm Phim Mới</h3>
+                <button type="button" class="modal-close" onclick="closeModal('movieModal')">&times;</button>
+            </div>
+            <form onsubmit="saveMovie(event)" class="modal-body">
+                <input type="hidden" id="movie-id">
+                <div class="form-grid-2">
+                    <div class="form-group">
+                        <label>Tên Phim *</label>
+                        <input type="text" id="movie-title" class="form-control" required placeholder="VD: Spider-Man: Brand New Day">
+                    </div>
+                    <div class="form-group">
+                        <label>Thể Loại *</label>
+                        <input type="text" id="movie-genre" class="form-control" required placeholder="VD: Hành động, Phiêu lưu">
+                    </div>
+                </div>
+
+                <div class="form-grid-4">
+                    <div class="form-group">
+                        <label>Thời Lượng (Phút)</label>
+                        <input type="number" id="movie-duration" class="form-control" min="1" max="400" placeholder="120">
+                    </div>
+                    <div class="form-group">
+                        <label>Nhãn Độ Tuổi</label>
+                        <select id="movie-age" class="form-control">
+                            <option value="P">P (Mọi lứa tuổi)</option>
+                            <option value="K">K (Dưới 13 tuổi có giám hộ)</option>
+                            <option value="T13">T13 (13+)</option>
+                            <option value="T16">T16 (16+)</option>
+                            <option value="T18">T18 (18+)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Trạng Thái *</label>
+                        <select id="movie-status" class="form-control">
+                            <option value="now_showing">Đang chiếu</option>
+                            <option value="coming_soon">Sắp chiếu</option>
+                            <option value="ended">Ngừng chiếu</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Điểm Đánh Giá</label>
+                        <input type="number" step="0.1" min="0" max="10" id="movie-rating" class="form-control" placeholder="8.5">
+                    </div>
+                </div>
+
+                <div class="form-grid-2">
+                    <div class="form-group">
+                        <label>Ngày Khởi Chiếu (Hiển thị)</label>
+                        <input type="text" id="movie-release" class="form-control" placeholder="VD: 31/07/2026">
+                    </div>
+                    <div class="form-group">
+                        <label>YouTube Trailer ID</label>
+                        <input type="text" id="movie-trailer" class="form-control" placeholder="VD: 62bIsvRcPv0">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Đường Dẫn Poster (URL hoặc assets/images/...)</label>
+                    <input type="text" id="movie-poster" class="form-control" placeholder="assets/images/spiderman-brand-new-day.jpeg">
+                </div>
+
+                <div class="form-grid-2">
+                    <div class="form-group">
+                        <label>Đạo Diễn</label>
+                        <input type="text" id="movie-director" class="form-control" placeholder="Tên đạo diễn">
+                    </div>
+                    <div class="form-group">
+                        <label>Quốc Gia</label>
+                        <input type="text" id="movie-country" class="form-control" value="Mỹ">
+                    </div>
+                </div>
+
+                <div class="form-grid-2">
+                    <div class="form-group">
+                        <label>Diễn Viên</label>
+                        <input type="text" id="movie-actors" class="form-control" placeholder="Danh sách diễn viên chính">
+                    </div>
+                    <div class="form-group">
+                        <label>Ngôn Ngữ</label>
+                        <input type="text" id="movie-language" class="form-control" value="Tiếng Anh, phụ đề tiếng Việt">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Nội Dung Tóm Tắt</label>
+                    <textarea id="movie-description" class="form-control" rows="3" placeholder="Mô tả nội dung phim..."></textarea>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" onclick="closeModal('movieModal')">Hủy</button>
+                    <button type="submit" class="btn btn-primary">💾 Lưu Thông Tin Phim</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL THÊM / SỬA SUẤT CHIẾU -->
+    <div class="modal-backdrop" id="showModal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3 id="showModalTitle">Tạo Suất Chiếu Mới</h3>
+                <button type="button" class="modal-close" onclick="closeModal('showModal')">&times;</button>
+            </div>
+            <form onsubmit="saveShow(event)" class="modal-body">
+                <input type="hidden" id="show-id">
+
+                <div class="form-group">
+                    <label>Chọn Phim *</label>
+                    <select id="show-movie" class="form-control" required onchange="autoCalculateEndTime()"></select>
+                </div>
+
+                <div class="form-grid-2">
+                    <div class="form-group">
+                        <label>Chọn Rạp *</label>
+                        <select id="show-cinema" class="form-control" required onchange="populateShowHalls()"></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Chọn Phòng Chiếu *</label>
+                        <select id="show-hall" class="form-control" required></select>
+                    </div>
+                </div>
+
+                <div class="form-grid-2">
+                    <div class="form-group">
+                        <label>Thời Gian Bắt Đầu *</label>
+                        <input type="datetime-local" id="show-start" class="form-control" required onchange="autoCalculateEndTime()">
+                    </div>
+                    <div class="form-group">
+                        <label>Thời Gian Kết Thúc *</label>
+                        <input type="datetime-local" id="show-end" class="form-control" required>
+                    </div>
+                </div>
+
+                <div class="form-grid-3">
+                    <div class="form-group">
+                        <label>Định Dạng Chiếu</label>
+                        <select id="show-format" class="form-control">
+                            <option value="2d_subtitled">2D Phụ đề</option>
+                            <option value="2d_dubbed">2D Lồng tiếng</option>
+                            <option value="3D">3D Phụ đề</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Giá Vé Cơ Bản (VNĐ) *</label>
+                        <input type="number" id="show-price" class="form-control" min="0" step="5000" value="75000" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Trạng Thái</label>
+                        <select id="show-status" class="form-control">
+                            <option value="scheduled">Mở bán (Scheduled)</option>
+                            <option value="finished">Đã chiếu (Finished)</option>
+                            <option value="cancelled">Đã hủy (Cancelled)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" onclick="closeModal('showModal')">Hủy</button>
+                    <button type="submit" class="btn btn-primary">💾 Lưu Suất Chiếu</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL THÊM RẠP -->
+    <div class="modal-backdrop" id="cinemaModal">
+        <div class="modal-box modal-sm">
+            <div class="modal-header">
+                <h3>Thêm Rạp Chiếu Mới</h3>
+                <button type="button" class="modal-close" onclick="closeModal('cinemaModal')">&times;</button>
+            </div>
+            <form onsubmit="saveCinema(event)" class="modal-body">
+                <div class="form-group">
+                    <label>Cụm Rạp</label>
+                    <input type="text" id="cinema-cluster" class="form-control" placeholder="VD: Cụm rạp A">
+                </div>
+                <div class="form-group">
+                    <label>Tên Rạp *</label>
+                    <input type="text" id="cinema-name" class="form-control" required placeholder="VD: Rạp 5 - Quận 1">
+                </div>
+                <div class="form-group">
+                    <label>Địa Chỉ *</label>
+                    <input type="text" id="cinema-address" class="form-control" required placeholder="Địa chỉ rạp chiếu">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" onclick="closeModal('cinemaModal')">Hủy</button>
+                    <button type="submit" class="btn btn-primary">Thêm Rạp</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL THÊM PHÒNG CHIẾU -->
+    <div class="modal-backdrop" id="hallModal">
+        <div class="modal-box modal-sm">
+            <div class="modal-header">
+                <h3>Thêm Phòng Chiếu Mới</h3>
+                <button type="button" class="modal-close" onclick="closeModal('hallModal')">&times;</button>
+            </div>
+            <form onsubmit="saveHall(event)" class="modal-body">
+                <div class="form-group">
+                    <label>Thuộc Rạp Chiếu *</label>
+                    <select id="hall-cinema-id" class="form-control" required></select>
+                </div>
+                <div class="form-group">
+                    <label>Tên Phòng Chiếu *</label>
+                    <input type="text" id="hall-name" class="form-control" required placeholder="VD: Phòng 3 - IMAX">
+                </div>
+                <div class="form-group">
+                    <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                        <input type="checkbox" id="hall-auto-seats" checked>
+                        <span>Tự động tạo sẵn 44 ghế (Thường, VIP, Đôi)</span>
+                    </label>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" onclick="closeModal('hallModal')">Hủy</button>
+                    <button type="submit" class="btn btn-primary">Tạo Phòng</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast-container" id="toastContainer"></div>
 
     <script src="js/script.js"></script>
 </body>
