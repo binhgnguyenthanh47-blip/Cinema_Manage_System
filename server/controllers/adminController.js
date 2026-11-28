@@ -35,6 +35,9 @@ const getDashboardStats = async (req, res) => {
             SELECT
                 COALESCE(SUM(CASE WHEN status = 'paid' THEN total_amount ELSE 0 END), 0) AS paid_revenue,
                 COALESCE(SUM(CASE WHEN status = 'pending' THEN total_amount ELSE 0 END), 0) AS pending_revenue,
+                COALESCE(SUM(CASE WHEN status = 'paid' THEN combo_amount ELSE 0 END), 0) AS paid_combo_revenue,
+                COALESCE(SUM(CASE WHEN status = 'pending' THEN combo_amount ELSE 0 END), 0) AS pending_combo_revenue,
+                COALESCE(SUM(CASE WHEN status = 'paid' THEN (total_amount - combo_amount) ELSE 0 END), 0) AS paid_ticket_revenue,
                 COUNT(CASE WHEN status = 'paid' THEN 1 END) AS paid_bookings,
                 COUNT(CASE WHEN status = 'pending' THEN 1 END) AS pending_bookings
             FROM bookings
@@ -96,6 +99,9 @@ const getDashboardStats = async (req, res) => {
                 kpis: {
                     paid_revenue: Number(revenueRow.paid_revenue || 0),
                     pending_revenue: Number(revenueRow.pending_revenue || 0),
+                    paid_combo_revenue: Number(revenueRow.paid_combo_revenue || 0),
+                    pending_combo_revenue: Number(revenueRow.pending_combo_revenue || 0),
+                    paid_ticket_revenue: Number(revenueRow.paid_ticket_revenue || 0),
                     paid_bookings: Number(revenueRow.paid_bookings || 0),
                     pending_bookings: Number(revenueRow.pending_bookings || 0),
                     sold_tickets: Number(ticketRow.sold_tickets || 0),
@@ -689,6 +695,8 @@ const getAdminBookings = async (req, res) => {
                 DATE_FORMAT(b.booking_time, '%H:%i %d/%m/%Y') AS booking_time,
                 b.status,
                 b.total_amount,
+                b.combo_summary,
+                b.combo_amount,
                 MIN(m.title) AS movie_title,
                 MIN(c.name) AS cinema_name,
                 MIN(h.hall_name) AS hall_name,
@@ -703,7 +711,7 @@ const getAdminBookings = async (req, res) => {
             LEFT JOIN cinemahalls h ON s.hall_id = h.hall_id
             LEFT JOIN cinemas c ON h.cinema_id = c.cinema_id
             LEFT JOIN seats st ON t.seat_id = st.seat_id
-            GROUP BY b.booking_id, b.user_id, u.full_name, u.email, b.booking_time, b.status, b.total_amount
+            GROUP BY b.booking_id, b.user_id, u.full_name, u.email, b.booking_time, b.status, b.total_amount, b.combo_summary, b.combo_amount
             ORDER BY b.booking_id DESC
             LIMIT 100
         `);
@@ -713,6 +721,7 @@ const getAdminBookings = async (req, res) => {
             data: bookings.map(b => ({
                 ...b,
                 total_amount: Number(b.total_amount),
+                combo_amount: Number(b.combo_amount || 0),
                 ticket_count: Number(b.ticket_count)
             }))
         });

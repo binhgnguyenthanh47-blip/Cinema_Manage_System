@@ -911,7 +911,7 @@
 
         tinhTongTien();
 
-        nutThanhToan.addEventListener("click", () => {
+        nutThanhToan.addEventListener("click", async () => {
             const hoTen = inputHoTen.value.trim();
             const email = inputEmail.value.trim();
             const sdt = inputSdt.value.trim();
@@ -956,6 +956,33 @@
             const phuongThuc = document.querySelector('input[name="phuongThuc"]:checked').value;
             const chiTietTien = tinhTongTien();
             const maVe = "CNM-" + Math.floor(100000 + Math.random() * 900000);
+
+            // --- ĐOẠN MỚI THÊM: Gửi bắp nước & giảm giá xuống MySQL ---
+            if (donTam.booking_id) {
+                nutThanhToan.disabled = true;
+                nutThanhToan.textContent = "Đang xử lý...";
+                try {
+                    const res = await fetch(`/api/bookings/${donTam.booking_id}/checkout`, {
+                        method: "PUT",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            combo_solo: soLuongCombo.solo,
+                            combo_couple: soLuongCombo.couple,
+                            discount_amount: chiTietTien.tienGiam
+                        })
+                    });
+                    const data = await res.json();
+                    if (!res.ok || !data.success) {
+                        throw new Error(data.message || "Lỗi cập nhật đơn hàng");
+                    }
+                } catch (err) {
+                    loiEl.textContent = err.message;
+                    nutThanhToan.disabled = false;
+                    nutThanhToan.textContent = "Thanh toán";
+                    return;
+                }
+            }
+            // ---------------------------------------------------------
 
             const dsComboText = [];
             if (soLuongCombo.solo > 0) dsComboText.push(`${soLuongCombo.solo}x Combo Solo`);

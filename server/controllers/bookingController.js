@@ -170,6 +170,65 @@ const createBooking = async (req, res) => {
     }
 };
 
+const confirmCheckout = async (req, res) => {
+    try {
+        const bookingId = Number(req.params.id);
+        const { combo_solo = 0, combo_couple = 0, discount_amount = 0 } = req.body || {};
+
+        if (!Number.isSafeInteger(bookingId) || bookingId <= 0) {
+            return res.status(400).json({ success: false, message: 'Mã đơn không hợp lệ' });
+        }
+
+        const [[ticketSum]] = await pool.query(
+            'SELECT COALESCE(SUM(price), 0) AS ticket_total FROM tickets WHERE booking_id = ?',
+            [bookingId]
+        );
+        const ticketTotal = Number(ticketSum.ticket_total || 0);
+
+        const soloQty = Math.max(0, parseInt(combo_solo, 10) || 0);
+        const coupleQty = Math.max(0, parseInt(combo_couple, 10) || 0);
+        const comboAmount = soloQty * 79000 + coupleQty * 139000;
+
+        const comboParts = [];
+        if (soloQty > 0) comboParts.push(`${soloQty}x Combo Solo`);
+        if (coupleQty > 0) comboParts.push(`${coupleQty}x Combo Couple`);
+        const comboSummary = comboParts.length > 0 ? comboParts.join(', ') : null;
+
+        const discount = Math.max(0, Number(discount_amount) || 0);
+        const finalTotal = Math.max(0, ticketTotal + comboAmount - discount);
+
+        const [result] = await pool.query(
+            `UPDATE bookings
+             SET combo_summary = ?,
+                 combo_amount = ?,
+                 discount_amount = ?,
+                 total_amount = ?
+             WHERE booking_id = ?`,
+            [comboSummary, comboAmount, discount, finalTotal, bookingId]
+        );
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ success: false, message: 'Không tìm thấy đơn đặt vé' });
+        }
+
+        try {
+            broadcast('bookings_updated', { booking_id: bookingId, combo_amount: comboAmount, total_amount: finalTotal });
+        } catch (err) {
+            console.error('Realtime error:', err);
+        }
+
+        return res.json({
+            success: true,
+            message: 'Đã cập nhật thông tin thanh toán & bắp nước!',
+            data: { booking_id: bookingId, combo_summary: comboSummary, combo_amount: comboAmount, total_amount: finalTotal }
+        });
+    } catch (error) {
+        console.error('Confirm checkout error:', error);
+        return res.status(500).json({ success: false, message: 'Lỗi cập nhật thanh toán' });
+    }
+};
+
 module.exports = {
-    createBooking
+    createBooking,
+    confirmCheckout
 };
