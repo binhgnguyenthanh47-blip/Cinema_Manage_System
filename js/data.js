@@ -411,25 +411,36 @@ function laySuatTheoNgay(phim, ngay) {
     return ketQua;
 }
 
-async function khoiTaoDuLieu() {
-    const data = await taiToanBoDuLieu();
+let _promiseKhoiTaoDuLieu = null;
 
-    dsRap = data.rap;
-    dsSuatChieu = data.suatChieu;
+function khoiTaoDuLieu() {
+    if (_promiseKhoiTaoDuLieu) return _promiseKhoiTaoDuLieu;
 
-    dsPhim = lienKetPhimVoiSuatChieu(
-        data.phim,
-        dsSuatChieu
-    );
+    _promiseKhoiTaoDuLieu = (async () => {
+        const data = await taiToanBoDuLieu();
 
-    dungDuLieuApi = true;
-    const dsNgayMoi = taoDanhSachNgay(dsSuatChieu);
-    if (dsNgayMoi.length > 0) {
-        dsNgayHienTai = dsNgayMoi;
-    }
+        dsRap = data.rap;
+        dsSuatChieu = data.suatChieu;
 
-    console.log("Da dong bo toan bo du lieu!");
-    console.log("Tong so phim:", dsPhim.length);
-    console.log("Tong so rap:", dsRap.length);
-    console.log("Tong so suat:", dsSuatChieu.length);
+        dsPhim = lienKetPhimVoiSuatChieu(
+            data.phim,
+            dsSuatChieu
+        );
+
+        dungDuLieuApi = true;
+        const dsNgayMoi = taoDanhSachNgay(dsSuatChieu);
+        if (dsNgayMoi.length > 0) {
+            dsNgayHienTai = dsNgayMoi;
+        }
+
+        console.log("Da dong bo toan bo du lieu!");
+        console.log("Tong so phim:", dsPhim.length);
+        console.log("Tong so rap:", dsRap.length);
+        console.log("Tong so suat:", dsSuatChieu.length);
+    })().catch((err) => {
+        _promiseKhoiTaoDuLieu = null;
+        throw err;
+    });
+
+    return _promiseKhoiTaoDuLieu;
 }
