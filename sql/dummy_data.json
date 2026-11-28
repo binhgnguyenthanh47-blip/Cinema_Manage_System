@@ -184,13 +184,13 @@
   "cinemas": [
     {
       "cinema_id": 1,
-      "name": "Cinema Demo Quan 1",
-      "address": "Quan 1, TP. Ho Chi Minh"
+      "name": "Cinema Demo Quận 1",
+      "address": "Quận 1, TP. Hồ Chí Minh"
     },
     {
       "cinema_id": 2,
-      "name": "Cinema Demo Thu Duc",
-      "address": "TP. Thu Duc, TP. Ho Chi Minh"
+      "name": "Cinema Demo Thủ Đức",
+      "address": "TP. Thủ Đức, TP. Hồ Chí Minh"
     }
   ],
   "cinema_halls": [
