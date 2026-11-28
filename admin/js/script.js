@@ -165,7 +165,19 @@ function renderDashboard() {
     const { kpis } = state.stats;
 
     document.getElementById('kpiPaidRevenue').textContent = formatCurrency(kpis.paid_revenue);
-    document.getElementById('kpiPendingRevenue').textContent = `Chờ thanh toán: ${formatCurrency(kpis.pending_revenue)}`;
+    document.getElementById('kpiPendingRevenue').textContent =
+        `Vé: ${formatCurrency(kpis.paid_ticket_revenue)} | Bắp nước: ${formatCurrency(kpis.paid_combo_revenue)}`;
+
+    const comboEl = document.getElementById('kpiComboRevenue');
+    if (comboEl) {
+        comboEl.textContent = formatCurrency(kpis.paid_combo_revenue);
+        const ratio = kpis.paid_revenue > 0
+            ? ((kpis.paid_combo_revenue / kpis.paid_revenue) * 100).toFixed(1)
+            : 0;
+        document.getElementById('kpiComboRatio').textContent =
+            `Chiếm ${ratio}% tổng doanh thu (Chờ TT: ${formatCurrency(kpis.pending_combo_revenue)})`;
+    }
+
     document.getElementById('kpiSoldTickets').textContent = `${kpis.sold_tickets} vé`;
     document.getElementById('kpiHeldTickets').textContent = `Đang giữ chỗ: ${kpis.held_tickets} vé`;
     document.getElementById('kpiTotalMovies').textContent = `${kpis.total_movies} phim`;
@@ -238,7 +250,7 @@ function renderRecentBookings() {
     if (!tbody) return;
     const recent = state.bookings.slice(0, 5);
     if (recent.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#64748B;">Chưa có đơn đặt vé nào.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:#64748B;">Chưa có đơn đặt vé nào.</td></tr>`;
         return;
     }
     tbody.innerHTML = recent.map(b => `
@@ -247,6 +259,7 @@ function renderRecentBookings() {
             <td>${b.full_name}<br><small class="text-muted">${b.email}</small></td>
             <td><strong>${b.movie_title || '-'}</strong><br><small class="text-muted">${b.cinema_name || ''} - ${b.show_time || ''}</small></td>
             <td><strong>${b.seats || '-'}</strong></td>
+            <td>${b.combo_summary ? `${b.combo_summary}<br><small class="text-muted">+${formatCurrency(b.combo_amount)}</small>` : '<span class="text-muted">Không có</span>'}</td>
             <td><strong>${formatCurrency(b.total_amount)}</strong></td>
             <td>${renderBookingBadge(b.status)}</td>
         </tr>
@@ -799,12 +812,12 @@ function renderBookingsTable() {
 
     const filtered = state.bookings.filter(b => {
         if (stFilter !== 'all' && b.status !== stFilter) return false;
-        if (kw && !`#${b.booking_id} ${b.full_name} ${b.email} ${b.movie_title || ''}`.toLowerCase().includes(kw)) return false;
+        if (kw && !`#${b.booking_id} ${b.full_name} ${b.email} ${b.movie_title || ''} ${b.combo_summary || ''}`.toLowerCase().includes(kw)) return false;
         return true;
     });
 
     if (filtered.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="9" style="text-align:center; color:#64748B;">Không có đơn đặt vé nào.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="10" style="text-align:center; color:#64748B;">Không có đơn đặt vé nào.</td></tr>`;
         return;
     }
 
@@ -815,6 +828,7 @@ function renderBookingsTable() {
             <td><strong>${b.movie_title || '-'}</strong></td>
             <td>${b.cinema_name || '-'} (${b.hall_name || '-'})<br><small class="text-muted">${b.show_time || '-'}</small></td>
             <td><strong>${b.seats || '-'}</strong> (${b.ticket_count} vé)</td>
+            <td>${b.combo_summary ? `${b.combo_summary}<br><small class="text-muted">+${formatCurrency(b.combo_amount)}</small>` : '<span class="text-muted">Không có</span>'}</td>
             <td><strong>${formatCurrency(b.total_amount)}</strong></td>
             <td><small>${b.booking_time}</small></td>
             <td>${renderBookingBadge(b.status)}</td>
