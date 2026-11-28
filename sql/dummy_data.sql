@@ -4,10 +4,10 @@ USE cinema_management;
 
 
 INSERT INTO Cinemas (cinema_id, name, address)
-VALUES (1, 'Cinema Demo Quan 1', 'Quan 1, TP. Ho Chi Minh');
+VALUES (1, 'Cinema Demo Quận 1', 'Quận 1, TP. Hồ Chí Minh');
 
 INSERT INTO Cinemas (cinema_id, name, address)
-VALUES (2, 'Cinema Demo Thu Duc', 'TP. Thu Duc, TP. Ho Chi Minh');
+VALUES (2, 'Cinema Demo Thủ Đức', 'TP. Thủ Đức, TP. Hồ Chí Minh');
 
 INSERT INTO CinemaHalls (hall_id, cinema_id, hall_name)
 VALUES (1, 1, 'Phong 01');
