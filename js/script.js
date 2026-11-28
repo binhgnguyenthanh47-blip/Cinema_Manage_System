@@ -17,6 +17,15 @@ function layThamSo(ten) {
     return new URLSearchParams(location.search).get(ten);
 }
 
+function layIdYoutube(url) {
+    const giaTri = String(url || "").trim();
+    if (!giaTri) return "";
+    const khop = giaTri.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/|v\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+    if (khop && khop[1]) return khop[1];
+    if (/^[a-zA-Z0-9_-]{11}$/.test(giaTri)) return giaTri;
+    return "";
+}
+
 function timRap(id) {
     return dsRap.find(function (r) {
         return Number(r.id) === Number(id);
@@ -331,11 +340,12 @@ function khoiTaoChiTiet() {
 
     const khungTrailer = document.getElementById("khungTrailer");
     const duongDanTim = "https://www.youtube.com/results?search_query=" + encodeURIComponent(phim.ten + " official trailer");
-    if (phim.trailer != "" && location.protocol != "file:") {
-        khungTrailer.innerHTML = '<iframe class="chi-tiet__video" src="https://www.youtube.com/embed/' + phim.trailer + '" allowfullscreen></iframe>';
-    } else if (phim.trailer != "") {
-        khungTrailer.innerHTML = '<a class="chi-tiet__trailer-lien" href="https://www.youtube.com/watch?v=' + phim.trailer + '" target="_blank" rel="noopener">' +
-            '<img class="chi-tiet__trailer-anh" src="https://img.youtube.com/vi/' + phim.trailer + '/hqdefault.jpg" alt="Trailer ' + phim.ten + '">' +
+    const youtubeId = layIdYoutube(phim.trailer);
+    if (youtubeId != "" && location.protocol != "file:") {
+        khungTrailer.innerHTML = '<iframe class="chi-tiet__video" src="https://www.youtube.com/embed/' + youtubeId + '" title="Trailer ' + phim.ten + '" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>';
+    } else if (youtubeId != "") {
+        khungTrailer.innerHTML = '<a class="chi-tiet__trailer-lien" href="https://www.youtube.com/watch?v=' + youtubeId + '" target="_blank" rel="noopener">' +
+            '<img class="chi-tiet__trailer-anh" src="https://img.youtube.com/vi/' + youtubeId + '/hqdefault.jpg" alt="Trailer ' + phim.ten + '">' +
             '<span class="nut nut--chinh chi-tiet__trailer-chu">Xem trailer trên YouTube</span></a>';
     } else {
         khungTrailer.innerHTML = '<a class="chi-tiet__trailer-lien" href="' + duongDanTim + '" target="_blank" rel="noopener">' +
